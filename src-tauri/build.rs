@@ -1,8 +1,70 @@
+use std::env;
+use std::fs;
+use std::path::Path;
+
+/// 复制平台特定的 cunzhi 文件到打包目录
+fn copy_platform_cunzhi() {
+    let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
+    let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap_or_default();
+    
+    // 确定源目录名
+    let platform_dir = match (target_os.as_str(), target_arch.as_str()) {
+        ("windows", _) => "windows",
+        ("macos", "x86_64") => "macos-x64",
+        ("macos", "aarch64") => "macos-arm64",
+        ("linux", _) => "linux",
+        _ => {
+            println!("cargo:warning=Unknown platform: {}-{}, skipping cunzhi copy", target_os, target_arch);
+            return;
+        }
+    };
+    
+    let src_dir = Path::new("cunzhi").join(platform_dir);
+    let dest_dir = Path::new("cunzhi-bundle");
+    
+    // 清理并重建目标目录
+    if dest_dir.exists() {
+        let _ = fs::remove_dir_all(dest_dir);
+    }
+    fs::create_dir_all(dest_dir).expect("Failed to create cunzhi-bundle directory");
+    
+    // 复制平台特定文件
+    if src_dir.exists() {
+        copy_dir_contents(&src_dir, dest_dir);
+        println!("cargo:warning=Copied cunzhi files from {:?} to {:?}", src_dir, dest_dir);
+    } else {
+        println!("cargo:warning=Source directory {:?} not found", src_dir);
+    }
+    
+    // 触发重新构建
+    println!("cargo:rerun-if-changed=cunzhi/{}", platform_dir);
+}
+
+/// 递归复制目录内容
+fn copy_dir_contents(src: &Path, dest: &Path) {
+    if let Ok(entries) = fs::read_dir(src) {
+        for entry in entries.flatten() {
+            let path = entry.path();
+            let file_name = path.file_name().unwrap();
+            let dest_path = dest.join(file_name);
+            
+            if path.is_dir() {
+                fs::create_dir_all(&dest_path).ok();
+                copy_dir_contents(&path, &dest_path);
+            } else {
+                fs::copy(&path, &dest_path).ok();
+            }
+        }
+    }
+}
+
 fn main() {
+    // 复制平台特定的 cunzhi 文件
+    copy_platform_cunzhi();
+    
     // Windows特定配置：请求管理员权限
     #[cfg(windows)]
     {
-        use std::env;
 
         // 从 Cargo.toml 获取版本号，统一版本管理
         let version = env!("CARGO_PKG_VERSION");

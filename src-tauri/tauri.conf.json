@@ -44,9 +44,9 @@
         "displayLanguageSelector": false
       }
     },
-    "resources": [
-      "windsurf-account-manager.exe.manifest",
-      "cunzhi/**/*"
-    ]
+    "resources": {
+      "windsurf-account-manager.exe.manifest": "",
+      "cunzhi-bundle/*": "cunzhi/"
+    }
   }
 }
