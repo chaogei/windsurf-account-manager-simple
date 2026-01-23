@@ -1285,5 +1285,62 @@
   "validation": {
     "groupNameLength": "Group name length must be 1-20 characters",
     "nicknameLength": "Nickname length must be 1-20 characters"
+  },
+  "autoReset": {
+    "title": "自动重置积分",
+    "rules": "规则配置"
+  },
+  "stats": {
+    "title": "统计"
+  },
+  "analytics": {
+    "title": "分析"
+  },
+  "autoRefill": {
+    "title": "自动充值"
+  },
+  "batchUpdatePlan": {
+    "title": "批量更新计划"
+  },
+  "tagManage": {
+    "title": "标签管理"
+  },
+  "teamSettings": {
+    "title": "团队设置"
+  },
+  "turnstile": {
+    "title": "Turnstile 验证"
+  },
+  "updatePlan": {
+    "title": "更新计划"
+  },
+  "settings": {
+    "title": "设置"
+  },
+  "cardGenerator": {
+    "title": "虚拟卡生成器",
+    "addBin": "添加 BIN",
+    "noBin": "暂无 BIN，请添加",
+    "generateCount": "生成数量",
+    "cardHolderName": "持卡人姓名",
+    "namePlaceholder": "例如 JOHN DOE",
+    "generate": "生成",
+    "noCards": "暂无生成的卡片",
+    "binAdded": "BIN 已添加",
+    "copyAllSuccess": "已复制 {count} 张卡片",
+    "generatedSuccess": "已生成 {count} 张卡片",
+    "nameFormats": {
+      "random": "随机英文名",
+      "custom": "自定义姓名"
+    },
+    "cardType": "卡片类型",
+    "types": {
+      "visa": "Visa",
+      "mastercard": "MasterCard",
+      "amex": "American Express",
+      "discover": "Discover",
+      "jcb": "JCB",
+      "unionpay": "UnionPay"
+    }
   }
 }
