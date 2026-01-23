@@ -529,7 +529,7 @@
       "averageUsage": "Average Usage",
       "lastReset": "Last Reset",
       "noData": "No data",
-      "title": "Title",
+      "title": "Statistics",
       "totalAccounts": "Total accounts",
       "activeAccounts": "Active accounts",
       "groupCount": "Group count",
@@ -806,7 +806,7 @@
       "quotaPercentage": "Quota percentage"
     },
     "analytics": {
-      "title": "Title",
+      "title": "Analytics",
       "totalCodeLines": "Total code lines",
       "avgDailyCodeLines": "Avg daily code lines",
       "totalSessions": "Total sessions",
@@ -833,7 +833,7 @@
       "unitTests": "Unit tests"
     },
     "autoRefill": {
-      "title": "Title",
+      "title": "Auto Refill",
       "statusTitle": "Status title",
       "disableAutoRefill": "Disable auto refill",
       "enableAutoRefillBtn": "Enable auto refill btn",
@@ -850,7 +850,7 @@
       "saveFailed": "Save failed"
     },
     "batchUpdatePlan": {
-      "title": "Title",
+      "title": "Batch Update Plan",
       "description": "Description",
       "selectedAccounts": "Selected accounts",
       "loopMode": "Loop mode",
@@ -1103,7 +1103,7 @@
       "noTags": "No tags"
     },
     "tagManage": {
-      "title": "Title",
+      "title": "Manage Tags",
       "newTagNamePlaceholder": "New tag name placeholder",
       "add": "Add",
       "noTagsHint": "No tags hint",
@@ -1121,7 +1121,7 @@
       "globalTags": "Global Tags"
     },
     "teamSettings": {
-      "title": "Title",
+      "title": "Team Settings",
       "windsurfSettings": "Windsurf settings",
       "modelsConfig": "Models config",
       "modelsConfigDesc": "Models config desc",
@@ -1193,7 +1193,7 @@
       "disabled": "Disabled"
     },
     "turnstile": {
-      "title": "Title",
+      "title": "Turnstile Validation",
       "completeVerification": "Complete verification",
       "loading": "Loading",
       "success": "Success",
@@ -1201,7 +1201,7 @@
       "getLink": "Get link"
     },
     "updatePlan": {
-      "title": "Title",
+      "title": "Update Plan",
       "currentPlan": "Current plan",
       "quotaUsage": "Quota usage",
       "currentPlanTag": "Current plan tag",
