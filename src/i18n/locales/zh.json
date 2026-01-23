@@ -579,7 +579,12 @@
         "triggerTip": "当使用率 ≥ {usage}% 且 剩余积分 ≤ {remaining} 时触发重置",
         "confirmDelete": "Are you sure you want to delete the auto reset rule for \"{name}\"?",
         "confirmClear": "Are you sure you want to clear all reset records? This action cannot be undone."
-      }
+      },
+      "group": "分组",
+      "account": "账户",
+      "selectGroup": "选择分组",
+      "autoJoined": "自动加入",
+      "resetTime": "重置时间"
     },
     "about": {
       "title": "About",
@@ -767,7 +772,8 @@
         "refreshProgress": "正在刷新 {count} 个账户...",
         "refreshSuccess": "Refresh Complete: {count} success",
         "refreshResult": "Refresh Complete (Partial Fail)\nSuccess: {success}/{total}\nFailed: {failed}/{total}",
-        "refreshFailed": "Refresh Failed: {error}"
+        "refreshFailed": "Refresh Failed: {error}",
+        "noSelectedAccounts": "未选择批量导入的账户"
       }
     },
     "logs": {

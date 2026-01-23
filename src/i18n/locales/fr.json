@@ -579,7 +579,12 @@
         "triggerTip": "Déclencher réinit. si usage ≥ {usage}% et crédits restants ≤ {remaining}",
         "confirmDelete": "Are you sure you want to delete the auto reset rule for \"{name}\"?",
         "confirmClear": "Are you sure you want to clear all reset records? This action cannot be undone."
-      }
+      },
+      "group": "Groupe",
+      "account": "Compte",
+      "selectGroup": "Sélectionner un groupe",
+      "autoJoined": "Rejoint auto",
+      "resetTime": "Heure de réinit."
     },
     "about": {
       "title": "About",
@@ -767,7 +772,8 @@
         "refreshProgress": "Actualisation de {count} comptes...",
         "refreshSuccess": "Refresh Complete: {count} success",
         "refreshResult": "Refresh Complete (Partial Fail)\nSuccess: {success}/{total}\nFailed: {failed}/{total}",
-        "refreshFailed": "Refresh Failed: {error}"
+        "refreshFailed": "Refresh Failed: {error}",
+        "noSelectedAccounts": "Aucun compte sélectionné pour l'importation par lot"
       }
     },
     "logs": {
