@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="标签管理"
+    :title="$t('dialog.tagManage.title')"
     width="600px"
     :close-on-click-modal="false"
     @close="handleClose"
@@ -11,7 +11,7 @@
       <div class="add-tag-section">
         <el-input
           v-model="newTagName"
-          placeholder="输入新标签名称"
+          :placeholder="$t('dialog.tagManage.newTagNamePlaceholder')"
           size="default"
           class="tag-input"
           @keyup.enter="handleAddTag"
@@ -26,7 +26,7 @@
           </template>
           <template #append>
             <el-button :icon="Plus" @click="handleAddTag" :loading="adding">
-              添加
+              {{ $t('dialog.tagManage.add') }}
             </el-button>
           </template>
         </el-input>
@@ -35,11 +35,11 @@
       <!-- 标签列表 -->
       <div class="tags-section">
         <div class="section-header">
-          <span class="section-title">全局标签 ({{ settingsStore.tags.length }})</span>
+          <span class="section-title">{{ $t('dialog.tagManage.globalTags', { count: settingsStore.tags.length }) }}</span>
         </div>
         
         <div v-if="settingsStore.tags.length === 0" class="empty-hint">
-          暂无标签，请添加新标签
+          {{ $t('dialog.tagManage.noTagsHint') }}
         </div>
 
         <el-scrollbar max-height="300px">
@@ -57,7 +57,7 @@
                   {{ tag.name }}
                 </span>
                 <span class="tag-usage">
-                  使用: {{ getTagUsageCount(tag.name) }} 个账号
+                  {{ $t('dialog.tagManage.usage', { count: getTagUsageCount(tag.name) }) }}
                 </span>
               </div>
               <div class="tag-actions">
@@ -90,16 +90,16 @@
       <!-- 批量操作区域 -->
       <div class="batch-section" v-if="selectedAccountIds.length > 0">
         <div class="section-header">
-          <span class="section-title">批量操作 (已选 {{ selectedAccountIds.length }} 个账号)</span>
+          <span class="section-title">{{ $t('dialog.tagManage.batchOperations', { count: selectedAccountIds.length }) }}</span>
         </div>
         
         <div class="batch-content">
           <div class="batch-row">
-            <span class="batch-label">添加标签:</span>
+            <span class="batch-label">{{ $t('dialog.tagManage.addTags') }}:</span>
             <el-select
               v-model="batchAddTags"
               multiple
-              placeholder="选择要添加的标签"
+              :placeholder="$t('dialog.tagManage.selectTagsToAdd')"
               style="flex: 1"
               :disabled="availableTagsToAdd.length === 0"
             >
@@ -114,11 +114,11 @@
             </el-select>
           </div>
           <div class="batch-row">
-            <span class="batch-label">移除标签:</span>
+            <span class="batch-label">{{ $t('dialog.tagManage.removeTags') }}:</span>
             <el-select
               v-model="batchRemoveTags"
               multiple
-              placeholder="选择要移除的标签"
+              :placeholder="$t('dialog.tagManage.selectTagsToRemove')"
               style="flex: 1"
               :disabled="availableTagsToRemove.length === 0"
             >
@@ -138,7 +138,7 @@
             :loading="batchUpdating"
             :disabled="batchAddTags.length === 0 && batchRemoveTags.length === 0"
           >
-            应用批量修改
+            {{ $t('dialog.tagManage.applyBatchChanges') }}
           </el-button>
         </div>
       </div>
@@ -147,15 +147,15 @@
     <!-- 编辑标签对话框 -->
     <el-dialog
       v-model="editDialogVisible"
-      title="编辑标签"
+      :title="$t('dialog.tagManage.editTag')"
       width="400px"
       append-to-body
     >
       <el-form :model="editForm" label-width="80px">
-        <el-form-item label="标签名称">
+        <el-form-item :label="$t('dialog.tagManage.tagName')">
           <el-input v-model="editForm.name" />
         </el-form-item>
-        <el-form-item label="标签颜色">
+        <el-form-item :label="$t('dialog.tagManage.tagColor')">
           <el-color-picker
             v-model="editForm.color"
             show-alpha
@@ -164,15 +164,15 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="editDialogVisible = false">取消</el-button>
+        <el-button @click="editDialogVisible = false">{{ $t('common.cancel') }}</el-button>
         <el-button type="primary" @click="handleUpdateTag" :loading="updating">
-          保存
+          {{ $t('common.save') }}
         </el-button>
       </template>
     </el-dialog>
 
     <template #footer>
-      <el-button @click="handleClose">关闭</el-button>
+      <el-button @click="handleClose">{{ $t('common.close') }}</el-button>
     </template>
   </el-dialog>
 </template>
@@ -338,12 +338,12 @@ function getTagUsageCount(tagName: string): number {
 async function handleAddTag() {
   const name = newTagName.value.trim();
   if (!name) {
-    ElMessage.warning('请输入标签名称');
+    ElMessage.warning($t('dialog.tagManage.pleaseEnterTagName'));
     return;
   }
   
   if (settingsStore.tags.some(t => t.name === name)) {
-    ElMessage.warning('标签已存在');
+    ElMessage.warning($t('dialog.tagManage.tagAlreadyExists'));
     return;
   }
   
@@ -353,10 +353,10 @@ async function handleAddTag() {
       name,
       color: newTagColor.value
     });
-    ElMessage.success('标签添加成功');
+    ElMessage.success($t('dialog.tagManage.tagAddedSuccess'));
     newTagName.value = '';
   } catch (e) {
-    ElMessage.error(`添加失败: ${e}`);
+    ElMessage.error($t('dialog.tagManage.addFailed', { error: e }));
   } finally {
     adding.value = false;
   }

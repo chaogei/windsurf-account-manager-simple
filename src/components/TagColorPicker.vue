@@ -30,7 +30,7 @@
     </div>
     
     <div v-if="tags.length === 0" class="no-tags-hint">
-      暂无标签，请先添加标签
+      {{ $t('dialog.tagColorPicker.noTags') }}
     </div>
   </div>
 </template>

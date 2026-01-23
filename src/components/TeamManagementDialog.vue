@@ -62,7 +62,7 @@
           </div>
           
           <el-table :data="members" style="width: 100%" max-height="400" class="member-table">
-            <el-table-column label="名称 & 邮箱" min-width="220">
+            <el-table-column :label="$t('dialog.teamManagement.nameAndEmail')" min-width="220">
               <template #default="{ row }">
                 <div class="member-cell">
                   <div class="member-cell-name">
@@ -73,43 +73,43 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="最后使用" width="120" align="center">
+            <el-table-column :label="$t('dialog.teamManagement.lastUsed')" width="120" align="center">
               <template #default="{ row }">
                 <span class="time-text">{{ formatLastUsed(row.last_update_time) }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="已用积分" width="100" align="center">
+            <el-table-column :label="$t('dialog.teamManagement.usedCredits')" width="100" align="center">
               <template #default="{ row }">
                 <span>{{ Math.floor((row.prompts_used || 0) / 100) }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="禁用访问" width="90" align="center">
+            <el-table-column :label="$t('dialog.teamManagement.disableAccess')" width="90" align="center">
               <template #default="{ row }">
                 <el-tag :type="row.disable_codeium ? 'danger' : 'success'" size="small">
-                  {{ row.disable_codeium ? '是' : '否' }}
+                  {{ row.disable_codeium ? $t('common.yes') : $t('common.no') }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="180" fixed="right" align="center">
+            <el-table-column :label="$t('dialog.teamManagement.actions')" width="180" fixed="right" align="center">
               <template #default="{ row }">
                 <el-button type="info" size="small" text @click="openMemberDetail(row)">
-                  编辑
+                  {{ $t('dialog.teamManagement.edit') }}
                 </el-button>
                 <template v-if="row.role !== 'Admin'">
                   <el-popconfirm
-                    title="确定要移除该成员吗？"
-                    confirm-button-text="确定"
-                    cancel-button-text="取消"
+                    :title="$t('dialog.teamManagement.confirmRemoveMember')"
+                    :confirm-button-text="$t('dialog.teamManagement.yes')"
+                    :cancel-button-text="$t('dialog.teamManagement.no')"
                     @confirm="removeMember(row)"
                   >
                     <template #reference>
                       <el-button type="danger" size="small" text>
-                        移除
+                        {{ $t('dialog.teamManagement.remove') }}
                       </el-button>
                     </template>
                   </el-popconfirm>
                   <el-button type="primary" size="small" text :loading="row.rejoining" @click="rejoinMember(row)">
-                    重置积分
+                    {{ $t('dialog.teamManagement.resetCredits') }}
                   </el-button>
                 </template>
               </template>
@@ -117,38 +117,38 @@
           </el-table>
           
           <div v-if="members.length === 0 && !loading" class="empty-state">
-            <el-empty description="暂无团队成员" />
+            <el-empty :description="$t('dialog.teamManagement.noMembers')" />
           </div>
         </el-tab-pane>
         
         <!-- 待处理邀请 -->
-        <el-tab-pane label="待处理邀请" name="invitations">
+        <el-tab-pane :label="$t('dialog.teamManagement.pendingInvitations')" name="invitations">
           <div class="tab-header">
             <el-button size="small" @click="loadPendingInvitations">
               <el-icon><Refresh /></el-icon>
-              刷新
+              {{ $t('common.refresh') }}
             </el-button>
           </div>
           
           <el-table :data="pendingInvitations" style="width: 100%" max-height="400">
-            <el-table-column prop="name" label="名称" width="150" />
-            <el-table-column prop="email" label="邮箱" min-width="200" />
-            <el-table-column prop="created_at" label="邀请时间" width="180">
+            <el-table-column prop="name" :label="$t('dialog.teamManagement.name')" width="150" />
+            <el-table-column prop="email" :label="$t('dialog.teamManagement.email')" min-width="200" />
+            <el-table-column prop="created_at" :label="$t('dialog.teamManagement.invitationTime')" width="180">
               <template #default="{ row }">
                 {{ formatTime(row.created_at) }}
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="100" fixed="right">
+            <el-table-column :label="$t('dialog.teamManagement.actions')" width="100" fixed="right">
               <template #default="{ row }">
                 <el-popconfirm
-                  title="确定要撤销该邀请吗？"
-                  confirm-button-text="确定"
-                  cancel-button-text="取消"
+                  :title="$t('dialog.teamManagement.confirmRevokeInvitation')"
+                  :confirm-button-text="$t('dialog.teamManagement.yes')"
+                  :cancel-button-text="$t('dialog.teamManagement.no')"
                   @confirm="revokeInvitation(row)"
                 >
                   <template #reference>
                     <el-button type="warning" size="small" text>
-                      撤销
+                      {{ $t('dialog.teamManagement.revokeInvitation') }}
                     </el-button>
                   </template>
                 </el-popconfirm>
@@ -157,60 +157,60 @@
           </el-table>
           
           <div v-if="pendingInvitations.length === 0 && !loading" class="empty-state">
-            <el-empty description="暂无待处理邀请" />
+            <el-empty :description="$t('dialog.teamManagement.noPendingInvitations')" />
           </div>
         </el-tab-pane>
         
         <!-- 我的邀请（普通用户） -->
-        <el-tab-pane label="我的邀请" name="my-invitation">
+        <el-tab-pane :label="$t('dialog.teamManagement.myInvitation')" name="my-invitation">
           <div class="my-invitation-section">
             <div v-if="myInvitation" class="invitation-card">
               <div class="invitation-info">
-                <h3>您收到了团队邀请</h3>
-                <p><strong>团队名称:</strong> {{ myInvitation.team_name || '未知团队' }}</p>
-                <p><strong>邀请人:</strong> {{ myInvitation.admin_name || '管理员' }}</p>
+                <h3>{{ $t('dialog.teamManagement.youReceivedInvitation') }}</h3>
+                <p><strong>{{ $t('dialog.teamManagement.teamName') }}:</strong> {{ myInvitation.team_name || $t('dialog.teamManagement.unknownTeam') }}</p>
+                <p><strong>{{ $t('dialog.teamManagement.inviter') }}:</strong> {{ myInvitation.admin_name || $t('dialog.teamManagement.admin') }}</p>
               </div>
               <div class="invitation-actions">
                 <el-button type="primary" @click="acceptInvitation">
-                  接受邀请
+                  {{ $t('dialog.teamManagement.acceptInvitation') }}
                 </el-button>
                 <el-button type="danger" @click="rejectInvitation">
-                  拒绝邀请
+                  {{ $t('dialog.teamManagement.rejectInvitation') }}
                 </el-button>
               </div>
             </div>
             <div v-else class="empty-state">
-              <el-empty description="暂无待处理的邀请" />
+              <el-empty :description="$t('dialog.teamManagement.noPendingInvitations')" />
               <el-button size="small" @click="loadMyInvitation">
                 <el-icon><Refresh /></el-icon>
-                检查邀请
+                {{ $t('common.checkInvitation') }}
               </el-button>
             </div>
           </div>
         </el-tab-pane>
 
         <!-- 申请加入团队 -->
-        <el-tab-pane label="申请加入" name="join-team">
+        <el-tab-pane :label="$t('dialog.teamManagement.joinTeam')" name="join-team">
           <div class="join-team-section">
             <el-alert
-              title="通过邀请链接加入团队"
+              title="{{ $t('dialog.teamManagement.joinTeam') }}"
               type="info"
-              description="输入团队管理员分享的邀请ID，申请加入团队。申请提交后需等待管理员审批。"
+              description="{{ $t('dialog.teamManagement.joinTeamDescription') }}"
               :closable="false"
               show-icon
               style="margin-bottom: 20px"
             />
             <el-form :model="joinForm" label-width="100px">
-              <el-form-item label="邀请链接ID">
+              <el-form-item :label="$t('dialog.teamManagement.inviteId')">
                 <el-input
                   v-model="joinForm.inviteId"
-                  placeholder="输入邀请ID（UUID格式）"
+                  placeholder="{{ $t('dialog.teamManagement.inviteIdPlaceholder') }}"
                   clearable
                 />
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" :loading="joining" @click="submitJoinRequest">
-                  提交申请
+                  {{ $t('dialog.teamManagement.submitJoinRequest') }}
                 </el-button>
               </el-form-item>
             </el-form>
@@ -222,32 +222,32 @@
           <div class="tab-header">
             <el-button size="small" @click="loadTeamMembers">
               <el-icon><Refresh /></el-icon>
-              刷新
+              {{ $t('common.refresh') }}
             </el-button>
           </div>
           
           <el-table :data="pendingMembers" style="width: 100%" max-height="400">
-            <el-table-column prop="name" label="名称" width="150" />
-            <el-table-column prop="email" label="邮箱" min-width="200" />
-            <el-table-column prop="status" label="状态" width="100">
+            <el-table-column prop="name" :label="$t('dialog.teamManagement.name')" width="150" />
+            <el-table-column prop="email" :label="$t('dialog.teamManagement.email')" min-width="200" />
+            <el-table-column prop="status" :label="$t('dialog.teamManagement.status')" width="100">
               <template #default>
-                <el-tag type="warning" size="small">待审批</el-tag>
+                <el-tag type="warning" size="small">{{ $t('dialog.teamManagement.pending') }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="160" fixed="right">
+            <el-table-column :label="$t('dialog.teamManagement.actions')" width="160" fixed="right">
               <template #default="{ row }">
                 <el-button type="success" size="small" text @click="approveJoinRequest(row, 'approve')">
-                  同意
+                  {{ $t('dialog.teamManagement.approve') }}
                 </el-button>
                 <el-button type="danger" size="small" text @click="approveJoinRequest(row, 'reject')">
-                  拒绝
+                  {{ $t('dialog.teamManagement.reject') }}
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
           
           <div v-if="pendingMembers.length === 0 && !loading" class="empty-state">
-            <el-empty description="暂无待审批的加入申请" />
+            <el-empty :description="$t('dialog.teamManagement.noPendingRequests')" />
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -256,7 +256,7 @@
     <!-- 邀请成员对话框 -->
     <el-dialog
       v-model="showInviteDialog"
-      title="邀请成员"
+      :title="$t('dialog.teamManagement.inviteMember')"
       width="500px"
       :close-on-click-modal="false"
       append-to-body
@@ -264,11 +264,11 @@
       <el-form :model="inviteForm" label-width="60px">
         <div v-for="(user, index) in inviteForm.users" :key="index" class="invite-user-row">
           <div class="invite-user-fields">
-            <el-form-item label="名称">
-              <el-input v-model="user.name" placeholder="成员名称" />
+            <el-form-item :label="$t('dialog.teamManagement.name')">
+              <el-input v-model="user.name" :placeholder="$t('dialog.teamManagement.memberName')" />
             </el-form-item>
-            <el-form-item label="邮箱">
-              <el-input v-model="user.email" placeholder="成员邮箱" />
+            <el-form-item :label="$t('dialog.teamManagement.email')">
+              <el-input v-model="user.email" :placeholder="$t('dialog.teamManagement.memberEmail')" />
             </el-form-item>
           </div>
           <el-button
@@ -283,22 +283,22 @@
         </div>
         <el-button class="add-more-btn" @click="addInviteUser">
           <el-icon><Plus /></el-icon>
-          添加更多
+          {{ $t('dialog.teamManagement.addMore') }}
         </el-button>
         
         <!-- 自动加入开关 -->
         <div class="auto-join-section">
           <el-switch v-model="autoJoinEnabled" />
-          <span class="auto-join-label">自动加入</span>
+          <span class="auto-join-label">{{ $t('dialog.teamManagement.autoJoin') }}</span>
           <el-tooltip content="邀请后，如果成员邮箱在账号管理器中，将自动接受邀请加入团队" placement="top">
             <el-icon class="help-icon"><QuestionFilled /></el-icon>
           </el-tooltip>
         </div>
       </el-form>
       <template #footer>
-        <el-button @click="showInviteDialog = false">取消</el-button>
+        <el-button @click="showInviteDialog = false">{{ $t('common.cancel') }}</el-button>
         <el-button type="primary" :loading="inviting" @click="submitInvite">
-          {{ autoJoinEnabled ? '邀请并自动加入' : '发送邀请' }}
+          {{ autoJoinEnabled ? $t('dialog.teamManagement.inviteAndAutoJoin') : $t('dialog.teamManagement.sendInvite') }}
         </el-button>
       </template>
     </el-dialog>
@@ -306,34 +306,34 @@
     <!-- 转让订阅对话框 -->
     <el-dialog
       v-model="showTransferDialog"
-      title="转让订阅"
+      :title="$t('dialog.teamManagement.transferSubscription')"
       width="500px"
       :close-on-click-modal="false"
       append-to-body
     >
       <el-alert
-        title="转让订阅说明"
+        :title="$t('dialog.teamManagement.transferSubscriptionDesc')"
         type="warning"
-        description="转让后，您将被移出团队，订阅将转移给目标用户。此操作不可撤销！"
+        :description="$t('dialog.teamManagement.transferWarning')"
         :closable="false"
         show-icon
         style="margin-bottom: 20px"
       />
       <el-form :model="transferForm" label-width="100px" autocomplete="off">
-        <el-form-item label="目标邮箱" required>
+        <el-form-item :label="$t('dialog.teamManagement.targetEmail')" required>
           <el-input
             v-model="transferForm.email"
-            placeholder="输入接收订阅的用户邮箱"
+            :placeholder="$t('dialog.teamManagement.targetEmailPlaceholder')"
             clearable
             name="transfer-target-email-no-autofill"
             autocomplete="off"
             data-form-type="other"
           />
         </el-form-item>
-        <el-form-item label="用户名称">
+        <el-form-item :label="$t('dialog.teamManagement.userName')">
           <el-input
             v-model="transferForm.name"
-            placeholder="可选，用户名称"
+            :placeholder="$t('dialog.teamManagement.userNameOptional')"
             clearable
             name="transfer-target-name-no-autofill"
             autocomplete="off"

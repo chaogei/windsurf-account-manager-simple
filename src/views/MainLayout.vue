@@ -75,7 +75,7 @@
 
         <el-menu-item index="auto-reset" @click="showAutoResetDialog = true">
           <el-icon><Timer /></el-icon>
-          <template #title>自动重置</template>
+          <template #title>{{ $t("nav.autoReset") }}</template>
         </el-menu-item>
 
         <el-menu-item
@@ -83,7 +83,7 @@
           @click="showCardGeneratorDialog = true"
         >
           <el-icon><CreditCard /></el-icon>
-          <template #title>虚拟卡生成</template>
+          <template #title>{{ $t("nav.cardGenerator") }}</template>
         </el-menu-item>
 
         <el-menu-item index="about" @click="showAboutDialog">
@@ -429,14 +429,16 @@
         <transition name="filter-slide">
           <div v-if="showFilterPanel" class="filter-panel">
             <div class="filter-panel-header">
-              <span class="filter-title">高级筛选</span>
+              <span class="filter-title">{{
+                $t("dashboard.advancedFilter")
+              }}</span>
               <div class="filter-header-actions">
-                <el-button size="small" @click="clearAllFilters"
-                  >清除筛选</el-button
-                >
-                <el-button size="small" type="primary" @click="applyFilters"
-                  >应用筛选</el-button
-                >
+                <el-button size="small" @click="clearAllFilters">{{
+                  $t("dashboard.clearFilter")
+                }}</el-button>
+                <el-button size="small" type="primary" @click="applyFilters">{{
+                  $t("dashboard.applyFilter")
+                }}</el-button>
                 <el-button
                   :icon="Close"
                   circle
@@ -457,7 +459,7 @@
                       v-model="filterForm.remainingQuotaMin"
                       :min="0"
                       :controls="false"
-                      placeholder="最小"
+                      :placeholder="$t('common.min')"
                       size="small"
                     />
                     <span class="range-separator">-</span>
@@ -465,7 +467,7 @@
                       v-model="filterForm.remainingQuotaMax"
                       :min="0"
                       :controls="false"
-                      placeholder="最大"
+                      :placeholder="$t('common.max')"
                       size="small"
                     />
                   </div>
@@ -479,7 +481,7 @@
                       v-model="filterForm.totalQuotaMin"
                       :min="0"
                       :controls="false"
-                      placeholder="最小"
+                      :placeholder="$t('common.min')"
                       size="small"
                     />
                     <span class="range-separator">-</span>
@@ -487,7 +489,7 @@
                       v-model="filterForm.totalQuotaMax"
                       :min="0"
                       :controls="false"
-                      placeholder="最大"
+                      :placeholder="$t('common.max')"
                       size="small"
                     />
                   </div>
@@ -500,14 +502,14 @@
                     <el-input-number
                       v-model="filterForm.expiryDaysMin"
                       :controls="false"
-                      placeholder="最小"
+                      :placeholder="$t('common.min')"
                       size="small"
                     />
                     <span class="range-separator">-</span>
                     <el-input-number
                       v-model="filterForm.expiryDaysMax"
                       :controls="false"
-                      placeholder="最大"
+                      :placeholder="$t('common.max')"
                       size="small"
                     />
                   </div>
@@ -929,7 +931,7 @@ const currentLanguageFlag = computed(() => {
 
 function handleLanguageCommand(lang: string) {
   settingsStore.setLanguage(lang);
-  ElMessage.success(t("settings.basic.languageChanged"));
+  ElMessage.success(t("dialog.settings.basic.languageChanged"));
 }
 
 const activeMenu = ref("accounts");
@@ -1884,9 +1886,9 @@ async function handleBatchRefresh() {
         }
       }
 
-      ElMessageBox.alert(message, "刷新结果", {
+      ElMessageBox.alert(message, t("common.status"), {
         type: "warning",
-        confirmButtonText: "确定",
+        confirmButtonText: t("common.confirm"),
       });
     }
 
@@ -1907,14 +1909,14 @@ async function handleExportAccounts(selectedOnly: boolean = false) {
         accountsStore.selectedAccounts.has(a.id),
       );
       if (accounts.length === 0) {
-        ElMessage.warning("没有选中的账号");
+        ElMessage.warning(t("dialog.batchImport.message.noSelectedAccounts"));
         return;
       }
     } else {
       // 导出所有账号
       accounts = accountsStore.filteredAccounts;
       if (accounts.length === 0) {
-        ElMessage.warning("没有可导出的账号");
+        ElMessage.warning(t("dialog.batchImport.message.noExportableAccounts"));
         return;
       }
     }
@@ -1923,58 +1925,58 @@ async function handleExportAccounts(selectedOnly: boolean = false) {
     const radioHtml = `
       <div style="padding: 20px 0;">
         <div style="margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #ebeef5;">
-          <div style="font-weight: 500; margin-bottom: 10px; color: #606266;">导出内容</div>
+          <div style="font-weight: 500; margin-bottom: 10px; color: #606266;">${t("dialog.export.content")}</div>
           <label style="display: block; margin: 10px 0; cursor: pointer; font-size: 14px;">
             <input type="radio" name="exportContent" value="password" checked style="margin-right: 10px; cursor: pointer; transform: scale(1.2);" />
-            <span style="font-weight: 500;">邮箱 + 密码</span>
-            <span style="color: #909399; margin-left: 8px;">传统登录凭证</span>
+            <span style="font-weight: 500;">${t("dialog.export.emailPassword")}</span>
+            <span style="color: #909399; margin-left: 8px;">${t("dialog.export.emailPasswordDesc")}</span>
           </label>
           <label style="display: block; margin: 10px 0; cursor: pointer; font-size: 14px;">
             <input type="radio" name="exportContent" value="refresh_token" style="margin-right: 10px; cursor: pointer; transform: scale(1.2);" />
-            <span style="font-weight: 500;">邮箱 + Refresh Token</span>
-            <span style="color: #909399; margin-left: 8px;">可直接刷新获取账号信息</span>
+            <span style="font-weight: 500;">${t("dialog.export.emailRefreshToken")}</span>
+            <span style="color: #909399; margin-left: 8px;">${t("dialog.export.emailRefreshTokenDesc")}</span>
           </label>
         </div>
         <div style="margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #ebeef5;">
-          <div style="font-weight: 500; margin-bottom: 10px; color: #606266;">导出格式</div>
+          <div style="font-weight: 500; margin-bottom: 10px; color: #606266;">${t("dialog.export.format")}</div>
           <label style="display: block; margin: 10px 0; cursor: pointer; font-size: 14px;">
             <input type="radio" name="exportFormat" value="3" checked style="margin-right: 10px; cursor: pointer; transform: scale(1.2);" />
-            <span style="font-weight: 500;">文本格式</span>
-            <span style="color: #909399; margin-left: 8px;">简单列表</span>
+            <span style="font-weight: 500;">${t("dialog.export.text")}</span>
+            <span style="color: #909399; margin-left: 8px;">${t("dialog.export.textDesc")}</span>
           </label>
           <label style="display: block; margin: 10px 0; cursor: pointer; font-size: 14px;">
             <input type="radio" name="exportFormat" value="1" style="margin-right: 10px; cursor: pointer; transform: scale(1.2);" />
-            <span style="font-weight: 500;">CSV格式</span>
-            <span style="color: #909399; margin-left: 8px;">适合 Excel 打开</span>
+            <span style="font-weight: 500;">${t("dialog.export.csv")}</span>
+            <span style="color: #909399; margin-left: 8px;">${t("dialog.export.csvDesc")}</span>
           </label>
           <label style="display: block; margin: 10px 0; cursor: pointer; font-size: 14px;">
             <input type="radio" name="exportFormat" value="2" style="margin-right: 10px; cursor: pointer; transform: scale(1.2);" />
-            <span style="font-weight: 500;">JSON格式</span>
-            <span style="color: #909399; margin-left: 8px;">适合程序处理</span>
+            <span style="font-weight: 500;">${t("dialog.export.json")}</span>
+            <span style="color: #909399; margin-left: 8px;">${t("dialog.export.jsonDesc")}</span>
           </label>
         </div>
         <div>
-          <div style="font-weight: 500; margin-bottom: 10px; color: #606266;">导出方式</div>
+          <div style="font-weight: 500; margin-bottom: 10px; color: #606266;">${t("dialog.export.method")}</div>
           <label style="display: block; margin: 10px 0; cursor: pointer; font-size: 14px;">
             <input type="radio" name="exportTarget" value="clipboard" checked style="margin-right: 10px; cursor: pointer; transform: scale(1.2);" />
-            <span style="font-weight: 500;">复制到剪贴板</span>
-            <span style="color: #909399; margin-left: 8px;">直接粘贴使用</span>
+            <span style="font-weight: 500;">${t("dialog.export.clipboard")}</span>
+            <span style="color: #909399; margin-left: 8px;">${t("dialog.export.clipboardDesc")}</span>
           </label>
           <label style="display: block; margin: 10px 0; cursor: pointer; font-size: 14px;">
             <input type="radio" name="exportTarget" value="file" style="margin-right: 10px; cursor: pointer; transform: scale(1.2);" />
-            <span style="font-weight: 500;">下载文件</span>
-            <span style="color: #909399; margin-left: 8px;">保存到本地</span>
+            <span style="font-weight: 500;">${t("dialog.export.file")}</span>
+            <span style="color: #909399; margin-left: 8px;">${t("dialog.export.fileDesc")}</span>
           </label>
         </div>
       </div>
     `;
 
     await ElMessageBox({
-      title: "选择导出格式",
+      title: t("dialog.export.title"),
       message: radioHtml,
       showCancelButton: true,
-      confirmButtonText: "导出",
-      cancelButtonText: "取消",
+      confirmButtonText: t("dialog.export.action"),
+      cancelButtonText: t("common.cancel"),
       dangerouslyUseHTMLString: true,
       customClass: "export-dialog",
       beforeClose: (action, instance, done) => {
@@ -2015,7 +2017,9 @@ async function handleExportAccounts(selectedOnly: boolean = false) {
     };
 
     const credentialLabel =
-      exportContent === "refresh_token" ? "Refresh Token" : "密码";
+      exportContent === "refresh_token"
+        ? "Refresh Token"
+        : t("common.password");
     const credentialKey =
       exportContent === "refresh_token" ? "refresh_token" : "password";
 
@@ -2067,7 +2071,9 @@ async function handleExportAccounts(selectedOnly: boolean = false) {
     if (target === "clipboard") {
       // 复制到剪贴板
       await navigator.clipboard.writeText(content);
-      ElMessage.success(`已复制 ${accounts.length} 个账号到剪贴板`);
+      ElMessage.success(
+        t("dialog.export.successClipboard", { count: accounts.length }),
+      );
     } else {
       // 创建下载链接
       const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
@@ -2080,29 +2086,35 @@ async function handleExportAccounts(selectedOnly: boolean = false) {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      ElMessage.success(`已导出 ${accounts.length} 个账号`);
+      ElMessage.success(
+        t("dialog.export.successFile", { count: accounts.length }),
+      );
     }
   } catch (error) {
     if (error !== "cancel") {
-      ElMessage.error(`导出失败: ${error}`);
+      ElMessage.error(t("dialog.export.failed", { error }));
     }
   }
 }
 
 async function showAddGroupDialog() {
   try {
-    const { value } = await ElMessageBox.prompt("请输入分组名称", "添加分组", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
-      inputPattern: /^.{1,20}$/,
-      inputErrorMessage: "分组名称长度应为1-20个字符",
-    });
+    const { value } = await ElMessageBox.prompt(
+      t("dashboard.group.enterGroupName"),
+      t("dashboard.group.add"),
+      {
+        confirmButtonText: t("common.confirm"),
+        cancelButtonText: t("common.cancel"),
+        inputPattern: /^.{1,20}$/,
+        inputErrorMessage: t("validation.nicknameLength"), // Reusing similar validation or "Group name length 1-20"
+      },
+    );
 
     await settingsStore.addGroup(value);
-    ElMessage.success("分组添加成功");
+    ElMessage.success(t("dashboard.group.addSuccess"));
   } catch (error) {
     if (error !== "cancel") {
-      ElMessage.error(`添加分组失败: ${error}`);
+      ElMessage.error(t("dashboard.group.addFailed", { error }));
     }
   }
 }
@@ -2110,13 +2122,13 @@ async function showAddGroupDialog() {
 async function showRenameGroupDialog(oldName: string) {
   try {
     const { value } = await ElMessageBox.prompt(
-      "请输入新的分组名称",
-      `重命名分组 "${oldName}"`,
+      t("dashboard.group.enterNewName"),
+      t("dashboard.group.renameTitle", { name: oldName }),
       {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+        confirmButtonText: t("common.confirm"),
+        cancelButtonText: t("common.cancel"),
         inputPattern: /^.{1,20}$/,
-        inputErrorMessage: "分组名称长度应为1-20个字符",
+        inputErrorMessage: t("validation.groupNameLength"),
         inputValue: oldName,
       },
     );
@@ -2126,13 +2138,13 @@ async function showRenameGroupDialog(oldName: string) {
     }
 
     await settingsStore.renameGroup(oldName, value);
-    ElMessage.success("分组重命名成功");
+    ElMessage.success(t("dashboard.group.renameSuccess"));
 
     // 刷新账号列表
     await accountsStore.loadAccounts();
   } catch (error) {
     if (error !== "cancel") {
-      ElMessage.error(`重命名分组失败: ${error}`);
+      ElMessage.error(t("dashboard.group.renameFailed", { error }));
     }
   }
 }
@@ -2140,23 +2152,23 @@ async function showRenameGroupDialog(oldName: string) {
 async function showDeleteGroupConfirm(name: string) {
   try {
     await ElMessageBox.confirm(
-      `确定要删除分组 "${name}" 吗？该分组下的账号将被移至"未分组"`,
-      "删除分组",
+      t("dashboard.group.deleteConfirm", { name }),
+      t("dashboard.group.deleteTitle"),
       {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+        confirmButtonText: t("common.confirm"),
+        cancelButtonText: t("common.cancel"),
         type: "warning",
       },
     );
 
     await settingsStore.deleteGroup(name);
-    ElMessage.success("分组删除成功");
+    ElMessage.success(t("dashboard.group.deleteSuccess"));
 
     // 刷新账号列表
     await accountsStore.loadAccounts();
   } catch (error) {
     if (error !== "cancel") {
-      ElMessage.error(`删除分组失败: ${error}`);
+      ElMessage.error(t("dashboard.group.deleteFailed", { error }));
     }
   }
 }
@@ -2186,12 +2198,12 @@ function closeBatchGroupDialog() {
 async function handleBatchUpdateGroup() {
   const selectedIds = Array.from(accountsStore.selectedAccounts);
   if (selectedIds.length === 0) {
-    ElMessage.warning("请先选择账号");
+    ElMessage.warning(t("dialog.batchImport.message.selectAccountFirst"));
     return;
   }
 
   if (!batchGroupTarget.value) {
-    ElMessage.warning("请选择目标分组");
+    ElMessage.warning(t("dashboard.group.selectTargetGroup"));
     return;
   }
 

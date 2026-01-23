@@ -987,7 +987,7 @@ function getGroupStats(group: string): { masters: number; members: number } {
 // 获取分组标签（用于下拉选项显示）
 function getGroupLabel(group: string): string {
   const stats = getGroupStats(group);
-  return `${group} (${t("dialog.accountInfo.role.owner")}${stats.masters}/${t("dialog.accountInfo.role.member")}${stats.members})`;
+  return `${group} (${$t("dialog.accountInfo.role.owner")}${stats.masters}/${$t("dialog.accountInfo.role.member")}${stats.members})`;
 }
 
 // 格式化时间（短格式）
@@ -1045,7 +1045,7 @@ async function handleAddConfig() {
     newConfig.value.targetId = "";
     await loadConfigs();
   } catch (error) {
-    ElMessage.error(`${t("common.error")}: ${error}`);
+    ElMessage.error(`${$t("common.error")}: ${error}`);
   } finally {
     adding.value = false;
   }
@@ -1076,7 +1076,7 @@ async function handleToggleEnabled(config: AutoResetConfig, enabled: boolean) {
     );
   } catch (error) {
     config.enabled = !enabled;
-    ElMessage.error(`${t("common.error")}: ${error}`);
+    ElMessage.error(`${$t("common.error")}: ${error}`);
   } finally {
     config._updating = false;
   }
@@ -1101,7 +1101,7 @@ async function handleCheckNow(config: AutoResetConfig) {
 
     await loadConfigs();
   } catch (error) {
-    ElMessage.error(`${t("common.error")}: ${error}`);
+    ElMessage.error(`${$t("common.error")}: ${error}`);
   } finally {
     config._checking = false;
   }
@@ -1131,7 +1131,7 @@ async function handleCheckAll() {
 
     await loadConfigs();
   } catch (error) {
-    ElMessage.error(`${t("common.error")}: ${error}`);
+    ElMessage.error(`${$t("common.error")}: ${error}`);
   } finally {
     checkingAll.value = false;
   }
@@ -1156,7 +1156,7 @@ async function handleResetNow(config: AutoResetConfig) {
 
     await loadConfigs();
   } catch (error) {
-    ElMessage.error(`${t("common.error")}: ${error}`);
+    ElMessage.error(`${$t("common.error")}: ${error}`);
   } finally {
     config._resetting = false;
   }
@@ -1186,7 +1186,7 @@ async function handleResetAll() {
 
     await loadConfigs();
   } catch (error) {
-    ElMessage.error(`${t("common.error")}: ${error}`);
+    ElMessage.error(`${$t("common.error")}: ${error}`);
   } finally {
     resettingAll.value = false;
   }
@@ -1220,7 +1220,7 @@ async function handleSaveEdit() {
     editingConfig.value = null;
     await loadConfigs();
   } catch (error) {
-    ElMessage.error(`${t("common.error")}: ${error}`);
+    ElMessage.error(`${$t("common.error")}: ${error}`);
   }
 }
 
@@ -1249,7 +1249,7 @@ async function handleDeleteConfig(config: AutoResetConfig) {
     await loadConfigs();
   } catch (error) {
     if (error !== "cancel") {
-      ElMessage.error(`${t("common.error")}: ${error}`);
+      ElMessage.error(`${$t("common.error")}: ${error}`);
     }
   }
 }
@@ -1273,7 +1273,7 @@ async function handleClearRecords() {
     await loadStats();
   } catch (error) {
     if (error !== "cancel") {
-      ElMessage.error(`${t("common.error")}: ${error}`);
+      ElMessage.error(`${$t("common.error")}: ${error}`);
     }
   }
 }

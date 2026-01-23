@@ -49,8 +49,8 @@
             </el-icon>
           </div>
           <div class="card-info">
-            <span class="card-label">Windsurf 版本</span>
-            <span class="card-value">{{ windsurfVersion || '未检测到' }}</span>
+            <span class="card-label">{{ $t('dialog.about.windsurfVersion') }}</span>
+            <span class="card-value">{{ windsurfVersion || $t('dialog.about.notDetected') }}</span>
           </div>
         </div>
         
@@ -61,8 +61,8 @@
             </el-icon>
           </div>
           <div class="card-info">
-            <span class="card-label">当前账号</span>
-            <span class="card-value">{{ currentEmail || '未登录' }}</span>
+            <span class="card-label">{{ $t('dialog.about.currentAccount') }}</span>
+            <span class="card-value">{{ currentEmail || $t('dialog.about.notLoggedIn') }}</span>
           </div>
         </div>
       </div>
@@ -96,14 +96,14 @@
           <div class="title-icon-wrapper sponsor-icon">
             <el-icon><Coffee /></el-icon>
           </div>
-          请作者喝杯咖啡
+          {{ $t('dialog.about.buyCoffee') }}
         </h3>
         <div class="sponsor-grid">
           <div class="sponsor-item alipay">
             <div class="qr-wrapper">
               <img src="/支付宝支付.png" alt="支付宝" class="sponsor-qr" />
               <div class="qr-overlay">
-                <span class="qr-text">支付宝扫码</span>
+              <span class="qr-text">{{ $t('dialog.about.alipayScan') }}</span>
               </div>
             </div>
             <div class="sponsor-label">
@@ -115,7 +115,7 @@
             <div class="qr-wrapper">
               <img src="/微信支付.png" alt="微信支付" class="sponsor-qr" />
               <div class="qr-overlay">
-                <span class="qr-text">微信扫码</span>
+              <span class="qr-text">{{ $t('dialog.about.wechatScan') }}</span>
               </div>
             </div>
             <div class="sponsor-label">
@@ -131,80 +131,80 @@
           <div class="title-icon-wrapper">
             <el-icon><Star /></el-icon>
           </div>
-          功能特性
+          {{ $t('dialog.about.features.title') }}
         </h3>
         <div class="feature-grid">
           <div class="feature-card">
             <div class="feature-icon-wrapper">
               <el-icon><Document /></el-icon>
             </div>
-            <span class="feature-text">导出账号</span>
+            <span class="feature-text">{{ $t('dialog.about.features.exportAccounts') }}</span>
           </div>
           <div class="feature-card">
             <div class="feature-icon-wrapper">
               <el-icon><DataAnalysis /></el-icon>
             </div>
-            <span class="feature-text">统计信息</span>
+            <span class="feature-text">{{ $t('dialog.about.features.statistics') }}</span>
           </div>
           <div class="feature-card">
             <div class="feature-icon-wrapper">
               <el-icon><Refresh /></el-icon>
             </div>
-            <span class="feature-text">刷新状态</span>
+            <span class="feature-text">{{ $t('dialog.about.features.refreshStatus') }}</span>
           </div>
           <div class="feature-card">
             <div class="feature-icon-wrapper">
               <el-icon><User /></el-icon>
             </div>
-            <span class="feature-text">多账号管理</span>
+            <span class="feature-text">{{ $t('dialog.about.features.multiAccount') }}</span>
           </div>
           <div class="feature-card">
             <div class="feature-icon-wrapper">
               <el-icon><Switch /></el-icon>
             </div>
-            <span class="feature-text">切换账号</span>
+            <span class="feature-text">{{ $t('dialog.about.features.switchAccount') }}</span>
           </div>
           <div class="feature-card">
             <div class="feature-icon-wrapper">
               <el-icon><Delete /></el-icon>
             </div>
-            <span class="feature-text">删除账号</span>
+            <span class="feature-text">{{ $t('dialog.about.features.deleteAccount') }}</span>
           </div>
           <div class="feature-card">
             <div class="feature-icon-wrapper">
               <el-icon><Edit /></el-icon>
             </div>
-            <span class="feature-text">编辑账号</span>
+            <span class="feature-text">{{ $t('dialog.about.features.editAccount') }}</span>
           </div>
           <div class="feature-card">
             <div class="feature-icon-wrapper">
               <el-icon><Upload /></el-icon>
             </div>
-            <span class="feature-text">批量导入</span>
+            <span class="feature-text">{{ $t('dialog.about.features.batchImport') }}</span>
           </div>
           <div class="feature-card">
             <div class="feature-icon-wrapper">
               <el-icon><List /></el-icon>
             </div>
-            <span class="feature-text">操作日志</span>
+            <span class="feature-text">{{ $t('dialog.about.features.operationLogs') }}</span>
           </div>
           <div class="feature-card">
             <div class="feature-icon-wrapper">
               <el-icon><Setting /></el-icon>
             </div>
-            <span class="feature-text">设置</span>
+            <span class="feature-text">{{ $t('dialog.about.features.settings') }}</span>
           </div>
           <div class="feature-card">
             <div class="feature-icon-wrapper">
               <el-icon><Link /></el-icon>
             </div>
-            <span class="feature-text">获取链接</span>
+            <span class="feature-text">{{ $t('dialog.about.features.getLink') }}</span>
           </div>
           <div class="feature-card">
             <div class="feature-icon-wrapper">
               <el-icon><Lightning /></el-icon>
             </div>
-            <span class="feature-text">无感换号</span>
+            <span class="feature-text">{{ $t('dialog.about.features.seamlessSwitch') }}</span>
           </div>
         </div>
       </div>
@@ -212,13 +212,11 @@
       <div class="footer-section">
         <div class="footer-content">
           <p class="copyright">
-            Made with <span class="heart">❤️</span> by chaogei666
+            {{ $t('dialog.about.copyright') }}
           </p>
-          <p class="year">© 2025 All rights reserved</p>
+          <p class="year">{{ $t('dialog.about.rights') }}</p>
         </div>
-        <p class="disclaimer">
-          本软件仅供学习交流使用，请勿用于商业用途
-        </p>
+        <p class="disclaimer">{{ $t('dialog.about.disclaimer') }}</p>
       </div>
     </div>
   </el-dialog>

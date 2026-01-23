@@ -154,13 +154,11 @@
                 </div>
               </div>
             </div>
-            <div v-else class="no-payment">
-              未绑定支付方式
-            </div>
+              <div v-else class="no-payment">{{ $t('dialog.billing.noPaymentMethod') }}</div>
             
             <div class="invoice-link" v-if="billingData.invoice_url">
               <el-link type="primary" :href="billingData.invoice_url" target="_blank">
-                <el-icon><Link /></el-icon> 查看最近发票
+                <el-icon><Link /></el-icon> {{ $t('dialog.billing.viewRecentInvoices') }}
               </el-link>
             </div>
           </div>
@@ -317,28 +315,28 @@ function getSeatUsageColor() {
 // 格式化支付方式
 function formatPaymentType(type: string) {
   const types: Record<string, string> = {
-    'unionpay': '银联卡',
-    'card': '信用卡',
+    'unionpay': $t('dialog.billing.paymentTypes.unionpay'),
+    'card': $t('dialog.billing.paymentTypes.card'),
     'visa': 'Visa',
     'mastercard': 'MasterCard',
-    'alipay': '支付宝',
-    'wechat': '微信支付'
+    'alipay': $t('dialog.billing.paymentTypes.alipay'),
+    'wechat': $t('dialog.billing.paymentTypes.wechat')
   };
-  return types[type?.toLowerCase()] || type || '未知';
+  return types[type?.toLowerCase()] || type || $t('dialog.billing.unknown');
 }
 
 // 格式化套餐名称
 function formatPlanName(name: string) {
   const names: Record<string, string> = {
-    'pro': 'Pro 专业版',
-    'teams': 'Teams 团队版',
-    'enterprise': 'Enterprise 企业版',
-    'enterprise_self_serve': 'Enterprise 企业自助版',
-    'trial': 'Trial 试用版',
-    'free': 'Free 免费版',
-    'starter': 'Starter 入门版'
+    'pro': $t('dialog.billing.plans.pro'),
+    'teams': $t('dialog.billing.plans.teams'),
+    'enterprise': $t('dialog.billing.plans.enterprise'),
+    'enterprise_self_serve': $t('dialog.billing.plans.enterpriseSelfServe'),
+    'trial': $t('dialog.billing.plans.trial'),
+    'free': $t('dialog.billing.plans.free'),
+    'starter': $t('dialog.billing.plans.starter')
   };
-  return names[name?.toLowerCase()] || name || '未知';
+  return names[name?.toLowerCase()] || name || $t('dialog.billing.unknown');
 }
 
 function handleClose() {
@@ -350,9 +348,9 @@ async function copyToClipboard() {
   if (props.billingData) {
     try {
       await navigator.clipboard.writeText(JSON.stringify(props.billingData, null, 2));
-      ElMessage.success('已复制到剪贴板');
+      ElMessage.success($t('dialog.billing.copiedToClipboard'));
     } catch (error) {
-      ElMessage.error('复制失败');
+      ElMessage.error($t('dialog.billing.copyFailed'));
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="uiStore.showEditAccountDialog"
-    :title="t('dialog.editAccount.title')"
+    :title="$t('dialog.editAccount.title')"
     width="500px"
     :close-on-click-modal="false"
   >
@@ -13,7 +13,7 @@
       label-width="100px"
       autocomplete="off"
     >
-      <el-form-item :label="t('dialog.editAccount.email')">
+      <el-form-item :label="$t('dialog.editAccount.email')">
         <el-input
           v-model="formData.email"
           disabled
@@ -22,45 +22,45 @@
         />
       </el-form-item>
 
-      <el-form-item :label="t('dialog.editAccount.nickname')" prop="nickname">
+      <el-form-item :label="$t('dialog.editAccount.nickname')" prop="nickname">
         <el-input
           v-model="formData.nickname"
-          :placeholder="t('dialog.editAccount.nicknamePlaceholder')"
+          :placeholder="$t('dialog.editAccount.nicknamePlaceholder')"
           :prefix-icon="User"
         />
       </el-form-item>
 
       <el-form-item
-        :label="t('dialog.editAccount.changePassword')"
+        :label="$t('dialog.editAccount.changePassword')"
         prop="newPassword"
       >
         <el-input
           v-model="formData.newPassword"
           type="password"
-          :placeholder="t('dialog.editAccount.passwordPlaceholder')"
+          :placeholder="$t('dialog.editAccount.passwordPlaceholder')"
           show-password
           autocomplete="new-password"
         />
       </el-form-item>
 
       <el-form-item
-        :label="t('dialog.editAccount.confirmPassword')"
+        :label="$t('dialog.editAccount.confirmPassword')"
         prop="confirmPassword"
         v-if="formData.newPassword"
       >
         <el-input
           v-model="formData.confirmPassword"
           type="password"
-          :placeholder="t('dialog.editAccount.confirmPasswordPlaceholder')"
+          :placeholder="$t('dialog.editAccount.confirmPasswordPlaceholder')"
           show-password
           autocomplete="new-password"
         />
       </el-form-item>
 
-      <el-form-item :label="t('dialog.editAccount.group')">
+      <el-form-item :label="$t('dialog.editAccount.group')">
         <el-select
           v-model="formData.group"
-          :placeholder="t('dialog.editAccount.groupPlaceholder')"
+          :placeholder="$t('dialog.editAccount.groupPlaceholder')"
           clearable
         >
           <el-option
@@ -72,13 +72,13 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item :label="t('dialog.editAccount.tags')">
+      <el-form-item :label="$t('dialog.editAccount.tags')">
         <el-select
           v-model="formData.tags"
           multiple
           filterable
           allow-create
-          :placeholder="t('dialog.editAccount.tagsPlaceholder')"
+          :placeholder="$t('dialog.editAccount.tagsPlaceholder')"
           style="width: 100%"
           @change="handleTagsChange"
         >
@@ -102,7 +102,7 @@
       </el-form-item>
 
       <el-form-item
-        :label="t('dialog.editAccount.tagColor')"
+        :label="$t('dialog.editAccount.tagColor')"
         v-if="formData.tags.length > 0"
       >
         <TagColorPicker

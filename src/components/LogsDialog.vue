@@ -91,7 +91,7 @@ async function loadLogs() {
   try {
     await settingsStore.loadLogs(100);
   } catch (error) {
-    ElMessage.error(`${t("dialog.logs.error")}: ${error}`);
+    ElMessage.error(`${$t("dialog.logs.error")}: ${error}`);
   }
 }
 
@@ -111,7 +111,7 @@ async function clearLogs() {
     ElMessage.success(t("dialog.logs.success"));
   } catch (error) {
     if (error !== "cancel") {
-      ElMessage.error(`${t("dialog.logs.error")}: ${error}`);
+      ElMessage.error(`${$t("dialog.logs.error")}: ${error}`);
     }
   }
 }

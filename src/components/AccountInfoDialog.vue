@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="visible"
-    :title="t('dialog.accountInfo.title')"
+    :title="$t('dialog.accountInfo.title')"
     width="850px"
     class="account-info-dialog"
     :close-on-click-modal="false"
@@ -9,13 +9,13 @@
   >
     <div v-if="loading" class="loading-container">
       <el-icon class="is-loading" size="32"><Loading /></el-icon>
-      <p>{{ t("dialog.accountInfo.loading") }}</p>
+      <p>{{$t("dialog.accountInfo.loading") }}</p>
     </div>
 
     <div v-else-if="accountInfo" class="dialog-content">
       <el-tabs class="custom-tabs">
         <!-- 用户详情页面 -->
-        <el-tab-pane :label="t('dialog.accountInfo.tabs.userDetails')">
+        <el-tab-pane :label="$t('dialog.accountInfo.tabs.userDetails')">
           <template #label>
             <span class="tab-label"
               ><el-icon><User /></el-icon>
@@ -30,7 +30,7 @@
 
           <div v-else-if="!userDetails" class="empty-container">
             <el-empty
-              :description="t('dialog.accountInfo.noData')"
+              :description="$t('dialog.accountInfo.noData')"
               :image-size="100"
             >
               <el-button @click="loadUserDetails" type="primary" size="small">{{
@@ -65,7 +65,7 @@
                 <div class="profile-info">
                   <div class="name-row">
                     <h3 class="user-name">
-                      {{ userDetails.user?.name || "未知用户" }}
+                      {{ userDetails.user?.name || $t('dialog.accountInfo.unknownUser') }}
                     </h3>
                     <el-tag
                       size="small"
@@ -75,7 +75,7 @@
                     >
                       {{
                         userDetails.role?.role_name ||
-                        (userDetails.is_root_admin ? "Root Admin" : "Member")
+                        (userDetails.is_root_admin ? $t('dialog.accountInfo.rootAdmin') : $t('dialog.accountInfo.member'))
                       }}
                     </el-tag>
                   </div>
@@ -83,7 +83,7 @@
                     <span class="email">{{
                       displayEmail(userDetails.user?.email)
                     }}</span>
-                    <el-tooltip content="复制邮箱"
+                    <el-tooltip :content="$t('dialog.accountInfo.copyEmail')"
                       ><el-icon
                         class="copy-icon"
                         @click="copyText(userDetails.user?.email)"
@@ -1175,7 +1175,7 @@
                       <el-tooltip
                         v-for="i in 31"
                         :key="i"
-                        :content="`${t('dialog.accountInfo.role.permissionMap')} ${i}: ${hasPermission(userDetails.permissions, i) ? t('dialog.accountInfo.role.granted') : t('dialog.accountInfo.role.notGranted')}`"
+                        :content="`${$t('dialog.accountInfo.role.permissionMap')} ${i}: ${hasPermission(userDetails.permissions, i) ? $t('dialog.accountInfo.role.granted') : $t('dialog.accountInfo.role.notGranted')}`"
                       >
                         <span
                           class="perm-dot"
@@ -1192,7 +1192,7 @@
 
             <!-- 原始数据折叠 -->
             <el-collapse v-if="parsedData" class="raw-data-collapse">
-              <el-collapse-item :title="t('dialog.accountInfo.firebase.raw')">
+              <el-collapse-item :title="$t('dialog.accountInfo.firebase.raw')">
                 <pre class="raw-data">{{
                   JSON.stringify(parsedData, null, 2)
                 }}</pre>
@@ -1202,7 +1202,7 @@
         </el-tab-pane>
 
         <!-- 本地信息 -->
-        <el-tab-pane :label="t('dialog.accountInfo.tabs.localInfo')">
+        <el-tab-pane :label="$t('dialog.accountInfo.tabs.localInfo')">
           <template #label>
             <span class="tab-label"
               ><el-icon><Monitor /></el-icon>
@@ -1330,7 +1330,7 @@
 
         <!-- Firebase信息 -->
         <el-tab-pane
-          :label="t('dialog.accountInfo.tabs.firebase')"
+          :label="$t('dialog.accountInfo.tabs.firebase')"
           v-if="accountInfo.firebase_info"
         >
           <template #label>

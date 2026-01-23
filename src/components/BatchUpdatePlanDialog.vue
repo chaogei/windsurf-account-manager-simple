@@ -14,8 +14,8 @@
           <el-icon><Trophy /></el-icon>
         </div>
         <div class="header-text">
-          <h3>批量更换订阅</h3>
-          <p>并发执行，快速更换多个账号的订阅计划</p>
+          <h3>{{ $t('dialog.batchUpdatePlan.title') }}</h3>
+          <p>{{ $t('dialog.batchUpdatePlan.description') }}</p>
         </div>
       </div>
     </template>
@@ -27,12 +27,12 @@
           <el-icon><User /></el-icon>
         </div>
         <div class="card-info">
-          <span class="label">已选择账号</span>
+          <span class="label">{{ $t('dialog.batchUpdatePlan.selectedAccounts') }}</span>
           <span class="count">{{ selectedAccountIds.length }}</span>
         </div>
         <div class="card-badge" v-if="loopMode">
           <el-icon><Refresh /></el-icon>
-          循环模式
+          <span>{{ $t('dialog.batchUpdatePlan.loopMode') }}</span>
         </div>
       </div>
       
@@ -40,7 +40,7 @@
       <div class="plan-selection">
         <div class="section-header">
           <el-icon><Medal /></el-icon>
-          <span>选择目标计划</span>
+          <span>{{ $t('dialog.batchUpdatePlan.selectTargetPlan') }}</span>
         </div>
         <div class="plan-cards">
           <div 
@@ -68,16 +68,16 @@
       <div class="payment-period-section">
         <div class="period-label">
           <el-icon><Calendar /></el-icon>
-          <span>付款周期</span>
+          <span>{{ $t('dialog.batchUpdatePlan.paymentPeriod') }}</span>
         </div>
         <el-radio-group v-model="paymentPeriod" :disabled="isRunning" size="small">
           <el-radio-button :value="1">
             <el-icon><Clock /></el-icon>
-            月付
+            {{ $t('dialog.batchUpdatePlan.monthly') }}
           </el-radio-button>
           <el-radio-button :value="2">
             <el-icon><Calendar /></el-icon>
-            年付
+            {{ $t('dialog.batchUpdatePlan.yearly') }}
           </el-radio-button>
         </el-radio-group>
       </div>
@@ -89,8 +89,8 @@
             <el-icon><Refresh /></el-icon>
           </div>
           <div class="loop-info">
-            <div class="loop-title">循环更换模式</div>
-            <div class="loop-desc">每个账号独立循环执行，连续3次失败后自动停止</div>
+            <div class="loop-title">{{ $t('dialog.batchUpdatePlan.loopModeTitle') }}</div>
+            <div class="loop-desc">{{ $t('dialog.batchUpdatePlan.loopModeDesc') }}</div>
           </div>
         </div>
         <el-switch 
@@ -106,7 +106,7 @@
           <div class="header-left">
             <el-icon v-if="isRunning" class="is-loading"><Loading /></el-icon>
             <el-icon v-else><SuccessFilled /></el-icon>
-            <span>{{ isRunning ? '正在执行' : '执行完成' }}</span>
+            <span>{{ isRunning ? $t('dialog.batchUpdatePlan.running') : $t('dialog.batchUpdatePlan.completed') }}</span>
           </div>
           <el-tag 
             :type="isRunning ? 'primary' : 'success'" 
@@ -114,7 +114,7 @@
             size="small"
             round
           >
-            {{ isRunning ? '运行中' : '已完成' }}
+            {{ isRunning ? $t('dialog.batchUpdatePlan.running') : $t('dialog.batchUpdatePlan.completed') }}
           </el-tag>
         </div>
         
@@ -123,29 +123,29 @@
           <div class="stat-card success">
             <el-icon><SuccessFilled /></el-icon>
             <div class="stat-value">{{ stats.successCount }}</div>
-            <div class="stat-label">成功</div>
+            <div class="stat-label">{{ $t('dialog.batchUpdatePlan.success') }}</div>
           </div>
           <div class="stat-card failed">
             <el-icon><CircleCloseFilled /></el-icon>
             <div class="stat-value">{{ stats.failedCount }}</div>
-            <div class="stat-label">失败</div>
+            <div class="stat-label">{{ $t('dialog.batchUpdatePlan.failed') }}</div>
           </div>
           <div class="stat-card total">
             <el-icon><DataLine /></el-icon>
             <div class="stat-value">{{ stats.totalAttempts }}</div>
-            <div class="stat-label">总计</div>
+            <div class="stat-label">{{ $t('dialog.batchUpdatePlan.total') }}</div>
           </div>
           <div class="stat-card progress">
             <el-icon><User /></el-icon>
             <div class="stat-value">{{ stats.processedAccounts }}/{{ selectedAccountIds.length }}</div>
-            <div class="stat-label">进度</div>
+            <div class="stat-label">{{ $t('dialog.batchUpdatePlan.progress') }}</div>
           </div>
         </div>
         
         <!-- 连续失败警告 -->
         <div v-if="stats.consecutiveFailures > 0" class="warning-alert">
           <el-icon><Warning /></el-icon>
-          <span>连续失败: {{ stats.consecutiveFailures }} / 3</span>
+          <span>{{ $t('dialog.batchUpdatePlan.consecutiveFailures', { count: stats.consecutiveFailures, total: 3 }) }}</span>
         </div>
         
         <!-- 最后错误 -->
@@ -159,12 +159,12 @@
           <div class="logs-header">
             <div class="header-left">
               <el-icon><Document /></el-icon>
-              <span>执行日志</span>
+              <span>{{ $t('dialog.batchUpdatePlan.executionLogs') }}</span>
               <el-tag size="small" type="info" effect="plain">{{ executionLogs.length }}</el-tag>
             </div>
             <el-button link size="small" @click="executionLogs = []">
               <el-icon><Delete /></el-icon>
-              清空
+              {{ $t('dialog.batchUpdatePlan.clear') }}
             </el-button>
           </div>
           <div class="logs-container" ref="logsContainer">
@@ -184,7 +184,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="handleClose" :disabled="isRunning" size="large">
-          取消
+          {{ $t('dialog.batchUpdatePlan.cancel') }}
         </el-button>
         <el-button
           v-if="isRunning"
@@ -193,7 +193,7 @@
           @click="stopExecution"
         >
           <el-icon><VideoPause /></el-icon>
-          停止执行
+          {{ $t('dialog.batchUpdatePlan.stopExecution') }}
         </el-button>
         <el-button
           v-else
@@ -203,7 +203,7 @@
           :disabled="!selectedPlan || selectedAccountIds.length === 0"
         >
           <el-icon><VideoPlay /></el-icon>
-          {{ loopMode ? '开始循环更换' : '开始批量更换' }}
+          {{ loopMode ? $t('dialog.batchUpdatePlan.startLoopUpdate') : $t('dialog.batchUpdatePlan.startBatchUpdate') }}
         </el-button>
       </div>
     </template>

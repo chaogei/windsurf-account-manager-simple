@@ -146,7 +146,7 @@ async function loadStats() {
   try {
     stats.value = await settingsApi.getStats();
   } catch (error) {
-    ElMessage.error(`${t("dialog.stats.loadError")}: ${error}`);
+    ElMessage.error(`${$t("dialog.stats.loadError")}: ${error}`);
   } finally {
     loading.value = false;
   }

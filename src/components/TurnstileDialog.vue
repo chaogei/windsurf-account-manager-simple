@@ -1,14 +1,14 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    title="人机验证"
+    :title="$t('dialog.turnstile.title')"
     width="400px"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     @close="handleClose"
   >
     <div class="turnstile-container">
-      <p class="turnstile-tip">请完成验证以获取试用链接</p>
+      <p class="turnstile-tip">{{ $t('dialog.turnstile.completeVerification') }}</p>
       
       <div class="turnstile-wrapper">
         <div 
@@ -19,27 +19,27 @@
       
       <p v-if="status === 'loading'" class="status-text loading">
         <el-icon class="is-loading"><Loading /></el-icon>
-        加载验证中...
+        {{ $t('dialog.turnstile.loading') }}
       </p>
       <p v-else-if="status === 'success'" class="status-text success">
         <el-icon><CircleCheck /></el-icon>
-        验证成功！
+        {{ $t('dialog.turnstile.success') }}
       </p>
       <p v-else-if="status === 'error'" class="status-text error">
         <el-icon><CircleClose /></el-icon>
-        验证失败，请重试
+        {{ $t('dialog.turnstile.error') }}
       </p>
     </div>
     
     <template #footer>
-      <el-button @click="handleClose">取消</el-button>
+      <el-button @click="handleClose">{{ $t('common.cancel') }}</el-button>
       <el-button 
         type="primary" 
         :disabled="status !== 'success'"
         :loading="isSubmitting"
         @click="handleConfirm"
       >
-        获取链接
+        {{ $t('dialog.turnstile.getLink') }}
       </el-button>
     </template>
   </el-dialog>

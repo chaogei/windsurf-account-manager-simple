@@ -15,7 +15,7 @@
   >
     <div class="card-header">
       <!-- 拖拽手柄 - simple 版本已禁用
-      <div class="drag-handle" title="拖拽排序">
+      <div class="drag-handle" :title="$t('dialog.accountCard.dragHandle')">
         <el-icon><Rank /></el-icon>
       </div>
       -->
@@ -82,7 +82,7 @@
             :color="quotaColor"
             :show-text="false"
           />
-          <span class="quota-percentage">{{ quotaPercentage }}%</span>
+          <span class="quota-percentage">{{ quotaPercentage }}% {{ $t('dialog.accountCard.quotaPercentage') }}</span>
         </div>
 
         <!-- 订阅到期时间（整合在配额区块内） -->

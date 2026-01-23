@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="使用分析"
+    :title="$t('dialog.analytics.title')"
     width="90%"
     class="analytics-dialog"
     :close-on-click-modal="false"
@@ -15,7 +15,7 @@
             <el-icon><Document /></el-icon>
           </div>
           <div class="stat-content">
-            <div class="stat-label">总代码行数</div>
+            <div class="stat-label">{{ $t('dialog.analytics.totalCodeLines') }}</div>
             <div class="stat-value">{{ formatNumber(analyticsData.summary.total_accepted_lines) }}</div>
           </div>
         </div>
@@ -25,7 +25,7 @@
             <el-icon><TrendCharts /></el-icon>
           </div>
           <div class="stat-content">
-            <div class="stat-label">日均代码行数</div>
+            <div class="stat-label">{{ $t('dialog.analytics.avgDailyCodeLines') }}</div>
             <div class="stat-value">{{ analyticsData.summary.avg_daily_accepted_lines.toFixed(1) }}</div>
           </div>
         </div>
@@ -35,7 +35,7 @@
             <el-icon><ChatLineRound /></el-icon>
           </div>
           <div class="stat-content">
-            <div class="stat-label">总会话数</div>
+            <div class="stat-label">{{ $t('dialog.analytics.totalSessions') }}</div>
             <div class="stat-value">{{ analyticsData.summary.total_sessions }}</div>
           </div>
         </div>
@@ -45,7 +45,7 @@
             <el-icon><Coin /></el-icon>
           </div>
           <div class="stat-content">
-            <div class="stat-label">总Token消耗</div>
+            <div class="stat-label">{{ $t('dialog.analytics.totalTokenConsumption') }}</div>
             <div class="stat-value">{{ formatNumber(analyticsData.summary.total_tokens / 100) }}</div>
           </div>
         </div>
@@ -55,7 +55,7 @@
             <el-icon><Cpu /></el-icon>
           </div>
           <div class="stat-content">
-            <div class="stat-label">主要模型</div>
+            <div class="stat-label">{{ $t('dialog.analytics.primaryModel') }}</div>
             <div class="stat-value small" :title="analyticsData.summary.primary_model">{{ formatModelName(analyticsData.summary.primary_model) }}</div>
           </div>
         </div>
@@ -65,7 +65,7 @@
             <el-icon><Tools /></el-icon>
           </div>
           <div class="stat-content">
-            <div class="stat-label">主要工具</div>
+            <div class="stat-label">{{ $t('dialog.analytics.primaryTool') }}</div>
             <div class="stat-value small" :title="analyticsData.summary.primary_tool">{{ formatToolName(analyticsData.summary.primary_tool) }}</div>
           </div>
         </div>
@@ -75,7 +75,7 @@
       <div v-if="!loading && analyticsData && hasPercentCodeWritten" class="ai-contribution-section">
         <h3 class="section-title">
           <el-icon><Cpu /></el-icon>
-          AI 代码贡献
+          {{ $t('dialog.analytics.aiCodeContribution') }}
         </h3>
         <div class="ai-contribution-cards">
           <div class="contribution-card ai-percent">
@@ -87,14 +87,14 @@
               </svg>
               <div class="percent-text">{{ aiContributionPercent.toFixed(1) }}%</div>
             </div>
-            <div class="contribution-label">AI 代码占比</div>
+            <div class="contribution-label">{{ $t('dialog.analytics.aiCodePercentage') }}</div>
           </div>
           
           <div class="contribution-breakdown">
             <div class="breakdown-item">
               <div class="breakdown-bar autocomplete" :style="{ width: autocompletePercent + '%' }"></div>
               <div class="breakdown-info">
-                <span class="breakdown-name">自动补全</span>
+                <span class="breakdown-name">{{ $t('dialog.analytics.autocomplete') }}</span>
                 <span class="breakdown-value">{{ formatBytes(analyticsData.percent_code_written.codeium_bytes_by_autocomplete) }}</span>
               </div>
             </div>
@@ -108,14 +108,14 @@
             <div class="breakdown-item">
               <div class="breakdown-bar command" :style="{ width: commandPercent + '%' }"></div>
               <div class="breakdown-info">
-                <span class="breakdown-name">命令</span>
+                <span class="breakdown-name">{{ $t('dialog.analytics.command') }}</span>
                 <span class="breakdown-value">{{ formatBytes(analyticsData.percent_code_written.codeium_bytes_by_command) }}</span>
               </div>
             </div>
             <div class="breakdown-item">
               <div class="breakdown-bar user" :style="{ width: userPercent + '%' }"></div>
               <div class="breakdown-info">
-                <span class="breakdown-name">用户编写</span>
+                <span class="breakdown-name">{{ $t('dialog.analytics.userWritten') }}</span>
                 <span class="breakdown-value">{{ formatBytes(analyticsData.percent_code_written.user_bytes) }}</span>
               </div>
             </div>
@@ -127,28 +127,28 @@
       <div v-if="!loading && analyticsData && hasCompletionStats" class="completion-stats-section">
         <h3 class="section-title">
           <el-icon><Finished /></el-icon>
-          代码补全统计
+          {{ $t('dialog.analytics.completionStats') }}
         </h3>
         <div class="completion-stats-cards">
           <div class="mini-stat-card">
             <div class="mini-stat-value success">{{ formatNumber(analyticsData.completion_stats.num_acceptances) }}</div>
-            <div class="mini-stat-label">接受次数</div>
+            <div class="mini-stat-label">{{ $t('dialog.analytics.acceptanceCount') }}</div>
           </div>
           <div class="mini-stat-card">
             <div class="mini-stat-value warning">{{ formatNumber(analyticsData.completion_stats.num_rejections) }}</div>
-            <div class="mini-stat-label">拒绝次数</div>
+            <div class="mini-stat-label">{{ $t('dialog.analytics.rejectionCount') }}</div>
           </div>
           <div class="mini-stat-card">
             <div class="mini-stat-value primary">{{ analyticsData.completion_stats.acceptance_rate.toFixed(1) }}%</div>
-            <div class="mini-stat-label">接受率</div>
+            <div class="mini-stat-label">{{ $t('dialog.analytics.acceptanceRate') }}</div>
           </div>
           <div class="mini-stat-card">
             <div class="mini-stat-value info">{{ formatNumber(analyticsData.completion_stats.num_lines_accepted) }}</div>
-            <div class="mini-stat-label">接受行数</div>
+            <div class="mini-stat-label">{{ $t('dialog.analytics.acceptedLines') }}</div>
           </div>
           <div class="mini-stat-card">
             <div class="mini-stat-value">{{ analyticsData.completion_stats.active_developer_days }}</div>
-            <div class="mini-stat-label">活跃天数</div>
+            <div class="mini-stat-label">{{ $t('dialog.analytics.activeDays') }}</div>
           </div>
         </div>
       </div>
@@ -157,32 +157,32 @@
       <div v-if="!loading && analyticsData && hasChatStats" class="chat-stats-section">
         <h3 class="section-title">
           <el-icon><ChatLineRound /></el-icon>
-          Chat 统计
+          {{ $t('dialog.analytics.chatStats') }}
         </h3>
         <div class="chat-stats-cards">
           <div class="mini-stat-card">
             <div class="mini-stat-value primary">{{ formatNumber(analyticsData.chat_stats.chats_sent) }}</div>
-            <div class="mini-stat-label">发送消息</div>
+            <div class="mini-stat-label">{{ $t('dialog.analytics.messagesSent') }}</div>
           </div>
           <div class="mini-stat-card">
             <div class="mini-stat-value success">{{ formatNumber(analyticsData.chat_stats.chats_accepted) }}</div>
-            <div class="mini-stat-label">采纳建议</div>
+            <div class="mini-stat-label">{{ $t('dialog.analytics.suggestionsAdopted') }}</div>
           </div>
           <div class="mini-stat-card">
             <div class="mini-stat-value info">{{ formatNumber(analyticsData.chat_stats.chat_code_blocks_used) }}</div>
-            <div class="mini-stat-label">代码块使用</div>
+            <div class="mini-stat-label">{{ $t('dialog.analytics.codeBlocksUsed') }}</div>
           </div>
           <div class="mini-stat-card">
             <div class="mini-stat-value warning">{{ formatNumber(analyticsData.chat_stats.function_explain_count) }}</div>
-            <div class="mini-stat-label">函数解释</div>
+            <div class="mini-stat-label">{{ $t('dialog.analytics.functionExplain') }}</div>
           </div>
           <div class="mini-stat-card">
             <div class="mini-stat-value">{{ formatNumber(analyticsData.chat_stats.function_refactor_count) }}</div>
-            <div class="mini-stat-label">函数重构</div>
+            <div class="mini-stat-label">{{ $t('dialog.analytics.functionRefactor') }}</div>
           </div>
           <div class="mini-stat-card">
             <div class="mini-stat-value danger">{{ formatNumber(analyticsData.chat_stats.function_unit_tests_count) }}</div>
-            <div class="mini-stat-label">单元测试</div>
+            <div class="mini-stat-label">{{ $t('dialog.analytics.unitTests') }}</div>
           </div>
         </div>
       </div>

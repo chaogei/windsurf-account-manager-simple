@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    title="团队设置 (Team Settings)"
+    :title="$t('dialog.teamSettings.title')"
     width="700px"
     :close-on-click-modal="false"
     destroy-on-close
@@ -10,22 +10,22 @@
     <div v-loading="loading" class="settings-container">
       <!-- Windsurf Settings -->
       <div class="settings-section">
-        <h3 class="section-title">Windsurf 设置</h3>
+        <h3 class="section-title">{{ $t('dialog.teamSettings.windsurfSettings') }}</h3>
         
         <!-- Models -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">模型配置 (Models)</span>
-            <span class="setting-desc">配置要在 Windsurf 中使用的模型</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.modelsConfig') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.modelsConfigDesc') }}</span>
           </div>
-          <el-button size="small" @click="openModelsConfig">配置</el-button>
+          <el-button size="small" @click="openModelsConfig">{{ $t('dialog.teamSettings.configure') }}</el-button>
         </div>
         
         <!-- Enable Web Search -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">网页搜索 (Web Search)</span>
-            <span class="setting-desc">允许 Cascade 搜索网页获取相关信息</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.webSearch') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.webSearchDesc') }}</span>
           </div>
           <el-switch v-model="settings.enableWebSearch" @change="handleSettingChange" />
         </div>
@@ -33,8 +33,8 @@
         <!-- Auto Run Terminal Commands -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">自动运行命令 (Auto Run Commands)</span>
-            <span class="setting-desc">允许 Cascade 在用户机器上自动执行命令</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.autoRunCommands') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.autoRunCommandsDesc') }}</span>
           </div>
           <el-switch v-model="settings.allowAutoRunCommands" @change="handleSettingChange" />
         </div>
@@ -42,8 +42,8 @@
         <!-- MCP Servers -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">MCP 服务器</span>
-            <span class="setting-desc">允许用户使用和配置 MCP 服务器</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.mcpServers') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.mcpServersDesc') }}</span>
           </div>
           <el-switch v-model="settings.allowMcpServers" @change="handleSettingChange" />
         </div>
@@ -51,30 +51,30 @@
         <!-- Whitelisted MCP Servers -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">MCP 白名单</span>
-            <span class="setting-desc">未添加 MCP 服务器时，默认所有服务器都在白名单中</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.mcpWhitelist') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.mcpWhitelistDesc') }}</span>
           </div>
-          <el-button size="small" @click="openMcpWhitelist">添加服务器</el-button>
+          <el-button size="small" @click="openMcpWhitelist">{{ $t('dialog.teamSettings.addServer') }}</el-button>
         </div>
         
         <!-- App Deploys -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">应用部署 (App Deploys) <el-tag size="small" type="warning">BETA</el-tag></span>
-            <span class="setting-desc">管理团队在 Cascade 中的部署权限</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.appDeploys') }} <el-tag size="small" type="warning">BETA</el-tag></span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.appDeploysDesc') }}</span>
           </div>
           <el-select v-model="settings.appDeploysMode" size="small" style="width: 160px" @change="handleSettingChange">
-            <el-option label="完全部署权限" value="full" />
-            <el-option label="仅内部团队" value="teams" />
-            <el-option label="禁用部署" value="disabled" />
+            <el-option :label="$t('dialog.teamSettings.fullDeployPermission')" value="full" />
+            <el-option :label="$t('dialog.teamSettings.internalTeamsOnly')" value="teams" />
+            <el-option :label="$t('dialog.teamSettings.disableDeployment')" value="disabled" />
           </el-select>
         </div>
         
         <!-- Conversation Sharing -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">对话分享 (Conversation Sharing)</span>
-            <span class="setting-desc">允许团队成员分享 Cascade 对话</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.conversationSharing') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.conversationSharingDesc') }}</span>
           </div>
           <el-switch v-model="settings.allowConversationSharing" @change="handleSettingChange" />
         </div>
@@ -82,8 +82,8 @@
         <!-- DeepWiki -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">DeepWiki</span>
-            <span class="setting-desc">启用 DeepWiki 悬浮卡片和代码符号的 IDE 内文章</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.deepwiki') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.deepwikiDesc') }}</span>
           </div>
           <el-switch v-model="settings.enableDeepwiki" @change="handleSettingChange" />
         </div>
@@ -91,8 +91,8 @@
         <!-- Fast Context -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">快速上下文 (Fast Context)</span>
-            <span class="setting-desc">启用快速上下文功能</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.fastContext') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.fastContextDesc') }}</span>
           </div>
           <el-switch v-model="settings.enableFastContext" @change="handleSettingChange" />
         </div>
@@ -100,8 +100,8 @@
         <!-- Codemaps -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">代码地图 (Codemaps)</span>
-            <span class="setting-desc">生成、查看和分享交互式代码地图</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.codemaps') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.codemapsDesc') }}</span>
           </div>
           <el-button size="small" @click="codemapsDialogVisible = true">配置</el-button>
         </div>
@@ -109,8 +109,8 @@
         <!-- Vibe and Replace -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">Vibe and Replace</span>
-            <span class="setting-desc">启用高级代码编辑的 Vibe and Replace 功能</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.vibeAndReplace') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.vibeAndReplaceDesc') }}</span>
           </div>
           <el-switch v-model="settings.allowVibeAndReplace" @change="handleSettingChange" />
         </div>
@@ -118,8 +118,8 @@
         <!-- Github Integration -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">Github 集成</span>
-            <span class="setting-desc">在团队的 GitHub 组织中安装 Windsurf 进行 PR 审查</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.githubIntegration') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.githubIntegrationDesc') }}</span>
           </div>
           <el-switch v-model="settings.allowGithubReviews" @change="handleSettingChange" />
         </div>
@@ -127,13 +127,13 @@
       
       <!-- Other Settings -->
       <div class="settings-section">
-        <h3 class="section-title">其他设置</h3>
+        <h3 class="section-title">{{ $t('dialog.teamSettings.otherSettings') }}</h3>
         
         <!-- Domain Management -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">域名管理 (Domain Management)</span>
-            <span class="setting-desc">管理和验证团队域名</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.domainManagement') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.domainManagementDesc') }}</span>
           </div>
           <el-button size="small" disabled>配置</el-button>
         </div>
@@ -141,8 +141,8 @@
         <!-- SSO and SAML Configuration -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">SSO 和 SAML 配置</span>
-            <span class="setting-desc">设置 Azure、Google、Okta 或自定义 SAML 单点登录</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.ssoSamlConfig') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.ssoSamlConfigDesc') }}</span>
           </div>
           <el-button size="small" disabled>配置</el-button>
         </div>
@@ -150,8 +150,8 @@
         <!-- Service Key Configuration -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">服务密钥配置 (Service Key)</span>
-            <span class="setting-desc">生成用于 SCIM 用户配置和分析 API 的服务密钥</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.serviceKeyConfig') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.serviceKeyConfigDesc') }}</span>
           </div>
           <el-button size="small" disabled>配置</el-button>
         </div>
@@ -159,8 +159,8 @@
         <!-- Role Management -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">角色管理 (Role Management)</span>
-            <span class="setting-desc">管理用户可拥有的角色列表</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.roleManagement') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.roleManagementDesc') }}</span>
           </div>
           <el-button size="small" disabled>配置</el-button>
         </div>
@@ -168,28 +168,19 @@
         <!-- Individual Level Analytics -->
         <div class="setting-item">
           <div class="setting-info">
-            <span class="setting-name">个人级分析 (Individual Analytics)</span>
-            <span class="setting-desc">个人级别的使用分析功能</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.individualAnalytics') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.individualAnalyticsDesc') }}</span>
           </div>
           <el-switch v-model="settings.allowIndividualAnalytics" @change="handleSettingChange" />
-        </div>
-        
-        <!-- Attribution Toggle -->
-        <div class="setting-item">
-          <div class="setting-info">
-            <span class="setting-name">代码归属 (Attribution) <el-tag size="small" type="warning">BETA</el-tag></span>
-            <span class="setting-desc">启用后 Windsurf 将阻止写入有归属的代码</span>
-          </div>
-          <el-switch v-model="settings.allowAttribution" @change="handleSettingChange" />
         </div>
       </div>
     </div>
     
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="dialogVisible = false">关闭</el-button>
+        <el-button @click="dialogVisible = false">{{ $t('dialog.teamSettings.cancel') }}</el-button>
         <el-button type="primary" :loading="saving" @click="saveSettings">
-          <el-icon><Check /></el-icon> 保存设置
+          <el-icon><Check /></el-icon> {{ $t('dialog.teamSettings.saveSettings') }}
         </el-button>
       </div>
     </template>
@@ -203,11 +194,11 @@
       @open="loadModelsConfig"
     >
       <div class="models-config" v-loading="loadingModels">
-        <p class="models-desc">配置要在 Windsurf 中使用的模型，每个类别可选择多个模型</p>
+        <p class="models-desc">{{ $t('dialog.teamSettings.modelsConfigDesc') }}</p>
         
         <!-- Cascade Models -->
         <div class="models-section">
-          <h4>Cascade 模型</h4>
+          <h4>{{ $t('dialog.teamSettings.cascadeModels') }}</h4>
           <el-select
             v-model="selectedCascadeModels"
             multiple
@@ -215,7 +206,7 @@
             collapse-tags
             collapse-tags-tooltip
             :max-collapse-tags="5"
-            placeholder="选择 Cascade 模型"
+            placeholder="{{ $t('dialog.teamSettings.selectCascadeModels') }}"
             style="width: 100%"
             popper-class="model-select-dropdown"
           >
@@ -238,7 +229,7 @@
         
         <!-- Command Models -->
         <div class="models-section">
-          <h4>Command 模型</h4>
+          <h4>{{ $t('dialog.teamSettings.commandModels') }}</h4>
           <el-select
             v-model="selectedCommandModels"
             multiple
@@ -246,7 +237,7 @@
             collapse-tags
             collapse-tags-tooltip
             :max-collapse-tags="5"
-            placeholder="选择 Command 模型"
+            placeholder="{{ $t('dialog.teamSettings.selectCommandModels') }}"
             style="width: 100%"
             popper-class="model-select-dropdown"
           >
@@ -269,7 +260,7 @@
         
         <!-- Extension Models -->
         <div class="models-section">
-          <h4>Extension 模型</h4>
+          <h4>{{ $t('dialog.teamSettings.extensionModels') }}</h4>
           <el-select
             v-model="selectedExtensionModels"
             multiple
@@ -277,7 +268,7 @@
             collapse-tags
             collapse-tags-tooltip
             :max-collapse-tags="5"
-            placeholder="选择 Extension 模型"
+            placeholder="{{ $t('dialog.teamSettings.selectExtensionModels') }}"
             style="width: 100%"
             popper-class="model-select-dropdown"
           >
@@ -296,23 +287,23 @@
         </div>
       </div>
       <template #footer>
-        <el-button @click="modelsDialogVisible = false">取消</el-button>
-        <el-button type="primary" :loading="savingModels" @click="saveModelsConfig">保存</el-button>
+        <el-button @click="modelsDialogVisible = false">{{ $t('dialog.teamSettings.cancel') }}</el-button>
+        <el-button type="primary" :loading="savingModels" @click="saveModelsConfig">{{ $t('dialog.teamSettings.save') }}</el-button>
       </template>
     </el-dialog>
     
     <!-- MCP Whitelist Dialog -->
     <el-dialog
       v-model="mcpDialogVisible"
-      title="添加 MCP 服务器"
+      title="{{ $t('dialog.teamSettings.addMcpServer') }}"
       width="500px"
       append-to-body
     >
       <div class="mcp-add-dialog">
         <div class="mcp-header">
-          <span class="mcp-label">服务器 ID</span>
+          <span class="mcp-label">{{ $t('dialog.teamSettings.mcpServerId') }}</span>
           <el-link type="primary" @click="mcpManualMode = !mcpManualMode">
-            {{ mcpManualMode ? '从列表选择' : '手动输入' }}
+            {{ mcpManualMode ? $t('dialog.teamSettings.selectFromList') : $t('dialog.teamSettings.manualInput') }}
           </el-link>
         </div>
         
@@ -320,7 +311,7 @@
         <el-select
           v-if="!mcpManualMode"
           v-model="selectedMcpPlugin"
-          placeholder="选择 MCP 服务器"
+          placeholder="{{ $t('dialog.teamSettings.selectMcpServer') }}"
           filterable
           style="width: 100%; margin-bottom: 16px"
           :loading="loadingPlugins"
@@ -343,27 +334,27 @@
         <el-input
           v-else
           v-model="newMcpServer"
-          placeholder="输入 MCP 服务器 ID"
+          placeholder="{{ $t('dialog.teamSettings.inputMcpServerId') }}"
           style="margin-bottom: 16px"
         />
         
         <div class="mcp-config-section">
-          <span class="mcp-label">服务器配置 (JSON)</span>
+          <span class="mcp-label">{{ $t('dialog.teamSettings.mcpServerConfig') }}</span>
           <el-input
             v-model="mcpServerConfig"
             type="textarea"
             :rows="4"
-            placeholder="参考 MCP 服务器文档获取配置详情。留空将使用默认配置。"
+            placeholder="{{ $t('dialog.teamSettings.mcpServerConfigDesc') }}"
           />
         </div>
         
         <div class="mcp-help-text">
-          需要帮助？查看 <el-link type="primary" href="https://docs.windsurf.com/mcp" target="_blank">文档</el-link> 获取配置详情
+          {{ $t('dialog.teamSettings.mcpHelpText') }} <el-link type="primary" href="https://docs.windsurf.com/mcp" target="_blank">{{ $t('dialog.teamSettings.mcpDocs') }}</el-link>
         </div>
         
         <!-- 已添加的服务器列表 -->
         <div class="mcp-added-list" v-if="mcpServers.length">
-          <div class="mcp-added-header">已添加的服务器</div>
+          <div class="mcp-added-header">{{ $t('dialog.teamSettings.addedMcpServers') }}</div>
           <div class="mcp-list">
             <el-tag
               v-for="(server, index) in mcpServers"
@@ -378,38 +369,38 @@
         </div>
       </div>
       <template #footer>
-        <el-button @click="mcpDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="addSelectedMcpServer">添加</el-button>
+        <el-button @click="mcpDialogVisible = false">{{ $t('dialog.teamSettings.cancel') }}</el-button>
+        <el-button type="primary" @click="addSelectedMcpServer">{{ $t('dialog.teamSettings.add') }}</el-button>
       </template>
     </el-dialog>
     
     <!-- Codemaps Configuration Dialog -->
     <el-dialog
       v-model="codemapsDialogVisible"
-      title="代码地图 (Codemaps)"
+      title="{{ $t('dialog.teamSettings.codemaps') }}"
       width="500px"
       append-to-body
     >
       <div class="codemaps-config">
-        <p class="codemaps-desc">生成、查看和分享交互式代码地图</p>
+        <p class="codemaps-desc">{{ $t('dialog.teamSettings.codemapsDesc') }}</p>
         
         <div class="codemaps-setting">
           <div class="setting-info">
-            <span class="setting-name">启用代码地图 (Enable Codemaps)</span>
-            <span class="setting-desc">允许团队生成和查看代码地图</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.enableCodemaps') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.enableCodemapsDesc') }}</span>
           </div>
           <el-switch v-model="settings.enableCodemaps" />
         </div>
         
         <div class="codemaps-setting">
           <div class="setting-info">
-            <span class="setting-name">代码地图分享 (Codemap Sharing)</span>
-            <span class="setting-desc">允许团队分享代码地图</span>
+            <span class="setting-name">{{ $t('dialog.teamSettings.codemapSharing') }}</span>
+            <span class="setting-desc">{{ $t('dialog.teamSettings.codemapSharingDesc') }}</span>
           </div>
           <el-select v-model="settings.codemapSharing" size="small" style="width: 130px">
-            <el-option label="启用" value="enabled" />
-            <el-option label="仅团队" value="team" />
-            <el-option label="禁用" value="disabled" />
+            <el-option label="{{ $t('dialog.teamSettings.enabled') }}" value="enabled" />
+            <el-option label="{{ $t('dialog.teamSettings.teamOnly') }}" value="team" />
+            <el-option label="{{ $t('dialog.teamSettings.disabled') }}" value="disabled" />
           </el-select>
         </div>
       </div>

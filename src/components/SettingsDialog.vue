@@ -8,7 +8,7 @@
     @close="handleClose"
   >
     <el-tabs v-model="activeTab" class="settings-tabs">
-      <el-tab-pane :label="$t('dialog.settings.basic')" name="basic">
+      <el-tab-pane :label="$t('dialog.settings.basic.title')" name="basic">
         <el-form :model="settings" label-width="140px">
           <!-- 现有基础设置 -->
           <el-form-item :label="$t('dialog.settings.autoRefreshToken')">
@@ -91,10 +91,22 @@
               v-model="settingsStore.language"
               @change="handleLanguageChange"
             >
-              <el-option label="简体中文" value="zh" />
-              <el-option label="English" value="en" />
-              <el-option label="Français" value="fr" />
-              <el-option label="Español" value="es" />
+              <el-option
+                :label="$t('dialog.settings.languages.zh')"
+                value="zh"
+              />
+              <el-option
+                :label="$t('dialog.settings.languages.en')"
+                value="en"
+              />
+              <el-option
+                :label="$t('dialog.settings.languages.fr')"
+                value="fr"
+              />
+              <el-option
+                :label="$t('dialog.settings.languages.es')"
+                value="es"
+              />
             </el-select>
           </el-form-item>
 
@@ -295,7 +307,7 @@
             >
               <template #append>
                 <el-button @click="clearCardBinRange">{{
-                  $t("common.clear") || "清除"
+                  $t("common.clear") || $t("dialog.settings.clear")
                 }}</el-button>
               </template>
             </el-input>
@@ -337,12 +349,13 @@
               {{ $t("dialog.settings.payment.testModeDesc") }}
               （{{
                 $t("common.count", { count: successBinCount }) ||
-                `池数量：${successBinCount}`
+                $t("dialog.settings.poolCount", { count: successBinCount })
               }}）
               <span v-if="testModeProgress" style="color: #67c23a">
-                <br />{{ $t("common.progress") || "当前进度" }}：{{
-                  testModeProgress
-                }}
+                <br />{{
+                  $t("common.progress") ||
+                  $t("dialog.settings.currentProgress")
+                }}：{{ testModeProgress }}
               </span>
             </div>
           </el-form-item>
@@ -568,7 +581,10 @@ function parseSeatCountOptions() {
 
   if (numbers.length === 0) {
     ElMessage.warning(
-      t("dialog.settings.invalidSeatCount", "请输入有效的座位数"),
+      t(
+        "dialog.settings.invalidSeatCount",
+        $t("dialog.settings.pleaseEnterValidSeatCount"),
+      ),
     );
     settings.seat_count_options = [18, 19, 20];
     seatCountOptionsInput.value = "18, 19, 20";
@@ -662,9 +678,9 @@ async function loadTestModeProgress() {
 async function resetTestModeProgress() {
   try {
     await ElMessageBox.confirm(
-      t(
+      $t(
         "dialog.settings.payment.confirmResetProgress",
-        "确定要重置测试模式进度吗？下次将从范围起始位置开始。",
+        $t("dialog.settings.confirmResetProgressMessage"),
       ),
       t("common.confirm"), // "确认重置",
       {
@@ -690,7 +706,7 @@ async function viewSuccessBins() {
     }
     ElMessageBox.alert(
       `<div style="max-height: 300px; overflow-y: auto;">
-        <p><b>${t("dialog.settings.payment.totalBins", { count: bins.length }) || `共 ${bins.length} 个成功BIN：`}</b></p>
+        <p><b>${$t("dialog.settings.payment.totalBins", { count: bins.length }) || `共 ${bins.length} 个成功BIN：`}</b></p>
         <p style="font-family: monospace; word-break: break-all;">${bins.join(", ")}</p>
       </div>`,
       t("dialog.settings.payment.poolTitle", "成功BIN池"),
@@ -789,7 +805,7 @@ async function handleSave() {
     ElMessage.success(t("common.success"));
     handleClose();
   } catch (error) {
-    ElMessage.error(`${t("common.error")}: ${error}`);
+    ElMessage.error(`${$t("common.error")}: ${error}`);
   } finally {
     loading.value = false;
   }
@@ -883,7 +899,7 @@ async function detectWindsurfPath() {
     // 保存路径设置到本地
     await settingsStore.updateSettings(settings);
   } catch (error) {
-    ElMessage.error(`${t("common.error")}: ${error}`);
+    ElMessage.error(`${$t("common.error")}: ${error}`);
     windsurfPath.value = "";
   } finally {
     detectingPath.value = false;
@@ -977,7 +993,7 @@ async function browseWindsurfPath() {
       }
     }
   } catch (error) {
-    ElMessage.error(`${t("common.error")}: ${error}`);
+    ElMessage.error(`${$t("common.error")}: ${error}`);
   }
 }
 
@@ -1043,7 +1059,7 @@ async function handleSeamlessSwitch(value: boolean) {
       settings.seamlessSwitchEnabled = !value;
     }
   } catch (error) {
-    ElMessage.error(`${t("common.error")}: ${error}`);
+    ElMessage.error(`${$t("common.error")}: ${error}`);
     settings.seamlessSwitchEnabled = !value;
   } finally {
     patchLoading.value = false;
@@ -1092,7 +1108,7 @@ async function handleCunzhiSwitch(value: boolean) {
       settings.cunzhiEnabled = !value;
     }
   } catch (error) {
-    // ElMessage.error(`${t('common.error')}: ${error}`);
+    // ElMessage.error(`${$t('common.error')}: ${error}`);
     // settings.cunzhiEnabled = !value;
     // 临时模拟成功 (如果API不存在)
     settings.cunzhiEnabled = value;
@@ -1110,7 +1126,7 @@ async function handleResetHttpClient() {
     await invoke("reset_http_client");
     ElMessage.success(t("dialog.settings.resetSuccess", "网络连接已重置"));
   } catch (error) {
-    ElMessage.error(`${t("common.error")}: ${error}`);
+    ElMessage.error(`${$t("common.error")}: ${error}`);
   } finally {
     resettingHttp.value = false;
   }

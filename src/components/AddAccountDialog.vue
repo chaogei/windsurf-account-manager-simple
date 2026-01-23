@@ -18,7 +18,7 @@
           <el-radio value="password">{{
             $t("dialog.addAccount.modePassword")
           }}</el-radio>
-          <el-radio value="refresh_token">Refresh Token</el-radio>
+          <el-radio value="refresh_token">{{ $t('dialog.addAccount.modeToken') }}</el-radio>
         </el-radio-group>
       </el-form-item>
 
@@ -47,7 +47,7 @@
 
       <!-- Refresh Token 模式 -->
       <template v-else>
-        <el-form-item label="Refresh Token" prop="refreshToken">
+        <el-form-item :label="$t('dialog.addAccount.refreshToken')" prop="refreshToken">
           <el-input
             v-model="formData.refreshToken"
             type="textarea"
@@ -262,7 +262,7 @@ async function handleSubmit() {
         const trimmedNickname = formData.nickname.trim() || undefined;
 
         if (!trimmedToken) {
-          ElMessage.error("Refresh Token 不能为空");
+          ElMessage.error($t('dialog.addAccount.messages.tokenEmpty'));
           loading.value = false;
           return;
         }
@@ -281,7 +281,7 @@ async function handleSubmit() {
           await accountsStore.loadAccounts();
           handleClose();
         } else {
-          ElMessage.error(result.error || "添加失败");
+          ElMessage.error($t('dialog.addAccount.messages.addFailed'));
         }
       } else {
         // 邮箱密码模式
@@ -291,7 +291,7 @@ async function handleSubmit() {
           formData.nickname.trim() || trimmedEmail.split("@")[0];
 
         if (!trimmedPassword) {
-          ElMessage.error("密码不能为空或只包含空格");
+          ElMessage.error($t('dialog.addAccount.messages.passwordEmpty'));
           loading.value = false;
           return;
         }
@@ -305,7 +305,7 @@ async function handleSubmit() {
           group: formData.group || "默认分组",
         });
 
-        ElMessage.success("账号添加成功，正在获取账号信息...");
+        ElMessage.success($t('dialog.addAccount.messages.addSuccess'));
 
         // 自动登录并获取账号详细信息
         try {
@@ -314,13 +314,13 @@ async function handleSubmit() {
           if (loginResult.success) {
             const latestAccount = await accountApi.getAccount(newAccount.id);
             await accountsStore.updateAccount(latestAccount);
-            ElMessage.success("账号信息已更新");
+            ElMessage.success($t('dialog.addAccount.messages.infoUpdated'));
           } else {
-            ElMessage.warning("账号已添加，但登录失败，请手动刷新");
+            ElMessage.warning($t('dialog.addAccount.messages.loginFailed'));
           }
         } catch (infoError) {
           console.error("获取账号信息失败:", infoError);
-          ElMessage.warning("账号已添加，但获取详细信息失败，请手动刷新");
+          ElMessage.warning($t('dialog.addAccount.messages.infoFailed'));
         }
 
         handleClose();

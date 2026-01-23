@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    title="自动充值设置"
+    :title="$t('dialog.autoRefill.title')"
     width="520px"
     :close-on-click-modal="false"
     @open="loadSettings"
@@ -10,24 +10,21 @@
       <!-- 当前状态 -->
       <div class="status-section">
         <div class="status-header">
-          <span class="status-title">Auto refill credits</span>
+          <span class="status-title">{{ $t('dialog.autoRefill.statusTitle') }}</span>
           <el-button
             :type="settings.enabled ? 'danger' : 'success'"
             size="small"
             :loading="saving"
             @click="toggleEnabled"
           >
-            {{ settings.enabled ? '禁用自动充值' : '启用自动充值' }}
+            {{ settings.enabled ? $t('dialog.autoRefill.disableAutoRefill') : $t('dialog.autoRefill.enableAutoRefillBtn') }}
           </el-button>
         </div>
         <div class="status-description" v-if="settings.enabled">
-          <span class="highlight">${{ settings.topUpSpent }}</span> 已使用，月度预算
-          <span class="highlight">${{ settings.monthlyTopUpAmount }}</span>。
-          当余额低于 15 积分时，将自动充值
-          <span class="highlight">${{ settings.topUpIncrement }}</span>。
+          <span v-html="$t('dialog.autoRefill.statusDescriptionEnabled', { spent: settings.topUpSpent, budget: settings.monthlyTopUpAmount, amount: settings.topUpIncrement })"></span>
         </div>
         <div class="status-description" v-else>
-          自动充值未启用。启用后，当积分余额低于 15 时将自动充值。
+          {{ $t('dialog.autoRefill.statusDescriptionDisabled') }}
         </div>
       </div>
 
@@ -38,8 +35,8 @@
         <!-- 月度预算 -->
         <div class="setting-item">
           <div class="setting-label">
-            <span class="label-title">月度预算上限</span>
-            <span class="label-desc">设置每月自动充值的最大金额</span>
+            <span class="label-title">{{ $t('dialog.autoRefill.monthlyBudgetLimit') }}</span>
+            <span class="label-desc">{{ $t('dialog.autoRefill.monthlyBudgetDesc') }}</span>
           </div>
           <div class="setting-options">
             <span class="currency">$</span>
@@ -62,8 +59,8 @@
         <!-- 充值增量 -->
         <div class="setting-item">
           <div class="setting-label">
-            <span class="label-title">单次充值金额</span>
-            <span class="label-desc">每次自动充值的金额（$40 的倍数）</span>
+            <span class="label-title">{{ $t('dialog.autoRefill.singleRefillAmount') }}</span>
+            <span class="label-desc">{{ $t('dialog.autoRefill.singleRefillDesc') }}</span>
           </div>
           <div class="setting-options">
             <span class="currency">$</span>
@@ -86,7 +83,7 @@
         <!-- 使用情况 -->
         <el-divider />
         <div class="usage-section">
-          <div class="usage-title">本月自动充值使用情况</div>
+          <div class="usage-title">{{ $t('dialog.autoRefill.monthlyUsage') }}</div>
           <div class="usage-bar">
             <el-progress
               :percentage="usagePercentage"
@@ -96,16 +93,16 @@
             />
           </div>
           <div class="usage-text">
-            ${{ settings.topUpSpent }} / ${{ settings.monthlyTopUpAmount }} 已使用
+            {{ $t('dialog.autoRefill.usageText', { used: settings.topUpSpent, total: settings.monthlyTopUpAmount }) }}
           </div>
         </div>
       </div>
     </div>
 
     <template #footer>
-      <el-button @click="dialogVisible = false">取消</el-button>
+      <el-button @click="dialogVisible = false">{{ $t('dialog.autoRefill.cancel') }}</el-button>
       <el-button type="primary" :loading="saving" @click="saveSettings">
-        保存设置
+        {{ $t('dialog.autoRefill.save') }}
       </el-button>
     </template>
   </el-dialog>
@@ -188,7 +185,7 @@ async function loadSettings() {
     }
   } catch (error: any) {
     console.error('Failed to load settings:', error)
-    ElMessage.error('加载设置失败: ' + error.toString())
+    ElMessage.error($t('dialog.autoRefill.loadFailed') + ': ' + error.toString())
   } finally {
     loading.value = false
   }
@@ -223,13 +220,13 @@ async function saveSettings() {
     console.log('[AutoRefill] Settings saved:', result)
     
     if (result.success) {
-      ElMessage.success(result.message || '设置已保存')
+      ElMessage.success(result.message || $t('dialog.autoRefill.saveSuccess'))
     } else {
-      ElMessage.error(result.error || '保存设置失败')
+      ElMessage.error(result.error || $t('dialog.autoRefill.saveFailed'))
     }
   } catch (error: any) {
     console.error('Failed to save settings:', error)
-    ElMessage.error('保存设置失败: ' + error.toString())
+    ElMessage.error($t('dialog.autoRefill.saveFailed') + ': ' + error.toString())
   } finally {
     saving.value = false
   }
