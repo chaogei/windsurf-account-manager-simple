@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { Settings, OperationLog, GlobalTag } from '@/types';
 import { settingsApi } from '@/api';
+import i18n from '@/i18n';
 
 // 默认设置值
 const defaultSettings: Partial<Settings> = {
@@ -14,6 +15,7 @@ const defaultSettings: Partial<Settings> = {
   useLightweightApi: true,
   proxyEnabled: false,
   proxyUrl: null,
+  language: 'zh',
 };
 
 export const useSettingsStore = defineStore('settings', () => {
@@ -33,6 +35,18 @@ export const useSettingsStore = defineStore('settings', () => {
       const loaded = await settingsApi.getSettings();
       // 合并默认值，确保新增字段有默认值
       settings.value = { ...defaultSettings, ...loaded } as Settings;
+      
+      // Fix: Prioritize localStorage > Settings API > Default
+      // If the backend doesn't store language yet, we rely on localStorage
+      const localLang = localStorage.getItem('language');
+      if (localLang) {
+        settings.value.language = localLang;
+        // @ts-ignore
+        i18n.global.locale.value = localLang;
+      } else if (settings.value.language) {
+        // @ts-ignore
+        i18n.global.locale.value = settings.value.language;
+      }
     } catch (e) {
       error.value = (e as Error).message;
       throw e;
@@ -239,6 +253,14 @@ export const useSettingsStore = defineStore('settings', () => {
     ]);
   }
 
+  async function setLanguage(lang: string) {
+    settings.value.language = lang;
+    // @ts-ignore
+    i18n.global.locale.value = lang;
+    localStorage.setItem('language', lang);
+    await updateSettings(settings.value);
+  }
+
   return {
     // State
     settings,
@@ -264,5 +286,6 @@ export const useSettingsStore = defineStore('settings', () => {
     clearLogs,
     exportData,
     initialize,
+    setLanguage,
   };
 });

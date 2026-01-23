@@ -326,6 +326,7 @@ export interface Settings {
   paymentPeriod?: number;  // 支付周期: 1=月付, 2=年付
   teamName?: string;  // Teams 计划的团队名称
   seatCount?: number;  // Teams 计划的席位数量
+  language?: string;   // Interface language (zh, en, fr, es)
 }
 
 /**

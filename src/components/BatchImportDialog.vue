@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="批量导入账号"
+    :title="$t('dialog.batchImport.title')"
     width="700px"
     :close-on-click-modal="false"
     @close="handleClose"
@@ -9,10 +9,14 @@
     <div class="import-container">
       <!-- 导入模式切换 -->
       <div class="mode-section">
-        <span class="mode-label">导入模式：</span>
+        <span class="mode-label">{{ $t("dialog.batchImport.modeLabel") }}</span>
         <el-radio-group v-model="importMode" @change="handleModeChange">
-          <el-radio value="password">邮箱密码</el-radio>
-          <el-radio value="refresh_token">Refresh Token</el-radio>
+          <el-radio value="password">{{
+            $t("dialog.batchImport.modePassword")
+          }}</el-radio>
+          <el-radio value="refresh_token">{{
+            $t("dialog.batchImport.modeToken")
+          }}</el-radio>
         </el-radio-group>
       </div>
 
@@ -21,37 +25,49 @@
         type="info"
         :closable="false"
         show-icon
-        style="margin-bottom: 16px;"
+        style="margin-bottom: 16px"
       >
         <template #title>
-          <span v-if="importMode === 'password'">每行一个账号，格式：<code>邮箱 密码 备注(可选)</code></span>
-          <span v-else>每行一个 Token，格式：<code>refresh_token 备注(可选)</code></span>
+          <span
+            v-if="importMode === 'password'"
+            v-html="$t('dialog.batchImport.formatHint.password')"
+          ></span>
+          <span
+            v-else
+            v-html="$t('dialog.batchImport.formatHint.token')"
+          ></span>
         </template>
       </el-alert>
 
       <!-- 输入区域 -->
       <div class="input-section">
         <div class="section-header">
-          <span class="section-title">{{ importMode === 'password' ? '账号数据' : 'Refresh Token 列表' }}</span>
+          <span class="section-title">{{
+            importMode === "password"
+              ? $t("dialog.batchImport.section.accountData")
+              : $t("dialog.batchImport.section.tokenList")
+          }}</span>
           <el-button type="primary" link @click="handleFileImport">
             <el-icon><Upload /></el-icon>
-            从文件导入
+            {{ $t("dialog.batchImport.importFromFile") }}
           </el-button>
         </div>
         <el-input
           v-model="inputText"
           type="textarea"
           :rows="12"
-          :placeholder="importMode === 'password' 
-            ? 'user1@example.com password123 测试账号1\nuser2@example.com password456\nuser3@example.com password789 备注信息'
-            : 'AMf-vBx...长token... 测试账号1\nAMf-vBy...长token...\nAMf-vBz...长token... 备注信息'"
+          :placeholder="
+            importMode === 'password'
+              ? $t('dialog.batchImport.placeholder.password')
+              : $t('dialog.batchImport.placeholder.token')
+          "
           @input="parseAccounts"
         />
         <input
           ref="fileInputRef"
           type="file"
           accept=".txt,.csv"
-          style="display: none;"
+          style="display: none"
           @change="handleFileSelected"
         />
       </div>
@@ -59,15 +75,25 @@
       <!-- 解析预览 -->
       <div class="preview-section" v-if="inputText.trim()">
         <div class="section-header">
-          <span class="section-title">解析预览</span>
+          <span class="section-title">{{
+            $t("dialog.batchImport.section.preview")
+          }}</span>
           <div class="stats">
-            <el-tag type="success" size="small">有效: {{ validAccounts.length }}</el-tag>
+            <el-tag type="success" size="small">{{
+              $t("dialog.batchImport.validCount", {
+                count: validAccounts.length,
+              })
+            }}</el-tag>
             <el-tag v-if="invalidLines.length > 0" type="danger" size="small">
-              无效: {{ invalidLines.length }}
+              {{
+                $t("dialog.batchImport.invalidCount", {
+                  count: invalidLines.length,
+                })
+              }}
             </el-tag>
           </div>
         </div>
-        
+
         <!-- 有效账号表格 -->
         <el-table
           v-if="validAccounts.length > 0"
@@ -76,20 +102,38 @@
           max-height="200"
           stripe
         >
-          <el-table-column prop="email" label="邮箱" min-width="180" />
-          <el-table-column prop="password" label="密码" width="120">
+          <el-table-column
+            prop="email"
+            :label="$t('common.email')"
+            min-width="180"
+          />
+          <el-table-column
+            prop="password"
+            :label="$t('common.password')"
+            width="120"
+          >
             <template #default="{ row }">
-              <span class="password-mask">{{ maskPassword(row.password) }}</span>
+              <span class="password-mask">{{
+                maskPassword(row.password)
+              }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="remark" label="备注" min-width="100">
+          <el-table-column
+            prop="remark"
+            :label="$t('dialog.addAccount.nickname')"
+            min-width="100"
+          >
             <template #default="{ row }">
-              <span class="remark-text">{{ row.remark || '-' }}</span>
+              <span class="remark-text">{{ row.remark || "-" }}</span>
             </template>
           </el-table-column>
         </el-table>
         <div v-if="validAccounts.length > 10" class="more-hint">
-          ... 还有 {{ validAccounts.length - 10 }} 个账号
+          {{
+            $t("dialog.batchImport.moreAccounts", {
+              count: validAccounts.length - 10,
+            })
+          }}
         </div>
 
         <!-- 无效行提示 -->
@@ -97,11 +141,18 @@
           v-if="invalidLines.length > 0"
           type="warning"
           :closable="false"
-          style="margin-top: 12px;"
+          style="margin-top: 12px"
         >
+          >
           <template #title>
-            格式错误的行: {{ invalidLines.slice(0, 5).join(', ') }}
-            <span v-if="invalidLines.length > 5">... 等 {{ invalidLines.length }} 行</span>
+            {{
+              $t("dialog.batchImport.invalidLines", {
+                lines: invalidLines.slice(0, 5).join(", "),
+              })
+            }}
+            <span v-if="invalidLines.length > 5">{{
+              $t("dialog.batchImport.moreLines", { count: invalidLines.length })
+            }}</span>
           </template>
         </el-alert>
       </div>
@@ -109,17 +160,21 @@
       <!-- 导入设置 -->
       <div class="settings-section">
         <div class="section-header">
-          <span class="section-title">导入设置</span>
+          <span class="section-title">{{
+            $t("dialog.batchImport.section.settings")
+          }}</span>
         </div>
         <div class="settings-content">
           <!-- 分组选择 -->
           <div class="setting-item">
-            <span class="setting-label">分组:</span>
+            <span class="setting-label">{{
+              $t("dialog.batchImport.groupLabel")
+            }}</span>
             <el-select
               v-model="selectedGroup"
-              placeholder="选择分组（可选）"
+              :placeholder="$t('dialog.batchImport.groupPlaceholder')"
               clearable
-              style="width: 180px;"
+              style="width: 180px"
             >
               <el-option
                 v-for="group in settingsStore.groups"
@@ -128,20 +183,24 @@
                 :value="group"
               />
             </el-select>
-            <span class="setting-hint">留空则使用默认分组</span>
+            <span class="setting-hint">{{
+              $t("dialog.batchImport.groupHint")
+            }}</span>
           </div>
-          
+
           <!-- 标签选择 -->
           <div class="setting-item">
-            <span class="setting-label">标签:</span>
+            <span class="setting-label">{{
+              $t("dialog.batchImport.tagsLabel")
+            }}</span>
             <el-select
               v-model="selectedTags"
               multiple
               collapse-tags
               collapse-tags-tooltip
-              placeholder="选择标签（可选）"
+              :placeholder="$t('dialog.batchImport.tagsPlaceholder')"
               clearable
-              style="width: 180px;"
+              style="width: 180px"
             >
               <el-option
                 v-for="tag in settingsStore.tags"
@@ -152,18 +211,35 @@
                 <span :style="{ color: tag.color }">{{ tag.name }}</span>
               </el-option>
             </el-select>
-            <span class="setting-hint">留空则不添加标签</span>
+            <span class="setting-hint">{{
+              $t("dialog.batchImport.tagsHint")
+            }}</span>
           </div>
-          
+
           <div class="setting-item">
-            <span class="setting-label">并发模式:</span>
-            <el-tag :type="unlimitedConcurrent ? 'danger' : 'primary'" size="small">
-              {{ unlimitedConcurrent ? '全量并发' : `限制并发 (${concurrencyLimit})` }}
+            <span class="setting-label">{{
+              $t("dialog.batchImport.concurrentMode")
+            }}</span>
+            <el-tag
+              :type="unlimitedConcurrent ? 'danger' : 'primary'"
+              size="small"
+            >
+              {{
+                unlimitedConcurrent
+                  ? $t("dialog.batchImport.unlimitedConcurrent")
+                  : $t("dialog.batchImport.limitConcurrent", {
+                      count: concurrencyLimit,
+                    })
+              }}
             </el-tag>
-            <span class="setting-hint">可在设置中修改</span>
+            <span class="setting-hint">{{
+              $t("dialog.batchImport.concurrentHint")
+            }}</span>
           </div>
           <div class="setting-item">
-            <el-checkbox v-model="autoLogin">导入后自动登录</el-checkbox>
+            <el-checkbox v-model="autoLogin">{{
+              $t("dialog.batchImport.autoLogin")
+            }}</el-checkbox>
           </div>
         </div>
       </div>
@@ -171,14 +247,20 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleClose">取消</el-button>
+        <el-button @click="handleClose">{{ $t("common.cancel") }}</el-button>
         <el-button
           type="primary"
           :disabled="validAccounts.length === 0"
           :loading="importing"
           @click="handleImport"
         >
-          {{ importing ? '导入中...' : `导入 ${validAccounts.length} 个账号` }}
+          {{
+            importing
+              ? $t("common.importing")
+              : $t("dialog.batchImport.confirmImport", {
+                  count: validAccounts.length,
+                })
+          }}
         </el-button>
       </div>
     </template>
@@ -186,63 +268,88 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
-import { Upload } from '@element-plus/icons-vue';
-import { useSettingsStore } from '@/store';
+import { ref, computed, watch } from "vue";
+import { Upload } from "@element-plus/icons-vue";
+import { useSettingsStore } from "@/store";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
   modelValue: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void;
-  (e: 'import', accounts: Array<{ email: string; password: string; remark: string; refreshToken?: string }>, autoLogin: boolean, group: string, tags: string[], mode: 'password' | 'refresh_token'): void;
+  (e: "update:modelValue", value: boolean): void;
+  (
+    e: "import",
+    accounts: Array<{
+      email: string;
+      password: string;
+      remark: string;
+      refreshToken?: string;
+    }>,
+    autoLogin: boolean,
+    group: string,
+    tags: string[],
+    mode: "password" | "refresh_token",
+  ): void;
 }>();
 
 const settingsStore = useSettingsStore();
+const { t } = useI18n();
 
 const visible = computed({
   get: () => props.modelValue,
-  set: (val) => emit('update:modelValue', val)
+  set: (val) => emit("update:modelValue", val),
 });
 
-const inputText = ref('');
-const validAccounts = ref<Array<{ email: string; password: string; remark: string; refreshToken?: string }>>([]);
+const inputText = ref("");
+const validAccounts = ref<
+  Array<{
+    email: string;
+    password: string;
+    remark: string;
+    refreshToken?: string;
+  }>
+>([]);
 const invalidLines = ref<number[]>([]);
 const autoLogin = ref(true);
 const importing = ref(false);
 const fileInputRef = ref<HTMLInputElement | null>(null);
-const selectedGroup = ref<string>('');
+const selectedGroup = ref<string>("");
 const selectedTags = ref<string[]>([]);
-const importMode = ref<'password' | 'refresh_token'>('password');
+const importMode = ref<"password" | "refresh_token">("password");
 
-const unlimitedConcurrent = computed(() => settingsStore.settings?.unlimitedConcurrentRefresh || false);
-const concurrencyLimit = computed(() => settingsStore.settings?.concurrent_limit || 5);
+const unlimitedConcurrent = computed(
+  () => settingsStore.settings?.unlimitedConcurrentRefresh || false,
+);
+const concurrencyLimit = computed(
+  () => settingsStore.settings?.concurrent_limit || 5,
+);
 
 // 切换模式时重置
 function handleModeChange() {
-  inputText.value = '';
+  inputText.value = "";
   validAccounts.value = [];
   invalidLines.value = [];
 }
 
 // 解析账号数据
 function parseAccounts() {
-  const lines = inputText.value.split('\n').filter(line => line.trim());
+  const lines = inputText.value.split("\n").filter((line) => line.trim());
   validAccounts.value = [];
   invalidLines.value = [];
 
-  if (importMode.value === 'password') {
+  if (importMode.value === "password") {
     // 邮箱密码模式
     lines.forEach((line, index) => {
       const parts = line.trim().split(/\s+/);
       if (parts.length >= 2) {
         const [email, password, ...remarkParts] = parts;
-        if (email.includes('@')) {
+        if (email.includes("@")) {
           validAccounts.value.push({
             email,
             password,
-            remark: remarkParts.join(' ') || ''
+            remark: remarkParts.join(" ") || "",
           });
         } else {
           invalidLines.value.push(index + 1);
@@ -259,9 +366,9 @@ function parseAccounts() {
         const [token, ...remarkParts] = parts;
         validAccounts.value.push({
           email: `Token #${index + 1}`,
-          password: '',
-          remark: remarkParts.join(' ') || '',
-          refreshToken: token
+          password: "",
+          remark: remarkParts.join(" ") || "",
+          refreshToken: token,
         });
       } else {
         invalidLines.value.push(index + 1);
@@ -273,9 +380,11 @@ function parseAccounts() {
 // 遮蔽密码显示
 function maskPassword(password: string): string {
   if (password.length <= 4) {
-    return '*'.repeat(password.length);
+    return "*".repeat(password.length);
   }
-  return password.slice(0, 2) + '*'.repeat(password.length - 4) + password.slice(-2);
+  return (
+    password.slice(0, 2) + "*".repeat(password.length - 4) + password.slice(-2)
+  );
 }
 
 // 从文件导入
@@ -295,27 +404,34 @@ function handleFileSelected(event: Event) {
     parseAccounts();
   };
   reader.readAsText(file);
-  
+
   // 重置input，允许再次选择同一文件
-  input.value = '';
+  input.value = "";
 }
 
 // 执行导入
 function handleImport() {
   if (validAccounts.value.length === 0) return;
   importing.value = true;
-  emit('import', [...validAccounts.value], autoLogin.value, selectedGroup.value || '默认分组', [...selectedTags.value], importMode.value);
+  emit(
+    "import",
+    [...validAccounts.value],
+    autoLogin.value,
+    selectedGroup.value || t("common.defaultGroup"),
+    [...selectedTags.value],
+    importMode.value,
+  );
 }
 
 // 关闭对话框
 function handleClose() {
   if (!importing.value) {
-    inputText.value = '';
+    inputText.value = "";
     validAccounts.value = [];
     invalidLines.value = [];
-    selectedGroup.value = '';
+    selectedGroup.value = "";
     selectedTags.value = [];
-    importMode.value = 'password';
+    importMode.value = "password";
     visible.value = false;
   }
 }
@@ -328,18 +444,18 @@ function resetImporting() {
 // 监听对话框关闭
 watch(visible, (val) => {
   if (!val) {
-    inputText.value = '';
+    inputText.value = "";
     validAccounts.value = [];
     invalidLines.value = [];
-    selectedGroup.value = '';
+    selectedGroup.value = "";
     selectedTags.value = [];
     importing.value = false;
-    importMode.value = 'password';
+    importMode.value = "password";
   }
 });
 
 defineExpose({
-  resetImporting
+  resetImporting,
 });
 </script>
 
@@ -378,7 +494,7 @@ defineExpose({
 }
 
 .input-section :deep(.el-textarea__inner) {
-  font-family: 'Consolas', 'Monaco', monospace;
+  font-family: "Consolas", "Monaco", monospace;
   font-size: 13px;
   line-height: 1.6;
 }

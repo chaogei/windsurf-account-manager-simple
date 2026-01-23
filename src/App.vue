@@ -1,16 +1,29 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, computed, ref } from 'vue';
-import { ElConfigProvider } from 'element-plus';
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
-import { useAccountsStore, useSettingsStore, useUIStore } from './store';
-import MainLayout from './views/MainLayout.vue';
-import WelcomeDialog from './components/WelcomeDialog.vue';
-import { invoke } from '@tauri-apps/api/core';
-import { listen, type UnlistenFn } from '@tauri-apps/api/event';
+import { onMounted, onUnmounted, computed, ref, watch } from "vue";
+import { ElConfigProvider } from "element-plus";
+import zhCn from "element-plus/dist/locale/zh-cn.mjs";
+import en from "element-plus/dist/locale/en.mjs";
+import fr from "element-plus/dist/locale/fr.mjs";
+import es from "element-plus/dist/locale/es.mjs";
+import { useAccountsStore, useSettingsStore, useUIStore } from "./store";
+import { useI18n } from "vue-i18n";
+import MainLayout from "./views/MainLayout.vue";
+import WelcomeDialog from "./components/WelcomeDialog.vue";
+import { invoke } from "@tauri-apps/api/core";
+import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 
 const accountsStore = useAccountsStore();
 const settingsStore = useSettingsStore();
 const uiStore = useUIStore();
+const { locale } = useI18n();
+
+// Element Plus locale map
+const epLocaleMap = {
+  zh: zhCn,
+  en: en,
+  fr: fr,
+  es: es,
+};
 
 const showWelcomeDialog = ref(true);
 
@@ -18,7 +31,7 @@ const showWelcomeDialog = ref(true);
 let tokenRefreshedUnlisten: UnlistenFn | null = null;
 
 // 用于Element Plus的命名空间，支持深色模式
-const elNamespace = computed(() => 'el');
+const elNamespace = computed(() => "el");
 
 // 禁用右键菜单
 const disableContextMenu = (e: MouseEvent) => {
@@ -29,113 +42,129 @@ const disableContextMenu = (e: MouseEvent) => {
 // 禁用调试快捷键
 const disableDebugKeys = (e: KeyboardEvent) => {
   // 禁用F12
-  if (e.key === 'F12') {
+  if (e.key === "F12") {
     e.preventDefault();
     return false;
   }
-  
+
   // 禁用Ctrl+Shift+I (开发者工具)
-  if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+  if (e.ctrlKey && e.shiftKey && e.key === "I") {
     e.preventDefault();
     return false;
   }
-  
+
   // 禁用Ctrl+Shift+J (控制台)
-  if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+  if (e.ctrlKey && e.shiftKey && e.key === "J") {
     e.preventDefault();
     return false;
   }
-  
+
   // 禁用Ctrl+Shift+C (审查元素)
-  if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+  if (e.ctrlKey && e.shiftKey && e.key === "C") {
     e.preventDefault();
     return false;
   }
-  
+
   // 禁用Ctrl+U (查看源代码)
-  if (e.ctrlKey && e.key === 'u') {
+  if (e.ctrlKey && e.key === "u") {
     e.preventDefault();
     return false;
   }
-  
+
   // 禁用Ctrl+S (保存页面)
-  if (e.ctrlKey && e.key === 's') {
+  if (e.ctrlKey && e.key === "s") {
     e.preventDefault();
     return false;
   }
-  
+
   return true;
 };
 
 onMounted(async () => {
   // 禁用右键菜单
-  document.addEventListener('contextmenu', disableContextMenu);
-  
+  document.addEventListener("contextmenu", disableContextMenu);
+
   // 禁用调试快捷键
-  document.addEventListener('keydown', disableDebugKeys);
-  
+  document.addEventListener("keydown", disableDebugKeys);
+
   // 获取并设置应用标题（包含版本号）
   try {
-    const title = await invoke<string>('get_app_title');
+    const title = await invoke<string>("get_app_title");
     document.title = title;
   } catch (error) {
-    console.error('Failed to get app title:', error);
+    console.error("Failed to get app title:", error);
   }
-  
+
   // 初始化应用数据
-  await Promise.all([
-    accountsStore.loadAccounts(),
-    settingsStore.initialize()
-  ]);
-  
+  await Promise.all([accountsStore.loadAccounts(), settingsStore.initialize()]);
+
   // 如果设置中有主题且与当前不同，则应用设置中的主题
   const settingsTheme = settingsStore.settings.theme;
   if (settingsTheme && settingsTheme !== uiStore.theme) {
-    uiStore.setTheme(settingsTheme as 'light' | 'dark');
+    uiStore.setTheme(settingsTheme as "light" | "dark");
   } else {
     // 确保当前主题被应用
     uiStore.setTheme(uiStore.theme);
   }
-  
+
   // 启动自动刷新Token功能
   accountsStore.startAutoRefreshTimer(settingsStore);
-  
+
   // 监听后端 token 刷新事件，自动更新前端账户数据
-  tokenRefreshedUnlisten = await listen<{ account_id: string; token: string; token_expires_at: string }>('token-refreshed', (event) => {
+  tokenRefreshedUnlisten = await listen<{
+    account_id: string;
+    token: string;
+    token_expires_at: string;
+  }>("token-refreshed", (event) => {
     const { account_id, token, token_expires_at } = event.payload;
-    console.log('[Token刷新事件] 后端已刷新账户 token:', account_id);
-    
+    console.log("[Token刷新事件] 后端已刷新账户 token:", account_id);
+
     // 更新对应账户的 token 和过期时间
-    const idx = accountsStore.accounts.findIndex(acc => acc.id === account_id);
+    const idx = accountsStore.accounts.findIndex(
+      (acc) => acc.id === account_id,
+    );
     if (idx !== -1) {
-      const updatedAccount = { 
-        ...accountsStore.accounts[idx], 
-        token, 
-        token_expires_at, 
-        status: 'active' as const 
+      const updatedAccount = {
+        ...accountsStore.accounts[idx],
+        token,
+        token_expires_at,
+        status: "active" as const,
       };
       accountsStore.accounts.splice(idx, 1, updatedAccount);
-      console.log('[Token刷新事件] 已更新账户:', updatedAccount.email);
+      console.log("[Token刷新事件] 已更新账户:", updatedAccount.email);
     }
   });
+
+  // Watch for language changes to update Element Plus locale
+  watch(
+    () => settingsStore.settings.language,
+    (newLang) => {
+      if (newLang) {
+        locale.value = newLang;
+      }
+    },
+    { immediate: true },
+  );
 });
 
 // 组件卸载时停止定时器和移除事件监听
 onUnmounted(() => {
   accountsStore.stopAutoRefreshTimer();
-  document.removeEventListener('contextmenu', disableContextMenu);
-  document.removeEventListener('keydown', disableDebugKeys);
+  document.removeEventListener("contextmenu", disableContextMenu);
+  document.removeEventListener("keydown", disableDebugKeys);
   // 取消 Tauri 事件监听
   if (tokenRefreshedUnlisten) {
     tokenRefreshedUnlisten();
     tokenRefreshedUnlisten = null;
   }
 });
-
 </script>
 
 <template>
-  <el-config-provider :locale="zhCn" :namespace="elNamespace">
+  <el-config-provider
+    :locale="epLocaleMap[locale as keyof typeof epLocaleMap] || zhCn"
+    :namespace="elNamespace"
+  >
     <MainLayout />
     <WelcomeDialog v-model="showWelcomeDialog" />
   </el-config-provider>
@@ -148,14 +177,29 @@ onUnmounted(() => {
   box-sizing: border-box;
 }
 
-html, body, #app {
+html,
+body,
+#app {
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
 
 #app {
-  font-family: 'Microsoft YaHei', '微软雅黑', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    "Microsoft YaHei",
+    "微软雅黑",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -734,7 +778,9 @@ html.dark .el-tooltip__popper {
   color: #cfd3dc !important;
 }
 
-html.dark .el-tooltip__popper[data-popper-placement^="top"] .el-tooltip__popper-arrow::before {
+html.dark
+  .el-tooltip__popper[data-popper-placement^="top"]
+  .el-tooltip__popper-arrow::before {
   background-color: #303133 !important;
   border-color: #4c4d4f !important;
 }

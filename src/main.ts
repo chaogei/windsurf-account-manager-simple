@@ -6,7 +6,11 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import { pinia } from './store';
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
 
+import i18n from './i18n';
+
 const app = createApp(App);
+
+app.use(i18n);
 
 // 注册Element Plus
 app.use(ElementPlus, {
