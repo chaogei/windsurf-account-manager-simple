@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    title="团队管理"
+    :title="$t('dialog.teamManagement.title')"
     width="900px"
     :close-on-click-modal="false"
     destroy-on-close
@@ -11,12 +11,12 @@
       <!-- 标签页 -->
       <el-tabs v-model="activeTab" type="border-card">
         <!-- 团队成员列表 -->
-        <el-tab-pane label="团队成员" name="members">
+        <el-tab-pane :label="$t('dialog.teamManagement.members')" name="members">
           <!-- 邀请链接区域 -->
           <div v-if="teamInviteId" class="invite-link-section">
             <div class="invite-link-label">
               <el-icon><Link /></el-icon>
-              <span>团队邀请ID:</span>
+              <span>{{ $t('dialog.teamManagement.inviteId') }}:</span>
             </div>
             <div class="invite-link-content">
               <el-input
@@ -27,11 +27,11 @@
               />
               <el-button type="primary" size="small" @click="copyInviteId">
                 <el-icon><CopyDocument /></el-icon>
-                复制
+                {{ $t('common.copy') }}
               </el-button>
               <el-button size="small" @click="copyInviteUrl">
                 <el-icon><Link /></el-icon>
-                复制链接
+                {{ $t('dialog.teamManagement.copyLink') }}
               </el-button>
             </div>
           </div>
@@ -39,7 +39,7 @@
           <div class="tab-header">
             <el-button type="primary" size="small" @click="showInviteDialog = true">
               <el-icon><Plus /></el-icon>
-              邀请成员
+              {{ $t('dialog.teamManagement.inviteMember') }}
             </el-button>
             <el-button 
               type="warning" 
@@ -49,15 +49,15 @@
               @click="batchResetMemberCredits"
             >
               <el-icon><RefreshRight /></el-icon>
-              批量重置积分
+              {{ $t('dialog.teamManagement.batchResetCredits') }}
             </el-button>
             <el-button size="small" @click="loadTeamMembers">
               <el-icon><Refresh /></el-icon>
-              刷新
+              {{ $t('common.refresh') }}
             </el-button>
             <el-button type="danger" size="small" @click="showTransferDialog = true">
               <el-icon><Switch /></el-icon>
-              转让订阅
+              {{ $t('dialog.teamManagement.transferSubscription') }}
             </el-button>
           </div>
           

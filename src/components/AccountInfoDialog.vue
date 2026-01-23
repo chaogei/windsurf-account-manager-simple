@@ -709,7 +709,7 @@
                           <el-icon
                             ><Check
                               v-if="
-                                userDetails.plan.knowledge_base_enabled
+                                userDetails.plan?.knowledge_base_enabled
                               " /><Close v-else
                           /></el-icon>
                           {{
@@ -719,7 +719,7 @@
                         <el-tag
                           size="small"
                           :type="
-                            userDetails.plan.browser_enabled
+                            userDetails.plan?.browser_enabled
                               ? 'success'
                               : 'info'
                           "
@@ -727,7 +727,7 @@
                         >
                           <el-icon
                             ><Check
-                              v-if="userDetails.plan.browser_enabled" /><Close
+                              v-if="userDetails.plan?.browser_enabled" /><Close
                               v-else
                           /></el-icon>
                           浏览器
@@ -735,7 +735,7 @@
                         <el-tag
                           size="small"
                           :type="
-                            userDetails.plan.can_share_conversations
+                            userDetails.plan?.can_share_conversations
                               ? 'success'
                               : 'info'
                           "
@@ -744,7 +744,7 @@
                           <el-icon
                             ><Check
                               v-if="
-                                userDetails.plan.can_share_conversations
+                                userDetails.plan?.can_share_conversations
                               " /><Close v-else
                           /></el-icon>
                           分享对话
@@ -752,7 +752,7 @@
                         <el-tag
                           size="small"
                           :type="
-                            userDetails.plan.can_buy_more_credits
+                            userDetails.plan?.can_buy_more_credits
                               ? 'success'
                               : 'info'
                           "
@@ -761,7 +761,7 @@
                           <el-icon
                             ><Check
                               v-if="
-                                userDetails.plan.can_buy_more_credits
+                                userDetails.plan?.can_buy_more_credits
                               " /><Close v-else
                           /></el-icon>
                           购买积分
@@ -769,7 +769,7 @@
                         <el-tag
                           size="small"
                           :type="
-                            userDetails.plan.can_customize_app_icon
+                            userDetails.plan?.can_customize_app_icon
                               ? 'success'
                               : 'info'
                           "
@@ -778,7 +778,7 @@
                           <el-icon
                             ><Check
                               v-if="
-                                userDetails.plan.can_customize_app_icon
+                                userDetails.plan?.can_customize_app_icon
                               " /><Close v-else
                           /></el-icon>
                           自定义图标

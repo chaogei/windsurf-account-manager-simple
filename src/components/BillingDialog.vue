@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="账单与订阅"
+    :title="$t('dialog.billing.title')"
     width="800px"
     class="billing-dialog"
     :close-on-click-modal="false"
@@ -9,7 +9,7 @@
   >
     <div v-if="loading" class="loading-container">
       <el-icon class="is-loading" size="32"><Loading /></el-icon>
-      <p>正在获取账单信息...</p>
+      <p>{{ $t('dialog.billing.loading') }}</p>
     </div>
     
     <div v-else-if="billingData" class="billing-content">
@@ -25,26 +25,26 @@
               {{ formatPlanName(billingData.plan_name) }}
             </div>
             <div class="plan-status">
-              <el-tag v-if="billingData.on_trial" type="warning" effect="dark" round size="small">试用期</el-tag>
-              <el-tag v-if="billingData.subscription_active" type="success" effect="dark" round size="small">活跃</el-tag>
-              <el-tag v-else-if="billingData.subscription_active === false" type="danger" effect="dark" round size="small">未激活</el-tag>
-              <el-tag v-if="billingData.cancel_at_period_end" type="danger" effect="dark" round size="small">将于本期结束后取消</el-tag>
+              <el-tag v-if="billingData.on_trial" type="warning" effect="dark" round size="small">{{ $t('dialog.billing.trial') }}</el-tag>
+              <el-tag v-if="billingData.subscription_active" type="success" effect="dark" round size="small">{{ $t('dialog.billing.active') }}</el-tag>
+              <el-tag v-else-if="billingData.subscription_active === false" type="danger" effect="dark" round size="small">{{ $t('dialog.billing.inactive') }}</el-tag>
+              <el-tag v-if="billingData.cancel_at_period_end" type="danger" effect="dark" round size="small">{{ $t('dialog.billing.cancelAtEnd') }}</el-tag>
             </div>
           </div>
           <div class="sub-price" v-if="billingData.plan_unit_amount">
             <span class="currency">$</span>
             <span class="amount">{{ billingData.plan_unit_amount.toFixed(2) }}</span>
-            <span class="unit" v-if="billingData.sub_interval"> / {{ billingData.sub_interval === 'yearly' ? '年' : '月' }}</span>
+            <span class="unit" v-if="billingData.sub_interval"> / {{ billingData.sub_interval === 'yearly' ? $t('dialog.billing.yearly') : $t('dialog.billing.monthly') }}</span>
           </div>
         </div>
         
         <div class="sub-dates" v-if="billingData.next_billing_date || billingData.subscription_renewal_time">
           <div class="date-item" v-if="billingData.subscription_renewal_time">
-            <span class="label">续期时间</span>
+            <span class="label">{{ $t('dialog.billing.renewalTime') }}</span>
             <span class="value">{{ billingData.subscription_renewal_time }}</span>
           </div>
           <div class="date-item" v-if="billingData.next_billing_date">
-            <span class="label">下次扣费</span>
+            <span class="label">{{ $t('dialog.billing.nextBilling') }}</span>
             <span class="value">{{ billingData.next_billing_date }}</span>
           </div>
         </div>
@@ -55,7 +55,7 @@
         <div class="info-card seats-card" v-if="billingData.num_seats || billingData.num_users">
           <div class="card-title">
             <el-icon><User /></el-icon>
-            <span>席位使用</span>
+            <span>{{ $t('dialog.billing.seatUsage') }}</span>
           </div>
           <div class="card-content">
             <div class="usage-circle-container">
@@ -68,13 +68,13 @@
               >
                 <template #default="{ percentage }">
                   <div class="percentage-value">{{ percentage }}%</div>
-                  <div class="percentage-label">已使用</div>
+                  <div class="percentage-label">{{ $t('dialog.billing.used') }}</div>
                 </template>
               </el-progress>
             </div>
             <div class="usage-details">
               <div class="detail-row">
-                <span class="label">总席位</span>
+                <span class="label">{{ $t('dialog.billing.totalSeats') }}</span>
                 <span class="value">{{ billingData.num_users || 0 }} / {{ billingData.num_seats || 0 }}</span>
               </div>
               <div class="detail-row" v-if="billingData.num_cascade_users !== undefined">
@@ -93,7 +93,7 @@
         <div class="info-card quota-card" v-if="billingData.total_quota">
           <div class="card-title">
             <el-icon><DataAnalysis /></el-icon>
-            <span>配额使用</span>
+            <span>{{ $t('dialog.billing.quotaUsage') }}</span>
           </div>
           <div class="card-content">
             <div class="quota-main">
@@ -113,16 +113,16 @@
             
             <div class="quota-tags">
               <el-tag size="small" type="info" effect="plain" v-if="billingData.base_quota">
-                基础: {{ formatQuota(billingData.base_quota) }}
+                {{ $t('dialog.billing.base') }}: {{ formatQuota(billingData.base_quota) }}
               </el-tag>
               <el-tag size="small" type="success" effect="plain" v-if="billingData.extra_credits">
-                额外: +{{ formatQuota(billingData.extra_credits) }}
+                {{ $t('dialog.billing.extra') }}: +{{ formatQuota(billingData.extra_credits) }}
               </el-tag>
             </div>
 
             <div class="cache-info" v-if="billingData.cache_limit">
               <div class="cache-header">
-                <span>缓存使用 ({{ getCacheUsagePercentage() }}%)</span>
+                <span>{{ $t('dialog.billing.cacheUsage') }} ({{ getCacheUsagePercentage() }}%)</span>
                 <span>{{ formatQuota(billingData.cache_limit) }}</span>
               </div>
               <el-progress 
@@ -139,7 +139,7 @@
         <div class="info-card payment-card" v-if="billingData.payment_method || billingData.plan_unit_amount">
           <div class="card-title">
             <el-icon><CreditCard /></el-icon>
-            <span>支付方式</span>
+            <span>{{ $t('dialog.billing.paymentMethod') }}</span>
           </div>
           <div class="card-content">
             <div class="payment-method" v-if="billingData.payment_method">
@@ -171,7 +171,7 @@
       <div class="alerts-container" v-if="billingData.failed_payment_message || billingData.top_up_error || isApproachingCacheLimit()">
          <el-alert
           v-if="billingData.failed_payment_message"
-          :title="`支付失败: ${billingData.failed_payment_message}`"
+          :title="`${$t('dialog.billing.paymentFailed')}: ${billingData.failed_payment_message}`"
           type="error"
           :closable="false"
           show-icon
@@ -179,7 +179,7 @@
         />
         <el-alert
           v-if="billingData.top_up_error"
-          :title="`充值错误: ${billingData.top_up_error}`"
+          :title="`${$t('dialog.billing.topUpError')}: ${billingData.top_up_error}`"
           type="warning"
           :closable="false"
           show-icon
@@ -187,7 +187,7 @@
         />
          <el-alert 
           v-if="isApproachingCacheLimit()" 
-          :title="`注意：缓存使用率已达${getCacheUsagePercentage()}%`"
+          :title="`${$t('dialog.billing.cacheWarning')}: ${getCacheUsagePercentage()}%`"
           type="warning"
           :closable="false"
           show-icon
@@ -197,7 +197,7 @@
       <!-- 错误信息 -->
       <el-alert
         v-if="!billingData.success"
-        :title="billingData.error || '获取账单信息失败'"
+        :title="billingData.error || $t('dialog.billing.fetchFailed')"
         type="error"
         :closable="false"
         show-icon
@@ -205,7 +205,7 @@
       
       <!-- 原始数据（折叠） -->
       <el-collapse v-if="billingData.raw_data" class="raw-data-collapse">
-        <el-collapse-item title="开发者原始数据">
+        <el-collapse-item :title="$t('dialog.billing.rawData')">
           <pre class="raw-data">{{ JSON.stringify(billingData.raw_data, null, 2) }}</pre>
         </el-collapse-item>
       </el-collapse>
@@ -213,9 +213,9 @@
     
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleClose">关闭</el-button>
+        <el-button @click="handleClose">{{ $t('common.close') }}</el-button>
         <el-button type="primary" @click="copyToClipboard" v-if="billingData">
-          <el-icon><CopyDocument /></el-icon> 复制数据
+          <el-icon><CopyDocument /></el-icon> {{ $t('dialog.billing.copyData') }}
         </el-button>
       </div>
     </template>

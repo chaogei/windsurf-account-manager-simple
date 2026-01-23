@@ -394,7 +394,6 @@
           >
             <el-button circle class="language-btn">
               <span class="language-flag">{{ currentLanguageFlag }}</span>
-              <el-icon class="el-icon--right"><ArrowDown /></el-icon>
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
