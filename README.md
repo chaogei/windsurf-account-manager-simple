@@ -1,5 +1,7 @@
 # Windsurf Account Manager - Simple
 
+[English](./docs/en/README.md) | [Français](./docs/fr/README.md) | [Español](./docs/es/README.md)
+
 一个基于 Tauri + Vue 3 + TypeScript 开发的 Windsurf 多账号管理桌面应用，用于管理多个 Windsurf 账号并提供积分重置、账单查询、一键换号等功能。
 
 > ⚠️ **免费软件声明**：本软件完全免费，如果你是付费购买的，说明你被骗了！
