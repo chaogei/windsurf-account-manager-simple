@@ -1,23 +1,23 @@
 <template>
   <el-dialog
     v-model="uiStore.showLogsDialog"
-    :title="$t('dialog.logs.title')"
+    :title="t('dialog.logs.title')"
     width="800px"
   >
     <div class="logs-container">
       <div class="logs-header">
         <el-button size="small" @click="loadLogs" :icon="Refresh">
-          {{ $t("common.reset") }}
+          {{ t("common.reset") }}
         </el-button>
         <el-button size="small" @click="clearLogs" :icon="Delete">
-          {{ $t("dialog.logs.clear") }}
+          {{ t("dialog.logs.clear") }}
         </el-button>
       </div>
 
       <el-table :data="logs" style="width: 100%" max-height="400">
         <el-table-column
           prop="timestamp"
-          :label="$t('dialog.logs.time')"
+          :label="t('dialog.logs.time')"
           width="180"
         >
           <template #default="{ row }">
@@ -27,7 +27,7 @@
 
         <el-table-column
           prop="operation_type"
-          :label="$t('dialog.logs.type')"
+          :label="t('dialog.logs.type')"
           width="120"
         >
           <template #default="{ row }">
@@ -39,23 +39,23 @@
 
         <el-table-column
           prop="account_email"
-          :label="$t('dialog.logs.account')"
+          :label="t('dialog.logs.account')"
           width="180"
         />
 
-        <el-table-column prop="message" :label="$t('dialog.logs.message')" />
+        <el-table-column prop="message" :label="t('dialog.logs.message')" />
 
         <el-table-column
           prop="status"
-          :label="$t('dialog.logs.status')"
+          :label="t('dialog.logs.status')"
           width="80"
         >
           <template #default="{ row }">
             <el-tag :type="row.status === 'success' ? 'success' : 'danger'">
               {{
                 row.status === "success"
-                  ? $t("dialog.logs.success")
-                  : $t("dialog.logs.error")
+                  ? t("dialog.logs.success")
+                  : t("dialog.logs.error")
               }}
             </el-tag>
           </template>
@@ -91,7 +91,7 @@ async function loadLogs() {
   try {
     await settingsStore.loadLogs(100);
   } catch (error) {
-    ElMessage.error(`${$t("dialog.logs.error")}: ${error}`);
+    ElMessage.error(`${t("dialog.logs.error")}: ${error}`);
   }
 }
 
@@ -111,7 +111,7 @@ async function clearLogs() {
     ElMessage.success(t("dialog.logs.success"));
   } catch (error) {
     if (error !== "cancel") {
-      ElMessage.error(`${$t("dialog.logs.error")}: ${error}`);
+      ElMessage.error(`${t("dialog.logs.error")}: ${error}`);
     }
   }
 }

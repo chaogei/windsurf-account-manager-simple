@@ -66,7 +66,7 @@
           <el-option
             v-for="group in settingsStore.groups"
             :key="group"
-            :label="group"
+            :label="group === '默认分组' ? $t('common.defaultGroup') : group"
             :value="group"
           />
         </el-select>

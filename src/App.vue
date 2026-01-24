@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, computed, ref, watch } from "vue";
 import { ElConfigProvider } from "element-plus";
+// @ts-ignore
 import zhCn from "element-plus/dist/locale/zh-cn.mjs";
+// @ts-ignore
 import en from "element-plus/dist/locale/en.mjs";
+// @ts-ignore
 import fr from "element-plus/dist/locale/fr.mjs";
+// @ts-ignore
 import es from "element-plus/dist/locale/es.mjs";
 import { useAccountsStore, useSettingsStore, useUIStore } from "./store";
 import { useI18n } from "vue-i18n";

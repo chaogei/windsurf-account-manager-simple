@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="uiStore.showStatsDialog"
-    :title="$t('dialog.stats.title')"
+    :title="t('dialog.stats.title')"
     width="700px"
   >
     <div v-if="loading" class="loading-container">
@@ -12,19 +12,19 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <el-statistic
-            :title="$t('dialog.stats.totalAccounts')"
+            :title="t('dialog.stats.totalAccounts')"
             :value="stats.total_accounts"
           />
         </el-col>
         <el-col :span="8">
           <el-statistic
-            :title="$t('dialog.stats.activeAccounts')"
+            :title="t('dialog.stats.activeAccounts')"
             :value="stats.active_accounts"
           />
         </el-col>
         <el-col :span="8">
           <el-statistic
-            :title="$t('dialog.stats.groupCount')"
+            :title="t('dialog.stats.groupCount')"
             :value="stats.groups"
           />
         </el-col>
@@ -35,26 +35,26 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-statistic
-            :title="$t('dialog.stats.successRate')"
+            :title="t('dialog.stats.successRate')"
             :value="stats.success_rate"
             suffix="%"
             :precision="1"
           />
           <div class="stat-detail">
-            {{ $t("dialog.logs.success") }}: {{ stats.successful_operations }} /
-            {{ $t("dialog.logs.error") }}: {{ stats.failed_operations }}
+            {{ t("dialog.logs.success") }}: {{ stats.successful_operations }} /
+            {{ t("dialog.logs.error") }}: {{ stats.failed_operations }}
           </div>
         </el-col>
         <el-col :span="12">
           <el-statistic
-            :title="$t('dialog.stats.resetSuccessRate')"
+            :title="t('dialog.stats.resetSuccessRate')"
             :value="stats.reset_success_rate"
             suffix="%"
             :precision="1"
           />
           <div class="stat-detail">
-            {{ $t("dialog.logs.success") }}: {{ stats.successful_resets }} /
-            {{ $t("dialog.logs.error") }}: {{ stats.failed_resets }}
+            {{ t("dialog.logs.success") }}: {{ stats.successful_resets }} /
+            {{ t("dialog.logs.error") }}: {{ stats.failed_resets }}
           </div>
         </el-col>
       </el-row>
@@ -62,39 +62,39 @@
       <el-divider />
 
       <el-descriptions :column="1" border>
-        <el-descriptions-item :label="$t('dialog.stats.totalOperations')">
+        <el-descriptions-item :label="t('dialog.stats.totalOperations')">
           {{ stats.total_operations }}
         </el-descriptions-item>
 
-        <el-descriptions-item :label="$t('dialog.stats.totalResets')">
+        <el-descriptions-item :label="t('dialog.stats.totalResets')">
           {{ stats.total_resets }}
         </el-descriptions-item>
 
-        <el-descriptions-item :label="$t('dialog.stats.lastOperation')">
+        <el-descriptions-item :label="t('dialog.stats.lastOperation')">
           {{
             stats.last_operation
               ? formatDate(stats.last_operation)
-              : $t("dialog.stats.noData")
+              : t("dialog.stats.noData")
           }}
         </el-descriptions-item>
 
-        <el-descriptions-item :label="$t('settings.autoRefresh')">
+        <el-descriptions-item :label="t('settings.autoRefresh')">
           <el-tag
             :type="stats.settings?.auto_refresh_token ? 'success' : 'info'"
           >
             {{
               stats.settings?.auto_refresh_token
-                ? $t("dialog.settings.on")
-                : $t("dialog.settings.off")
+                ? t("dialog.settings.on")
+                : t("dialog.settings.off")
             }}
           </el-tag>
         </el-descriptions-item>
 
-        <el-descriptions-item :label="$t('settings.retryTimes')">
+        <el-descriptions-item :label="t('settings.retryTimes')">
           {{ stats.settings?.retry_times || 2 }}
         </el-descriptions-item>
 
-        <el-descriptions-item :label="$t('settings.concurrentLimit')">
+        <el-descriptions-item :label="t('settings.concurrentLimit')">
           {{ stats.settings?.concurrent_limit || 5 }}
         </el-descriptions-item>
       </el-descriptions>
@@ -102,10 +102,10 @@
 
     <template #footer>
       <el-button @click="refresh" :icon="Refresh">{{
-        $t("common.reset")
+        t("common.reset")
       }}</el-button>
       <el-button @click="uiStore.closeStatsDialog">{{
-        $t("common.close")
+        t("common.close")
       }}</el-button>
     </template>
   </el-dialog>
@@ -146,7 +146,7 @@ async function loadStats() {
   try {
     stats.value = await settingsApi.getStats();
   } catch (error) {
-    ElMessage.error(`${$t("dialog.stats.loadError")}: ${error}`);
+    ElMessage.error(`${t("dialog.stats.loadError")}: ${error}`);
   } finally {
     loading.value = false;
   }

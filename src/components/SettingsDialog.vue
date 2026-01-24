@@ -1,33 +1,33 @@
 <template>
   <el-dialog
     v-model="uiStore.showSettingsDialog"
-    :title="$t('dialog.settings.title')"
+    :title="t('dialog.settings.title')"
     width="800px"
     :close-on-click-modal="false"
     append-to-body
     @close="handleClose"
   >
     <el-tabs v-model="activeTab" class="settings-tabs">
-      <el-tab-pane :label="$t('dialog.settings.basic.title')" name="basic">
+      <el-tab-pane :label="t('dialog.settings.basic.title')" name="basic">
         <el-form :model="settings" label-width="140px">
           <!-- 现有基础设置 -->
-          <el-form-item :label="$t('dialog.settings.autoRefreshToken')">
+          <el-form-item :label="t('dialog.settings.autoRefreshToken')">
             <el-switch
               v-model="settings.auto_refresh_token"
-              :active-text="$t('dialog.settings.on')"
-              :inactive-text="$t('dialog.settings.off')"
+              :active-text="t('dialog.settings.on')"
+              :inactive-text="t('dialog.settings.off')"
             />
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.unlimitedConcurrent')">
+          <el-form-item :label="t('dialog.settings.unlimitedConcurrent')">
             <el-switch
               v-model="settings.unlimitedConcurrentRefresh"
-              :active-text="$t('dialog.settings.on')"
-              :inactive-text="$t('dialog.settings.off')"
+              :active-text="t('dialog.settings.on')"
+              :inactive-text="t('dialog.settings.off')"
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
               {{
-                $t(
+                t(
                   "dialog.settings.unlimitedConcurrentDesc",
                   "⚠️ 开启后将不限制并发数量，可能导致账号被封禁，请谨慎使用",
                 )
@@ -35,7 +35,7 @@
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.concurrentLimit')">
+          <el-form-item :label="t('dialog.settings.concurrentLimit')">
             <el-input-number
               v-model="settings.concurrent_limit"
               :min="1"
@@ -44,7 +44,7 @@
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
               {{
-                $t(
+                t(
                   "dialog.settings.concurrentLimitDesc",
                   "建议设置为 3-5，过高可能会导致请求由于速率限制而失败",
                 )
@@ -52,15 +52,15 @@
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.seatCountOptions')">
+          <el-form-item :label="t('dialog.settings.seatCountOptions')">
             <el-input
               v-model="seatCountOptionsInput"
-              :placeholder="$t('dialog.settings.seatCountPlaceholder')"
+              :placeholder="t('dialog.settings.seatCountPlaceholder')"
               @blur="parseSeatCountOptions"
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
               {{
-                $t(
+                t(
                   "dialog.settings.seatCountDesc",
                   "输入数字并用逗号分隔，例如: 18, 19, 20",
                 )
@@ -68,76 +68,76 @@
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.retryTimes')">
+          <el-form-item :label="t('dialog.settings.retryTimes')">
             <el-input-number
               v-model="settings.retry_times"
               :min="0"
               :max="10"
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.retryTimesDesc") }}
+              {{ t("dialog.settings.retryTimesDesc") }}
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.theme')">
+          <el-form-item :label="t('dialog.settings.theme')">
             <el-select v-model="settings.theme">
-              <el-option :label="$t('dialog.settings.light')" value="light" />
-              <el-option :label="$t('dialog.settings.dark')" value="dark" />
+              <el-option :label="t('dialog.settings.light')" value="light" />
+              <el-option :label="t('dialog.settings.dark')" value="dark" />
             </el-select>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.language')">
+          <el-form-item :label="t('dialog.settings.language')">
             <el-select
-              v-model="settingsStore.language"
+              v-model="settings.language"
               @change="handleLanguageChange"
             >
               <el-option
-                :label="$t('dialog.settings.languages.zh')"
+                :label="t('dialog.settings.languages.zh')"
                 value="zh"
               />
               <el-option
-                :label="$t('dialog.settings.languages.en')"
+                :label="t('dialog.settings.languages.en')"
                 value="en"
               />
               <el-option
-                :label="$t('dialog.settings.languages.fr')"
+                :label="t('dialog.settings.languages.fr')"
                 value="fr"
               />
               <el-option
-                :label="$t('dialog.settings.languages.es')"
+                :label="t('dialog.settings.languages.es')"
                 value="es"
               />
             </el-select>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.showResultDialog')">
+          <el-form-item :label="t('dialog.settings.showResultDialog')">
             <el-switch
               v-model="settings.show_seats_result_dialog"
-              :active-text="$t('dialog.settings.on')"
-              :inactive-text="$t('dialog.settings.off')"
+              :active-text="t('dialog.settings.on')"
+              :inactive-text="t('dialog.settings.off')"
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.showResultDialogDesc") }}
+              {{ t("dialog.settings.showResultDialogDesc") }}
             </div>
           </el-form-item>
 
           <el-divider content-position="left">{{
-            $t("settings.network", "网络设置")
+            t("settings.network", "网络设置")
           }}</el-divider>
 
-          <el-form-item :label="$t('settings.proxy', '代理设置')">
+          <el-form-item :label="t('settings.proxy', '代理设置')">
             <el-switch
               v-model="settings.proxyEnabled"
-              :active-text="$t('dialog.settings.on')"
-              :inactive-text="$t('dialog.settings.off')"
+              :active-text="t('dialog.settings.on')"
+              :inactive-text="t('dialog.settings.off')"
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.proxySettingsDesc") }}
+              {{ t("dialog.settings.proxySettingsDesc") }}
             </div>
           </el-form-item>
 
           <el-form-item
-            :label="$t('dialog.settings.proxyAddress', '代理地址')"
+            :label="t('dialog.settings.proxyAddress', '代理地址')"
             v-if="settings.proxyEnabled"
           >
             <el-input
@@ -152,7 +152,7 @@
             </el-input>
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
               {{
-                $t(
+                t(
                   "dialog.settings.proxyFormatDesc",
                   "支持 HTTP/HTTPS/SOCKS5 代理，格式：http://host:port 或 socks5://host:port",
                 )
@@ -161,18 +161,18 @@
           </el-form-item>
 
           <el-form-item
-            :label="$t('dialog.settings.resetConnection', '重置网络连接')"
+            :label="t('dialog.settings.resetConnection', '重置网络连接')"
           >
             <el-button
               type="warning"
               @click="handleResetHttpClient"
               :loading="resettingHttp"
             >
-              {{ $t("dialog.settings.resetHttpClient", "重置HTTP客户端") }}
+              {{ t("dialog.settings.resetHttpClient", "重置HTTP客户端") }}
             </el-button>
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
               {{
-                $t(
+                t(
                   "dialog.settings.resetHttpClientDesc",
                   "当遇到连续的API请求失败时，可点击此按钮重置网络连接池",
                 )
@@ -184,89 +184,89 @@
 
       <!-- 支付设置标签页 -->
       <el-tab-pane
-        :label="$t('dialog.settings.payment.title', '支付设置')"
+        :label="t('dialog.settings.payment.title', '支付设置')"
         name="payment"
       >
         <el-form :model="settings" label-width="140px">
-          <el-form-item :label="$t('dialog.settings.payment.autoOpen')">
+          <el-form-item :label="t('dialog.settings.payment.autoOpen')">
             <el-switch
               v-model="settings.autoOpenPaymentLinkInWebview"
-              :active-text="$t('dialog.settings.on')"
-              :inactive-text="$t('dialog.settings.off')"
+              :active-text="t('dialog.settings.on')"
+              :inactive-text="t('dialog.settings.off')"
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.payment.autoOpenDesc") }}
+              {{ t("dialog.settings.payment.autoOpenDesc") }}
             </div>
           </el-form-item>
 
           <el-divider content-position="left">{{
-            $t("dialog.settings.payment.browserSettings")
+            t("dialog.settings.payment.browserSettings")
           }}</el-divider>
 
-          <el-form-item :label="$t('dialog.settings.payment.autoOpenBrowser')">
+          <el-form-item :label="t('dialog.settings.payment.autoOpenBrowser')">
             <el-switch
               v-model="settings.autoOpenBrowser"
-              :active-text="$t('dialog.settings.on')"
-              :inactive-text="$t('dialog.settings.off')"
+              :active-text="t('dialog.settings.on')"
+              :inactive-text="t('dialog.settings.off')"
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.payment.autoOpenBrowserDesc") }}
+              {{ t("dialog.settings.payment.autoOpenBrowserDesc") }}
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.payment.browserMode')">
+          <el-form-item :label="t('dialog.settings.payment.browserMode')">
             <el-radio-group v-model="settings.browserMode">
               <el-radio-button label="incognito">{{
-                $t("dialog.settings.payment.modes.incognito")
+                t("dialog.settings.payment.modes.incognito")
               }}</el-radio-button>
               <el-radio-button label="normal">{{
-                $t("dialog.settings.payment.modes.normal")
+                t("dialog.settings.payment.modes.normal")
               }}</el-radio-button>
             </el-radio-group>
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.payment.browserModeDesc") }}
+              {{ t("dialog.settings.payment.browserModeDesc") }}
             </div>
           </el-form-item>
 
           <el-divider content-position="left">{{
-            $t("dialog.settings.payment.autoFillSettings")
+            t("dialog.settings.payment.autoFillSettings")
           }}</el-divider>
 
-          <el-form-item :label="$t('dialog.settings.payment.autoFill')">
+          <el-form-item :label="t('dialog.settings.payment.autoFill')">
             <el-switch
               v-model="settings.autoFillPaymentForm"
-              :active-text="$t('dialog.settings.on')"
-              :inactive-text="$t('dialog.settings.off')"
+              :active-text="t('dialog.settings.on')"
+              :inactive-text="t('dialog.settings.off')"
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.payment.autoFillDesc") }}
+              {{ t("dialog.settings.payment.autoFillDesc") }}
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.payment.showCardInfo')">
+          <el-form-item :label="t('dialog.settings.payment.showCardInfo')">
             <el-switch
               v-model="settings.showVirtualCardInfo"
-              :active-text="$t('dialog.settings.on')"
-              :inactive-text="$t('dialog.settings.off')"
+              :active-text="t('dialog.settings.on')"
+              :inactive-text="t('dialog.settings.off')"
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.payment.showCardInfoDesc") }}
+              {{ t("dialog.settings.payment.showCardInfoDesc") }}
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.payment.autoSubmit')">
+          <el-form-item :label="t('dialog.settings.payment.autoSubmit')">
             <el-switch
               v-model="settings.autoSubmitPaymentForm"
-              :active-text="$t('dialog.settings.on')"
-              :inactive-text="$t('dialog.settings.off')"
+              :active-text="t('dialog.settings.on')"
+              :inactive-text="t('dialog.settings.off')"
               :disabled="!settings.autoFillPaymentForm"
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.payment.autoSubmitDesc") }}
+              {{ t("dialog.settings.payment.autoSubmitDesc") }}
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.payment.delay')">
+          <el-form-item :label="t('dialog.settings.payment.delay')">
             <el-input-number
               v-model="settings.paymentPageDelay"
               :min="1"
@@ -275,48 +275,48 @@
               :disabled="!settings.autoFillPaymentForm"
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.payment.delayDesc") }}
+              {{ t("dialog.settings.payment.delayDesc") }}
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.payment.customBin')">
+          <el-form-item :label="t('dialog.settings.payment.customBin')">
             <el-input
               v-model="settings.customCardBin"
               :placeholder="
-                $t('dialog.settings.payment.customBinDesc', '请输入4-12位数字')
+                t('dialog.settings.payment.customBinDesc', '请输入4-12位数字')
               "
               maxlength="12"
               @input="validateCardBin"
             >
               <template #append>
                 <el-button @click="resetCardBin">{{
-                  $t("dialog.settings.payment.resetDefault")
+                  t("dialog.settings.payment.resetDefault")
                 }}</el-button>
               </template>
             </el-input>
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.payment.customBinDesc") }}
+              {{ t("dialog.settings.payment.customBinDesc") }}
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.payment.binRange')">
+          <el-form-item :label="t('dialog.settings.payment.binRange')">
             <el-input
               v-model="settings.customCardBinRange"
-              :placeholder="$t('dialog.settings.payment.binRangePlaceholder')"
+              :placeholder="t('dialog.settings.payment.binRangePlaceholder')"
               @input="validateCardBinRange"
             >
               <template #append>
                 <el-button @click="clearCardBinRange">{{
-                  $t("common.clear") || $t("dialog.settings.clear")
+                  t("common.clear") || t("dialog.settings.clear")
                 }}</el-button>
               </template>
             </el-input>
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.payment.binRangeDesc") }}
+              {{ t("dialog.settings.payment.binRangeDesc") }}
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.payment.retryTimes')">
+          <el-form-item :label="t('dialog.settings.payment.retryTimes')">
             <el-input-number
               v-model="settings.cardBindRetryTimes"
               :min="0"
@@ -325,15 +325,15 @@
               controls-position="right"
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.payment.retryTimesDesc") }}
+              {{ t("dialog.settings.payment.retryTimesDesc") }}
             </div>
           </el-form-item>
 
           <el-divider content-position="left">{{
-            $t("dialog.settings.payment.binPool")
+            t("dialog.settings.payment.binPool")
           }}</el-divider>
 
-          <el-form-item :label="$t('dialog.settings.payment.testMode')">
+          <el-form-item :label="t('dialog.settings.payment.testMode')">
             <div style="display: flex; align-items: center; gap: 10px">
               <el-switch v-model="settings.testModeEnabled" />
               <el-button
@@ -342,42 +342,41 @@
                 @click="resetTestModeProgress"
                 :disabled="!testModeProgress"
               >
-                {{ $t("dialog.settings.payment.resetProgress") }}
+                {{ t("dialog.settings.payment.resetProgress") }}
               </el-button>
             </div>
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.payment.testModeDesc") }}
+              {{ t("dialog.settings.payment.testModeDesc") }}
               （{{
-                $t("common.count", { count: successBinCount }) ||
-                $t("dialog.settings.poolCount", { count: successBinCount })
+                t("common.count", { count: successBinCount }) ||
+                t("dialog.settings.poolCount", { count: successBinCount })
               }}）
               <span v-if="testModeProgress" style="color: #67c23a">
                 <br />{{
-                  $t("common.progress") ||
-                  $t("dialog.settings.currentProgress")
+                  t("common.progress") || t("dialog.settings.currentProgress")
                 }}：{{ testModeProgress }}
               </span>
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.payment.useLocalPool')">
+          <el-form-item :label="t('dialog.settings.payment.useLocalPool')">
             <el-switch
               v-model="settings.useLocalSuccessBins"
               :disabled="successBinCount === 0"
             />
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.payment.useLocalPoolDesc") }}
+              {{ t("dialog.settings.payment.useLocalPoolDesc") }}
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.payment.poolManagement')">
+          <el-form-item :label="t('dialog.settings.payment.poolManagement')">
             <el-button-group>
               <el-button
                 size="small"
                 @click="viewSuccessBins"
                 :disabled="successBinCount === 0"
               >
-                {{ $t("dialog.settings.payment.viewPool") }}
+                {{ t("dialog.settings.payment.viewPool") }}
               </el-button>
               <el-button
                 size="small"
@@ -385,13 +384,13 @@
                 @click="clearSuccessBins"
                 :disabled="successBinCount === 0"
               >
-                {{ $t("dialog.settings.payment.clearPool") }}
+                {{ t("dialog.settings.payment.clearPool") }}
               </el-button>
             </el-button-group>
           </el-form-item>
 
           <el-alert
-            :title="$t('dialog.settings.payment.importantNote')"
+            :title="t('dialog.settings.payment.importantNote')"
             type="warning"
             :closable="false"
             show-icon
@@ -399,10 +398,10 @@
           >
             <template #default>
               <div style="font-size: 12px; line-height: 1.6">
-                <p>{{ $t("dialog.settings.payment.importantDesc1") }}</p>
-                <p>{{ $t("dialog.settings.payment.importantDesc2") }}</p>
-                <p>{{ $t("dialog.settings.payment.importantDesc3") }}</p>
-                <p>{{ $t("dialog.settings.payment.importantDesc4") }}</p>
+                <p>{{ t("dialog.settings.payment.importantDesc1") }}</p>
+                <p>{{ t("dialog.settings.payment.importantDesc2") }}</p>
+                <p>{{ t("dialog.settings.payment.importantDesc3") }}</p>
+                <p>{{ t("dialog.settings.payment.importantDesc4") }}</p>
               </div>
             </template>
           </el-alert>
@@ -410,15 +409,12 @@
       </el-tab-pane>
 
       <!-- 无感换号标签页 -->
-      <el-tab-pane
-        :label="$t('dialog.settings.seamless.title')"
-        name="seamless"
-      >
+      <el-tab-pane :label="t('dialog.settings.seamless.title')" name="seamless">
         <el-form :model="settings" label-width="140px">
-          <el-form-item :label="$t('dialog.settings.seamless.path')">
+          <el-form-item :label="t('dialog.settings.seamless.path')">
             <el-input
               v-model="windsurfPath"
-              :placeholder="$t('dialog.settings.seamless.pathPlaceholder')"
+              :placeholder="t('dialog.settings.seamless.pathPlaceholder')"
               @blur="handlePathChange"
             >
               <template #append>
@@ -427,39 +423,39 @@
                     @click="detectWindsurfPath"
                     :loading="detectingPath"
                   >
-                    {{ $t("dialog.settings.seamless.autoDetect") }}
+                    {{ t("dialog.settings.seamless.autoDetect") }}
                   </el-button>
                   <el-button @click="browseWindsurfPath">
-                    {{ $t("dialog.settings.seamless.browse") }}
+                    {{ t("dialog.settings.seamless.browse") }}
                   </el-button>
                 </el-button-group>
               </template>
             </el-input>
             <div style="margin-top: 5px; color: #909399; font-size: 12px">
-              {{ $t("dialog.settings.seamless.pathDesc") }}
+              {{ t("dialog.settings.seamless.pathDesc") }}
             </div>
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.seamless.enable')">
+          <el-form-item :label="t('dialog.settings.seamless.enable')">
             <el-switch
               v-model="settings.seamlessSwitchEnabled"
-              :active-text="$t('dialog.settings.on')"
-              :inactive-text="$t('dialog.settings.off')"
+              :active-text="t('dialog.settings.on')"
+              :inactive-text="t('dialog.settings.off')"
               :loading="patchLoading"
               @change="handleSeamlessSwitch"
               :disabled="!windsurfPath"
             />
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.seamless.patchStatus')">
+          <el-form-item :label="t('dialog.settings.seamless.patchStatus')">
             <el-tag v-if="patchStatus.installed" type="success">{{
-              $t("dialog.settings.seamless.installed")
+              t("dialog.settings.seamless.installed")
             }}</el-tag>
             <el-tag v-else-if="patchStatus.error" type="danger">{{
               patchStatus.error
             }}</el-tag>
             <el-tag v-else type="info">{{
-              $t("dialog.settings.seamless.notInstalled")
+              t("dialog.settings.seamless.notInstalled")
             }}</el-tag>
             <el-button
               v-if="patchStatus.installed"
@@ -467,12 +463,12 @@
               style="margin-left: 10px"
               @click="checkPatchStatus"
             >
-              {{ $t("dialog.settings.seamless.recheck") }}
+              {{ t("dialog.settings.seamless.recheck") }}
             </el-button>
           </el-form-item>
 
           <el-alert
-            :title="$t('dialog.settings.seamless.featureDesc')"
+            :title="t('dialog.settings.seamless.featureDesc')"
             type="info"
             :closable="false"
             show-icon
@@ -480,35 +476,35 @@
           >
             <template #default>
               <div style="font-size: 12px; line-height: 1.6">
-                <p>{{ $t("dialog.settings.seamless.featureDesc1") }}</p>
-                <p>{{ $t("dialog.settings.seamless.featureDesc2") }}</p>
+                <p>{{ t("dialog.settings.seamless.featureDesc1") }}</p>
+                <p>{{ t("dialog.settings.seamless.featureDesc2") }}</p>
               </div>
             </template>
           </el-alert>
 
           <el-divider content-position="left">{{
-            $t("dialog.settings.seamless.weige")
+            t("dialog.settings.seamless.weige")
           }}</el-divider>
 
-          <el-form-item :label="$t('dialog.settings.seamless.enableWeige')">
+          <el-form-item :label="t('dialog.settings.seamless.enableWeige')">
             <el-switch
               v-model="settings.cunzhiEnabled"
-              :active-text="$t('dialog.settings.on')"
-              :inactive-text="$t('dialog.settings.off')"
+              :active-text="t('dialog.settings.on')"
+              :inactive-text="t('dialog.settings.off')"
               :loading="cunzhiLoading"
               @change="handleCunzhiSwitch"
             />
           </el-form-item>
 
-          <el-form-item :label="$t('dialog.settings.seamless.weigeStatus')">
+          <el-form-item :label="t('dialog.settings.seamless.weigeStatus')">
             <el-tag v-if="cunzhiStatus.installed" type="success">{{
-              $t("dialog.settings.seamless.installed")
+              t("dialog.settings.seamless.installed")
             }}</el-tag>
             <el-tag v-else-if="cunzhiStatus.error" type="danger">{{
               cunzhiStatus.error
             }}</el-tag>
             <el-tag v-else type="info">{{
-              $t("dialog.settings.seamless.notInstalled")
+              t("dialog.settings.seamless.notInstalled")
             }}</el-tag>
             <el-button
               v-if="cunzhiStatus.installed"
@@ -516,12 +512,12 @@
               style="margin-left: 10px"
               @click="checkCunzhiStatus"
             >
-              {{ $t("dialog.settings.seamless.recheck") }}
+              {{ t("dialog.settings.seamless.recheck") }}
             </el-button>
           </el-form-item>
 
           <el-alert
-            :title="$t('dialog.settings.seamless.weigeDesc')"
+            :title="t('dialog.settings.seamless.weigeDesc')"
             type="success"
             :closable="false"
             show-icon
@@ -529,8 +525,8 @@
           >
             <template #default>
               <div style="font-size: 12px; line-height: 1.6">
-                <p>{{ $t("dialog.settings.seamless.weigeDesc1") }}</p>
-                <p>{{ $t("dialog.settings.seamless.weigeDesc2") }}</p>
+                <p>{{ t("dialog.settings.seamless.weigeDesc1") }}</p>
+                <p>{{ t("dialog.settings.seamless.weigeDesc2") }}</p>
               </div>
             </template>
           </el-alert>
@@ -539,9 +535,9 @@
     </el-tabs>
 
     <template #footer>
-      <el-button @click="handleClose">{{ $t("common.cancel") }}</el-button>
+      <el-button @click="handleClose">{{ t("common.cancel") }}</el-button>
       <el-button type="primary" @click="handleSave" :loading="loading">
-        {{ $t("common.save") }}
+        {{ t("common.save") }}
       </el-button>
     </template>
   </el-dialog>
@@ -554,7 +550,6 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { Connection } from "@element-plus/icons-vue";
 import { useSettingsStore, useUIStore } from "@/store";
 import { invoke } from "@tauri-apps/api/core";
-import { systemApi } from "@/api";
 
 const { t } = useI18n();
 const settingsStore = useSettingsStore();
@@ -583,7 +578,7 @@ function parseSeatCountOptions() {
     ElMessage.warning(
       t(
         "dialog.settings.invalidSeatCount",
-        $t("dialog.settings.pleaseEnterValidSeatCount"),
+        t("dialog.settings.pleaseEnterValidSeatCount"),
       ),
     );
     settings.seat_count_options = [18, 19, 20];
@@ -622,6 +617,7 @@ const settings = reactive<{
   proxyUrl: string | null;
   useLightweightApi: boolean;
   cunzhiEnabled: boolean;
+  language?: string;
 }>({
   auto_refresh_token: true,
   seat_count_options: [18, 19, 20],
@@ -650,6 +646,7 @@ const settings = reactive<{
   proxyUrl: null, // 默认无代理地址
   useLightweightApi: true, // 默认使用轻量级API
   cunzhiEnabled: false, // 默认关闭伟哥功能
+  language: "zh", // 默认语言
 });
 
 // 成功BIN池相关
@@ -678,9 +675,9 @@ async function loadTestModeProgress() {
 async function resetTestModeProgress() {
   try {
     await ElMessageBox.confirm(
-      $t(
+      t(
         "dialog.settings.payment.confirmResetProgress",
-        $t("dialog.settings.confirmResetProgressMessage"),
+        t("dialog.settings.confirmResetProgressMessage"),
       ),
       t("common.confirm"), // "确认重置",
       {
@@ -706,7 +703,7 @@ async function viewSuccessBins() {
     }
     ElMessageBox.alert(
       `<div style="max-height: 300px; overflow-y: auto;">
-        <p><b>${$t("dialog.settings.payment.totalBins", { count: bins.length }) || `共 ${bins.length} 个成功BIN：`}</b></p>
+        <p><b>${t("dialog.settings.payment.totalBins", { count: bins.length }) || `共 ${bins.length} 个成功BIN：`}</b></p>
         <p style="font-family: monospace; word-break: break-all;">${bins.join(", ")}</p>
       </div>`,
       t("dialog.settings.payment.poolTitle", "成功BIN池"),
@@ -805,7 +802,7 @@ async function handleSave() {
     ElMessage.success(t("common.success"));
     handleClose();
   } catch (error) {
-    ElMessage.error(`${$t("common.error")}: ${error}`);
+    ElMessage.error(`${t("common.error")}: ${error}`);
   } finally {
     loading.value = false;
   }
@@ -899,7 +896,7 @@ async function detectWindsurfPath() {
     // 保存路径设置到本地
     await settingsStore.updateSettings(settings);
   } catch (error) {
-    ElMessage.error(`${$t("common.error")}: ${error}`);
+    ElMessage.error(`${t("common.error")}: ${error}`);
     windsurfPath.value = "";
   } finally {
     detectingPath.value = false;
@@ -993,7 +990,7 @@ async function browseWindsurfPath() {
       }
     }
   } catch (error) {
-    ElMessage.error(`${$t("common.error")}: ${error}`);
+    ElMessage.error(`${t("common.error")}: ${error}`);
   }
 }
 
@@ -1008,7 +1005,6 @@ async function handleSeamlessSwitch(value: boolean) {
   }
 
   // 确认对话框
-  const action = value ? t("dialog.settings.on") : t("dialog.settings.off");
   const message = value
     ? t(
         "dialog.settings.seamless.confirmEnable",
@@ -1059,7 +1055,7 @@ async function handleSeamlessSwitch(value: boolean) {
       settings.seamlessSwitchEnabled = !value;
     }
   } catch (error) {
-    ElMessage.error(`${$t("common.error")}: ${error}`);
+    ElMessage.error(`${t("common.error")}: ${error}`);
     settings.seamlessSwitchEnabled = !value;
   } finally {
     patchLoading.value = false;
@@ -1069,7 +1065,6 @@ async function handleSeamlessSwitch(value: boolean) {
 // 处理伟哥开关
 async function handleCunzhiSwitch(value: boolean) {
   // 类似无感换号的处理逻辑
-  const action = value ? t("dialog.settings.on") : t("dialog.settings.off");
   const message = value
     ? t(
         "dialog.settings.seamless.confirmEnableWeige",
@@ -1108,7 +1103,7 @@ async function handleCunzhiSwitch(value: boolean) {
       settings.cunzhiEnabled = !value;
     }
   } catch (error) {
-    // ElMessage.error(`${$t('common.error')}: ${error}`);
+    // ElMessage.error(`${t('common.error')}: ${error}`);
     // settings.cunzhiEnabled = !value;
     // 临时模拟成功 (如果API不存在)
     settings.cunzhiEnabled = value;
@@ -1126,7 +1121,7 @@ async function handleResetHttpClient() {
     await invoke("reset_http_client");
     ElMessage.success(t("dialog.settings.resetSuccess", "网络连接已重置"));
   } catch (error) {
-    ElMessage.error(`${$t("common.error")}: ${error}`);
+    ElMessage.error(`${t("common.error")}: ${error}`);
   } finally {
     resettingHttp.value = false;
   }

@@ -14,7 +14,7 @@
           <div class="header-icon">
             <el-icon><Timer /></el-icon>
           </div>
-          <h3 class="header-text">{{ $t("dialog.autoReset.title") }}</h3>
+          <h3 class="header-text">{{ t("dialog.autoReset.title") }}</h3>
         </div>
         <el-button
           :icon="Close"
@@ -31,39 +31,39 @@
       class="custom-tabs"
     >
       <!-- Tab 1: 规则配置 -->
-      <el-tab-pane :label="$t('dialog.autoReset.rules')" name="rules">
+      <el-tab-pane :label="t('dialog.autoReset.rules')" name="rules">
         <div class="tab-content">
           <!-- 添加配置区域 -->
           <el-card class="add-config-card" shadow="never">
             <template #header>
               <div class="card-header">
-                <span>{{ $t("dialog.autoReset.addRule") }}</span>
+                <span>{{ t("dialog.autoReset.addRule") }}</span>
               </div>
             </template>
 
             <el-form :model="newConfig" label-width="100px" size="default">
               <el-row :gutter="16">
                 <el-col :span="12">
-                  <el-form-item :label="$t('dialog.autoReset.targetType')">
+                  <el-form-item :label="t('dialog.autoReset.targetType')">
                     <el-radio-group
                       v-model="newConfig.targetType"
                       @change="handleTargetTypeChange"
                     >
                       <el-radio value="group">{{
-                        $t("dialog.autoReset.group")
+                        t("dialog.autoReset.group")
                       }}</el-radio>
                       <el-radio value="account">{{
-                        $t("dialog.autoReset.account")
+                        t("dialog.autoReset.account")
                       }}</el-radio>
                     </el-radio-group>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item :label="$t('dialog.autoReset.selectTarget')">
+                  <el-form-item :label="t('dialog.autoReset.selectTarget')">
                     <el-select
                       v-if="newConfig.targetType === 'group'"
                       v-model="newConfig.targetId"
-                      :placeholder="$t('dialog.autoReset.selectGroup')"
+                      :placeholder="t('dialog.autoReset.selectGroup')"
                       style="width: 100%"
                     >
                       <el-option
@@ -73,14 +73,18 @@
                         :value="group"
                       >
                         <div class="group-option">
-                          <span>{{ group }}</span>
+                          <span>{{
+                            group === "默认分组"
+                              ? t("common.defaultGroup")
+                              : group
+                          }}</span>
                           <span class="group-stats">
                             <el-tag type="primary" size="small"
-                              >{{ $t("dialog.accountInfo.role.owner")
+                              >{{ t("dialog.accountInfo.role.owner")
                               }}{{ getGroupStats(group).masters }}</el-tag
                             >
                             <el-tag type="info" size="small"
-                              >{{ $t("dialog.accountInfo.role.member")
+                              >{{ t("dialog.accountInfo.role.member")
                               }}{{ getGroupStats(group).members }}</el-tag
                             >
                           </span>
@@ -90,7 +94,7 @@
                     <el-select
                       v-else
                       v-model="newConfig.targetId"
-                      :placeholder="$t('dialog.autoReset.selectAccount')"
+                      :placeholder="t('dialog.autoReset.selectAccount')"
                       filterable
                       style="width: 100%"
                     >
@@ -107,7 +111,7 @@
 
               <el-row :gutter="16">
                 <el-col :span="8">
-                  <el-form-item :label="$t('dialog.autoReset.checkInterval')">
+                  <el-form-item :label="t('dialog.autoReset.checkInterval')">
                     <el-input-number
                       v-model="newConfig.checkInterval"
                       :min="1"
@@ -115,7 +119,7 @@
                       style="width: 100%"
                     />
                     <span class="unit-label">{{
-                      $t("dialog.autoReset.minutes")
+                      t("dialog.autoReset.minutes")
                     }}</span>
                     <div class="interval-presets">
                       <el-button
@@ -146,7 +150,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item :label="$t('dialog.autoReset.usageThreshold')">
+                  <el-form-item :label="t('dialog.autoReset.usageThreshold')">
                     <el-input-number
                       v-model="newConfig.usageThreshold"
                       :min="1"
@@ -158,7 +162,7 @@
                 </el-col>
                 <el-col :span="8">
                   <el-form-item
-                    :label="$t('dialog.autoReset.remainingThreshold')"
+                    :label="t('dialog.autoReset.remainingThreshold')"
                   >
                     <el-input-number
                       v-model="newConfig.remainingThreshold"
@@ -168,7 +172,7 @@
                       style="width: 100%"
                     />
                     <span class="unit-label">{{
-                      $t("dialog.autoReset.credits")
+                      t("dialog.autoReset.credits")
                     }}</span>
                   </el-form-item>
                 </el-col>
@@ -181,11 +185,11 @@
                   :loading="adding"
                 >
                   <el-icon><Plus /></el-icon>
-                  {{ $t("common.add") }}
+                  {{ t("common.add") }}
                 </el-button>
                 <span class="tip-text">
                   {{
-                    $t("dialog.autoReset.tips.trigger", {
+                    t("dialog.autoReset.tips.trigger", {
                       usage: newConfig.usageThreshold,
                       remaining: newConfig.remainingThreshold,
                     })
@@ -201,7 +205,7 @@
               <div class="card-header">
                 <div class="header-left">
                   <span>{{
-                    $t("dialog.autoReset.configuredRules", {
+                    t("dialog.autoReset.configuredRules", {
                       count: filteredConfigs.length,
                       total: configs.length,
                     })
@@ -220,7 +224,7 @@
                 <div class="header-actions">
                   <el-input
                     v-model="searchKeyword"
-                    :placeholder="$t('dialog.autoReset.searchPlaceholder')"
+                    :placeholder="t('dialog.autoReset.searchPlaceholder')"
                     :prefix-icon="Search"
                     clearable
                     size="small"
@@ -234,7 +238,7 @@
                     :loading="checkingAll"
                   >
                     <el-icon><Refresh /></el-icon>
-                    {{ $t("dialog.autoReset.checkAll") }}
+                    {{ t("dialog.autoReset.checkAll") }}
                   </el-button>
                   <el-button
                     v-if="filteredConfigs.length > 0"
@@ -244,7 +248,7 @@
                     :loading="resettingAll"
                   >
                     <el-icon><RefreshRight /></el-icon>
-                    {{ $t("dialog.autoReset.resetAll") }}
+                    {{ t("dialog.autoReset.resetAll") }}
                   </el-button>
                 </div>
               </div>
@@ -253,10 +257,10 @@
             <el-table
               :data="paginatedConfigs"
               v-loading="loading"
-              :empty-text="$t('dialog.autoReset.noRules')"
+              :empty-text="t('dialog.autoReset.noRules')"
             >
               <el-table-column
-                :label="$t('dialog.autoReset.target')"
+                :label="t('dialog.autoReset.target')"
                 min-width="280"
               >
                 <template #default="{ row }">
@@ -267,8 +271,8 @@
                     >
                       {{
                         row.targetType === "group"
-                          ? $t("dialog.autoReset.group")
-                          : $t("dialog.autoReset.account")
+                          ? t("dialog.autoReset.group")
+                          : t("dialog.autoReset.account")
                       }}
                     </el-tag>
                     <span class="target-name">
@@ -279,11 +283,11 @@
                     </span>
                     <span v-if="row.targetType === 'group'" class="group-info">
                       <el-tag type="warning" size="small" effect="plain"
-                        >{{ $t("dialog.accountInfo.role.owner")
+                        >{{ t("dialog.accountInfo.role.owner")
                         }}{{ getGroupStats(row.targetId).masters }}</el-tag
                       >
                       <el-tag type="info" size="small" effect="plain"
-                        >{{ $t("dialog.accountInfo.role.member")
+                        >{{ t("dialog.accountInfo.role.member")
                         }}{{ getGroupStats(row.targetId).members }}</el-tag
                       >
                     </span>
@@ -292,27 +296,26 @@
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.autoReset.interval')"
+                :label="t('dialog.autoReset.interval')"
                 width="90"
                 align="center"
               >
                 <template #default="{ row }">
-                  {{ row.checkInterval }}{{ $t("dialog.autoReset.minutes") }}
+                  {{ row.checkInterval }}{{ t("dialog.autoReset.minutes") }}
                 </template>
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.autoReset.condition')"
+                :label="t('dialog.autoReset.condition')"
                 width="140"
               >
                 <template #default="{ row }">
                   <div class="condition-info">
                     <span
-                      >{{ $t("common.usage") }} ≥
-                      {{ row.usageThreshold }}%</span
+                      >{{ t("common.usage") }} ≥ {{ row.usageThreshold }}%</span
                     >
                     <span
-                      >{{ $t("common.remaining") }} ≤
+                      >{{ t("common.remaining") }} ≤
                       {{ row.remainingThreshold }}</span
                     >
                   </div>
@@ -320,7 +323,7 @@
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.autoReset.lastCheck')"
+                :label="t('dialog.autoReset.lastCheck')"
                 width="120"
               >
                 <template #default="{ row }">
@@ -332,7 +335,7 @@
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.autoReset.lastReset')"
+                :label="t('dialog.autoReset.lastReset')"
                 width="120"
               >
                 <template #default="{ row }">
@@ -344,7 +347,7 @@
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.autoReset.status')"
+                :label="t('dialog.autoReset.status')"
                 width="70"
                 align="center"
               >
@@ -358,7 +361,7 @@
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.autoReset.actions')"
+                :label="t('dialog.autoReset.actions')"
                 width="150"
                 align="center"
               >
@@ -368,7 +371,7 @@
                     link
                     size="small"
                     @click="handleEditConfig(row)"
-                    >{{ $t("common.edit") }}</el-button
+                    >{{ t("common.edit") }}</el-button
                   >
                   <el-button
                     type="success"
@@ -376,7 +379,7 @@
                     size="small"
                     @click="handleCheckNow(row)"
                     :loading="row._checking"
-                    >{{ $t("common.check") }}</el-button
+                    >{{ t("common.check") }}</el-button
                   >
                   <el-button
                     type="warning"
@@ -384,14 +387,14 @@
                     size="small"
                     @click="handleResetNow(row)"
                     :loading="row._resetting"
-                    >{{ $t("common.reset") }}</el-button
+                    >{{ t("common.reset") }}</el-button
                   >
                   <el-button
                     type="danger"
                     link
                     size="small"
                     @click="handleDeleteConfig(row)"
-                    >{{ $t("common.delete") }}</el-button
+                    >{{ t("common.delete") }}</el-button
                   >
                 </template>
               </el-table-column>
@@ -401,13 +404,13 @@
       </el-tab-pane>
 
       <!-- Tab 2: 重置记录 -->
-      <el-tab-pane :label="$t('dialog.autoReset.records')" name="records">
+      <el-tab-pane :label="t('dialog.autoReset.records')" name="records">
         <div class="tab-content">
           <el-card shadow="never">
             <template #header>
               <div class="card-header">
                 <span
-                  >{{ $t("dialog.autoReset.resetHistory") }} ({{
+                  >{{ t("dialog.autoReset.resetHistory") }} ({{
                     recordsTotal
                   }})</span
                 >
@@ -418,7 +421,7 @@
                   @click="handleClearRecords"
                 >
                   <el-icon><Delete /></el-icon>
-                  {{ $t("dialog.autoReset.clearRecords") }}
+                  {{ t("dialog.autoReset.clearRecords") }}
                 </el-button>
               </div>
             </template>
@@ -426,10 +429,10 @@
             <el-table
               :data="records"
               v-loading="recordsLoading"
-              :empty-text="$t('dialog.logs.empty')"
+              :empty-text="t('dialog.logs.empty')"
             >
               <el-table-column
-                :label="$t('dialog.accountInfo.basic.email')"
+                :label="t('dialog.accountInfo.basic.email')"
                 min-width="200"
               >
                 <template #default="{ row }">
@@ -443,7 +446,7 @@
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.accountInfo.role.owner')"
+                :label="t('dialog.accountInfo.role.owner')"
                 min-width="180"
               >
                 <template #default="{ row }">
@@ -452,7 +455,7 @@
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.accountInfo.stats.used')"
+                :label="t('dialog.accountInfo.stats.used')"
                 width="120"
                 align="center"
               >
@@ -463,7 +466,7 @@
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.accountInfo.plan.total')"
+                :label="t('dialog.accountInfo.plan.total')"
                 width="100"
                 align="center"
               >
@@ -473,7 +476,7 @@
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.autoReset.autoJoined')"
+                :label="t('dialog.autoReset.autoJoined')"
                 width="80"
                 align="center"
               >
@@ -482,13 +485,13 @@
                     :type="row.auto_joined ? 'success' : 'info'"
                     size="small"
                   >
-                    {{ row.auto_joined ? $t("common.yes") : $t("common.no") }}
+                    {{ row.auto_joined ? t("common.yes") : t("common.no") }}
                   </el-tag>
                 </template>
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.autoReset.resetTime')"
+                :label="t('dialog.autoReset.resetTime')"
                 width="160"
               >
                 <template #default="{ row }">
@@ -515,13 +518,13 @@
       </el-tab-pane>
 
       <!-- Tab 3: 统计概览 -->
-      <el-tab-pane :label="$t('dialog.autoReset.overview')" name="stats">
+      <el-tab-pane :label="t('dialog.autoReset.overview')" name="stats">
         <div class="tab-content">
           <el-card shadow="never">
             <template #header>
               <div class="card-header">
                 <span
-                  >{{ $t("dialog.autoReset.resetStats") }} ({{
+                  >{{ t("dialog.autoReset.resetStats") }} ({{
                     statsTotal
                   }})</span
                 >
@@ -531,10 +534,10 @@
             <el-table
               :data="stats"
               v-loading="statsLoading"
-              :empty-text="$t('dialog.stats.noData')"
+              :empty-text="t('dialog.stats.noData')"
             >
               <el-table-column
-                :label="$t('dialog.accountInfo.basic.email')"
+                :label="t('dialog.accountInfo.basic.email')"
                 min-width="200"
               >
                 <template #default="{ row }">
@@ -548,7 +551,7 @@
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.stats.totalResets')"
+                :label="t('dialog.stats.totalResets')"
                 width="100"
                 align="center"
               >
@@ -558,7 +561,7 @@
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.accountInfo.stats.totalUsed')"
+                :label="t('dialog.accountInfo.stats.totalUsed')"
                 width="140"
                 align="center"
               >
@@ -568,7 +571,7 @@
               </el-table-column>
 
               <el-table-column
-                :label="$t('dialog.stats.averageUsage')"
+                :label="t('dialog.stats.averageUsage')"
                 width="140"
                 align="center"
               >
@@ -585,10 +588,7 @@
                 </template>
               </el-table-column>
 
-              <el-table-column
-                :label="$t('dialog.stats.lastReset')"
-                width="160"
-              >
+              <el-table-column :label="t('dialog.stats.lastReset')" width="160">
                 <template #default="{ row }">
                   <span v-if="row.last_reset_at">{{
                     formatFullTime(row.last_reset_at)
@@ -619,24 +619,24 @@
     <!-- 编辑对话框 -->
     <el-dialog
       v-model="showEditDialog"
-      :title="$t('dialog.autoReset.editRule')"
+      :title="t('dialog.autoReset.editRule')"
       width="450px"
       :close-on-click-modal="false"
       append-to-body
     >
       <el-form :model="editForm" label-width="100px" v-if="editingConfig">
-        <el-form-item :label="$t('dialog.autoReset.target')">
+        <el-form-item :label="t('dialog.autoReset.target')">
           <span>{{ getTargetName(editingConfig) }}</span>
         </el-form-item>
 
-        <el-form-item :label="$t('dialog.autoReset.checkInterval')">
+        <el-form-item :label="t('dialog.autoReset.checkInterval')">
           <el-input-number
             v-model="editForm.checkInterval"
             :min="1"
             :max="1440"
             style="width: 100%"
           />
-          <span class="unit-label">{{ $t("dialog.autoReset.minutes") }}</span>
+          <span class="unit-label">{{ t("dialog.autoReset.minutes") }}</span>
           <div class="interval-presets">
             <el-button size="small" text @click="editForm.checkInterval = 5"
               >5</el-button
@@ -653,7 +653,7 @@
           </div>
         </el-form-item>
 
-        <el-form-item :label="$t('dialog.autoReset.usageThreshold')">
+        <el-form-item :label="t('dialog.autoReset.usageThreshold')">
           <el-input-number
             v-model="editForm.usageThreshold"
             :min="1"
@@ -663,7 +663,7 @@
           <span class="unit-label">%</span>
         </el-form-item>
 
-        <el-form-item :label="$t('dialog.autoReset.remainingThreshold')">
+        <el-form-item :label="t('dialog.autoReset.remainingThreshold')">
           <el-input-number
             v-model="editForm.remainingThreshold"
             :min="0"
@@ -671,13 +671,13 @@
             :step="100"
             style="width: 100%"
           />
-          <span class="unit-label">{{ $t("dialog.autoReset.credits") }}</span>
+          <span class="unit-label">{{ t("dialog.autoReset.credits") }}</span>
         </el-form-item>
 
         <el-form-item>
           <span class="tip-text">
             {{
-              $t("dialog.autoReset.tips.trigger", {
+              t("dialog.autoReset.tips.trigger", {
                 usage: editForm.usageThreshold,
                 remaining: editForm.remainingThreshold,
               })
@@ -688,10 +688,10 @@
 
       <template #footer>
         <el-button @click="showEditDialog = false">{{
-          $t("common.cancel")
+          t("common.cancel")
         }}</el-button>
         <el-button type="primary" @click="handleSaveEdit">{{
-          $t("common.save")
+          t("common.save")
         }}</el-button>
       </template>
     </el-dialog>
@@ -987,7 +987,8 @@ function getGroupStats(group: string): { masters: number; members: number } {
 // 获取分组标签（用于下拉选项显示）
 function getGroupLabel(group: string): string {
   const stats = getGroupStats(group);
-  return `${group} (${$t("dialog.accountInfo.role.owner")}${stats.masters}/${$t("dialog.accountInfo.role.member")}${stats.members})`;
+  const displayName = group === "默认分组" ? t("common.defaultGroup") : group;
+  return `${displayName} (${t("dialog.accountInfo.role.owner")}${stats.masters}/${t("dialog.accountInfo.role.member")}${stats.members})`;
 }
 
 // 格式化时间（短格式）
@@ -1045,7 +1046,7 @@ async function handleAddConfig() {
     newConfig.value.targetId = "";
     await loadConfigs();
   } catch (error) {
-    ElMessage.error(`${$t("common.error")}: ${error}`);
+    ElMessage.error(`${t("common.error")}: ${error}`);
   } finally {
     adding.value = false;
   }
@@ -1076,7 +1077,7 @@ async function handleToggleEnabled(config: AutoResetConfig, enabled: boolean) {
     );
   } catch (error) {
     config.enabled = !enabled;
-    ElMessage.error(`${$t("common.error")}: ${error}`);
+    ElMessage.error(`${t("common.error")}: ${error}`);
   } finally {
     config._updating = false;
   }
@@ -1101,7 +1102,7 @@ async function handleCheckNow(config: AutoResetConfig) {
 
     await loadConfigs();
   } catch (error) {
-    ElMessage.error(`${$t("common.error")}: ${error}`);
+    ElMessage.error(`${t("common.error")}: ${error}`);
   } finally {
     config._checking = false;
   }
@@ -1131,7 +1132,7 @@ async function handleCheckAll() {
 
     await loadConfigs();
   } catch (error) {
-    ElMessage.error(`${$t("common.error")}: ${error}`);
+    ElMessage.error(`${t("common.error")}: ${error}`);
   } finally {
     checkingAll.value = false;
   }
@@ -1156,7 +1157,7 @@ async function handleResetNow(config: AutoResetConfig) {
 
     await loadConfigs();
   } catch (error) {
-    ElMessage.error(`${$t("common.error")}: ${error}`);
+    ElMessage.error(`${t("common.error")}: ${error}`);
   } finally {
     config._resetting = false;
   }
@@ -1186,7 +1187,7 @@ async function handleResetAll() {
 
     await loadConfigs();
   } catch (error) {
-    ElMessage.error(`${$t("common.error")}: ${error}`);
+    ElMessage.error(`${t("common.error")}: ${error}`);
   } finally {
     resettingAll.value = false;
   }
@@ -1220,7 +1221,7 @@ async function handleSaveEdit() {
     editingConfig.value = null;
     await loadConfigs();
   } catch (error) {
-    ElMessage.error(`${$t("common.error")}: ${error}`);
+    ElMessage.error(`${t("common.error")}: ${error}`);
   }
 }
 
@@ -1249,7 +1250,7 @@ async function handleDeleteConfig(config: AutoResetConfig) {
     await loadConfigs();
   } catch (error) {
     if (error !== "cancel") {
-      ElMessage.error(`${$t("common.error")}: ${error}`);
+      ElMessage.error(`${t("common.error")}: ${error}`);
     }
   }
 }
@@ -1273,7 +1274,7 @@ async function handleClearRecords() {
     await loadStats();
   } catch (error) {
     if (error !== "cancel") {
-      ElMessage.error(`${$t("common.error")}: ${error}`);
+      ElMessage.error(`${t("common.error")}: ${error}`);
     }
   }
 }

@@ -29,6 +29,9 @@
     "check": "Check",
     "enabled": "Enabled",
     "disabled": "Disabled",
+    "unlimited": "Unlimited",
+    "fetchFailed": "Fetch failed",
+    "copyReferralLinkSuccess": "Referral link copied to clipboard",
     "progress": "Progress",
     "pleaseEnterValidSeatCount": "Please enter valid seat count",
     "confirmResetProgressMessage": "Are you sure you want to reset test mode progress? Next time will start from the beginning of the range.",
@@ -39,7 +42,18 @@
     "clear": "Clear",
     "checkInvitation": "Check invitation",
     "min": "Min",
-    "max": "Max"
+    "max": "Max",
+    "justNow": "Just now",
+    "minutesAgo": "{n}m ago",
+    "hoursAgo": "{n}h ago",
+    "daysAgo": "{n}d ago",
+    "neverUsed": "Never used",
+    "copy_success": "Copied to clipboard",
+    "copy_fail": "Copy failed",
+    "save_success": "Saved successfully",
+    "save_fail": "Save failed",
+    "referralCodeNotFound": "Referral code not found",
+    "noContentToCopy": "No content to copy"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -86,7 +100,8 @@
       "batchImport": "Batch Import",
       "exportAll": "Export Accounts",
       "tagManage": "Manage Tags",
-      "refreshAll": "Refresh All"
+      "refreshAll": "Refresh All",
+      "selectedPageAccounts": "Selected {count} accounts on current page"
     },
     "group": {
       "management": "Group Management",
@@ -110,6 +125,7 @@
       "deleteFailed": "Failed to delete group: {error}",
       "selectTargetGroup": "Please select a target group"
     },
+
     "transfer": {
       "title": "Batch Transfer Subscription",
       "warningTitle": "Transfer Instructions",
@@ -141,7 +157,11 @@
       "expiresToday": "Expires Today",
       "expiresTomorrow": "Expires Tomorrow",
       "expiresInDays": "Expires in {days} days",
-      "remainingDays": "{days} days left"
+      "remainingDays": "{days} days left",
+      "remainingHours": "{hours} hours left",
+      "remainingMonths": "{months} months left",
+      "expiredInDays": "Expired {days} days ago",
+      "expiringSoon": "Expiring soon"
     },
     "token": {
       "expired": "Expired",
@@ -248,7 +268,14 @@
         "pro": "Pro",
         "teams": "Teams",
         "enterprise": "Enterprise",
-        "enterpriseSelfServe": "Enterprise self serve",
+        "enterpriseSelfServe": "Enterprise Self-Serve",
+        "enterpriseSaaS": "Enterprise SaaS",
+        "enterpriseSelf": "Enterprise Self-Hosted",
+        "enterprisePooled": "Pooled SaaS",
+        "hybrid": "Hybrid",
+        "waitPro": "Waitlist Pro",
+        "teamsUltimate": "Teams Ultimate",
+        "proUltimate": "Pro Ultimate",
         "trial": "Trial",
         "free": "Free",
         "starter": "Starter"
@@ -267,7 +294,7 @@
       "nameAndEmail": "Name and email",
       "lastUsed": "Last used",
       "usedCredits": "Used credits",
-      "disableAccess": "Disable access",
+      "disableAccess": "Disable Access",
       "actions": "Actions",
       "edit": "Edit",
       "confirmRemoveMember": "Confirm remove member",
@@ -292,8 +319,11 @@
       "acceptInvitation": "Accept invitation",
       "rejectInvitation": "Reject invitation",
       "joinTeam": "Join team",
-      "joinTeamDescription": "Join team description",
-      "inviteIdPlaceholder": "Invite id placeholder",
+      "joinTeamDescription": "If you have an invitation ID from another team, you can join it below. Your current subscription may be affected.",
+      "inviteIdPlaceholder": "Enter Invitation ID (e.g. team_xxx)",
+      "copyInviteIdSuccess": "Invitation ID copied to clipboard",
+      "copyInviteUrlSuccess": "Invitation link copied to clipboard",
+      "fetchPendingFailed": "Failed to fetch pending invitations",
       "submitJoinRequest": "Submit join request",
       "status": "Status",
       "pending": "Pending",
@@ -311,7 +341,67 @@
       "targetEmail": "Target email",
       "targetEmailPlaceholder": "Target email placeholder",
       "userName": "User name",
-      "userNameOptional": "User name optional"
+      "userNameOptional": "User name optional",
+      "steps": {
+        "disableAccess": "Disable Access",
+        "inviteUser": "Invite User",
+        "grantAdmin": "Grant Admin",
+        "removeSelf": "Remove Self"
+      },
+      "autoJoinTooltip": "After invitation, if the member email is in Account Manager, they will automatically join.",
+      "transfer": {
+        "status": {
+          "disablingSelf": "Disabling self access...",
+          "invitingUser": "Inviting user...",
+          "grantingAdmin": "Granting admin permissions...",
+          "removingSelf": "Removing self from team...",
+          "completed": "Transfer completed!"
+        },
+        "confirmTransfer": "Confirm Transfer",
+        "confirmTransferMsg": "Are you sure you want to transfer subscription to {email}?\\nYou will be removed from the team. This cannot be undone!"
+      },
+      "removeMember": "Remove Member",
+      "saveChanges": "Save Changes",
+      "disableTip": "After disabling, the member cannot use Windsurf and will not occupy a seat.",
+      "apiKey": "API Key",
+      "signUpTime": "Sign Up Time",
+      "role": "Role",
+      "roles": {
+        "user": "User",
+        "admin": "Admin"
+      },
+      "disabled": "Disabled",
+      "confirmRemoveMemberMsg": "Are you sure you want to remove this member?",
+      "memberRemoved": "Member removed",
+      "confirmRejectInvite": "Are you sure you want to reject this invitation?",
+      "inviteRejected": "Invitation rejected",
+      "rejectFailed": "Failed to reject invitation",
+      "removeMemberFailed": "Failed to remove member",
+      "reinviteFailed": "Failed to reinvite",
+      "resetCreditsSuccess": "{name} credits reset successfully",
+      "reinvitedWait": "Re-invited {name}, waiting for acceptance",
+      "noResetableMembers": "No resetable members",
+      "batchResetConfirm": "Are you sure you want to reset credits for {count} members? This will remove and re-invite them.",
+      "batchResetTitle": "Batch Reset Credits",
+      "invitationRevoked": "Invitation revoked",
+      "revokeFailed": "Failed to revoke invitation",
+      "joinedSuccess": "Joined team successfully",
+      "joinFailed": "Failed to join team",
+      "inviteSuccessAuto": "Successfully invited {invited} members, {joined} joined automatically",
+      "inviteSuccess": "Successfully invited {invited} members",
+      "inviteFailed": "Invitation failed",
+      "fillValidMember": "Please fill in at least one valid member",
+      "enterInviteId": "Please enter Invitation ID",
+      "applySubmitted": "Application submitted, waiting for approval",
+      "applyFailed": "Application failed",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "operationFailed": "Operation failed",
+      "enterTargetEmail": "Please enter target email",
+      "transferWait": "Invitation sent, user must accept manually. Please retry after acceptance.",
+      "memberNotFound": "New member not found",
+      "transferSuccess": "Subscription transferred to {email}",
+      "transferFailed": "Transfer failed"
     },
     "accountInfo": {
       "title": "Account Info",
@@ -319,6 +409,8 @@
       "reload": "Reload",
       "close": "Close",
       "noData": "No user details available",
+      "fetchDetailsFailed": "Failed to fetch details: {error}",
+      "fetchDetailsError": "Error fetching details: {error}",
       "tabs": {
         "userDetails": "User Details",
         "localInfo": "Local Info",
@@ -470,10 +562,13 @@
           "title": "Auth Provider",
           "id": "Provider ID",
           "userId": "User ID",
-          "fedId": "Federated ID"
+          "fedId": "Federated ID",
+          "displayName": "Display Name"
         },
-        "raw": "View Raw Data"
+        "raw": "View Raw Data",
+        "viewRawData": "View Raw Data"
       },
+      "fetchError": "Failed to fetch account info",
       "helper": {
         "plan": {
           "unknown": "Unknown",
@@ -523,6 +618,75 @@
         "used": "Used",
         "totalUsed": "Total used"
       }
+    },
+    "messages": {
+        "noResetableMembers": "No resetable team members",
+        "noAccountsOnPage": "No accounts on current page",
+        "listRefreshed": "Account list refreshed",
+        "batchRefreshSuccess": "✅ Batch Refresh Complete!\nSuccess: {success}/{total}",
+        "batchRefreshPartial": "⚠️ Refresh Complete (Partial Failure)\nSuccess: {success}/{total}\nFailed: {failed}/{total}\n\nFailed Accounts:\n{details}{more}",
+        "moreFailures": "\n  ... and {count} more failures",
+        "unknownError": "Unknown error"
+    },
+    "batchDelete": {
+        "confirmTitle": "Batch Delete Confirmation",
+        "confirmMessage": "Are you sure you want to delete {count} selected account(s)?"
+    },
+    "updatePlan": {
+        "title": "Update Subscription Plan",
+        "currentPlan": "Current Plan",
+        "quotaUsage": "Quota Usage",
+        "planFeatures": {
+            "teams": { "name": "Teams", "features": "Team collaboration, shared workspace" },
+            "pro": { "name": "Pro", "features": "Advanced features, higher limits" },
+            "enterprise_saas": { "name": "Enterprise SaaS", "features": "Enterprise grade security, SSO" },
+            "hybrid": { "name": "Hybrid", "features": "Flexible deployment" },
+            "enterprise_self_hosted": { "name": "Self-Hosted", "features": "Full control, on-premise" },
+            "waitlist_pro": { "name": "Waitlist Pro", "features": "Early access to Pro features" },
+            "teams_ultimate": { "name": "Teams Ultimate", "features": "All Teams features +" },
+            "pro_ultimate": { "name": "Pro Ultimate", "features": "All Pro features +" },
+            "trial": { "name": "Trial", "features": "Try before you buy" },
+            "enterprise_self_serve": { "name": "Ent Self-Serve", "features": "Self-service enterprise plan" },
+            "enterprise_saas_pooled": { "name": "Pooled SaaS", "features": "Pooled resources" }
+        },
+        "currentPlanTag": "Current Plan",
+        "selectedTag": "Selected",
+        "selectPlan": "Select Plan",
+        "currentlyInUse": "Currently in Use",
+        "paymentPeriod": "Payment Period",
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "previewBilling": "Preview Billing",
+        "billingPreview": "Billing Preview",
+        "immediateDue": "Due Immediately",
+        "pricePerSeat": "Price/Seat",
+        "seatCount": "Seats",
+        "amountPerInterval": "Recurring",
+        "perYear": "/year",
+        "perMonth": "/month",
+        "billingStart": "Start Date",
+        "billingEnd": "End Date",
+        "loopMode": "Loop Mode",
+        "loopModeDesc": "Continuously attempt to update plan until success",
+        "success": "Success",
+        "failed": "Failed",
+        "total": "Total",
+        "consecutiveFailures": "Consecutive Failures",
+        "subscriptionManagement": "Subscription Management",
+        "manageSubscriptionStatus": "Manage your subscription status",
+        "cancelSubscription": "Cancel Subscription",
+        "resumeSubscription": "Resume Subscription",
+        "cancel": "Cancel",
+        "stopLoop": "Stop Loop",
+        "startLoopReplacement": "Start Loop",
+        "confirmChange": "Confirm Change",
+        "cancelReasons": {
+            "too_expensive": "Too expensive",
+            "not_using": "I do not use it enough",
+            "missing_features": "Missing features",
+            "switching_service": "Switching to another service",
+            "other": "Other reason"
+        }
     },
     "stats": {
       "totalResets": "Total Resets",
@@ -584,7 +748,13 @@
       "account": "Account",
       "selectGroup": "Select Group",
       "autoJoined": "Auto Joined",
-      "resetTime": "Reset Time"
+      "resetTime": "Reset Time",
+      "selectAccount": "Sélectionner un compte",
+      "editRule": "Modifier la règle",
+      "errorLoading": "Erreur lors du chargement des configs",
+      "resetSuccess": "{count} réinitialisation(s) réussie(s)",
+      "errorCheck": "Erreur lors de la vérification",
+      "noResetNeeded": "Aucune réinitialisation nécessaire"
     },
     "about": {
       "title": "About",
@@ -642,7 +812,7 @@
       "resetTrigger": "Trigger reset when usage ≥ {usage}% and remaining credits ≤ {remaining}",
       "resetTriggerFr": "Déclencher la réinitialisation lorsque l'utilisation ≥ {usage}% et les crédits restants ≤ {remaining}",
       "resetTriggerEs": "Desencadenar reinicio cuando uso ≥ {usage}% y créditos restantes ≤ {remaining}",
-      "resetTriggerZh": "当使用率 ≥ {usage}% 且 剩余积分 ≤ {remaining} 时触发重置"
+      "resetTriggerZh": "Trigger reset when usage ≥ {usage}% and remaining credits ≤ {remaining}"
     },
     "addAccount": {
       "title": "Add Account",
@@ -773,7 +943,9 @@
         "refreshSuccess": "Refresh Complete: {count} success",
         "refreshResult": "Refresh Complete (Partial Fail)\nSuccess: {success}/{total}\nFailed: {failed}/{total}",
         "refreshFailed": "Refresh Failed: {error}",
-        "noSelectedAccounts": "No accounts selected for batch import"
+        "noSelectedAccounts": "No accounts selected for batch import",
+        "noExportableAccounts": "Aucun compte exportable sélectionné",
+        "selectAccountFirst": "Veuillez d'abord sélectionner des comptes"
       }
     },
     "logs": {
@@ -853,7 +1025,9 @@
       "save": "Save",
       "loadFailed": "Load failed",
       "saveSuccess": "Save success",
-      "saveFailed": "Save failed"
+      "saveFailed": "Save failed",
+      "statusDescriptionEnabled": "Used this month: <span class='highlight'>${spent}</span> / Limit: ${budget}. Next refill: ${amount}$",
+      "usageText": "Used: ${used} / Total: ${total}"
     },
     "batchUpdatePlan": {
       "title": "Batch Update Plan",
@@ -963,7 +1137,7 @@
       "languages": {
         "title": "Language",
         "en": "English",
-        "zh": "简体中文",
+        "zh": "Simplified Chinese",
         "es": "Español",
         "fr": "Français"
       },
@@ -1075,11 +1249,19 @@
         "weigeDesc1": "💊 Keep-Alive: Prevent AI from ending conversations prematurely",
         "weigeDesc2": "⚠️ Note: Toggling requires Windsurf restart to take effect",
         "error": "Error",
-        "selectPath": "Select Windsurf Path"
+        "selectPath": "Select Windsurf Path",
+        "alreadyPatched": "Patch already applied",
+        "pathFound": "Path detected: {path}",
+        "pathSelected": "Path selected: {path}",
+        "setPathFirst": "Please set Windsurf path first"
       },
       "pleaseEnterValidSeatCount": "Please enter valid seat count",
       "confirmResetProgressMessage": "Confirm reset progress message",
-      "clear": "Clear"
+      "clear": "Clear",
+      "language": "Interface Language",
+      "proxySettingsDesc": "Use proxy for API requests",
+      "poolCount": "Pool Count: {count}",
+      "currentProgress": "Current Progress"
     },
     "export": {
       "title": "Select Export Format",
@@ -1124,7 +1306,10 @@
       "pleaseEnterTagName": "Please enter tag name",
       "tagAlreadyExists": "Tag already exists",
       "tagAddedSuccess": "Tag added success",
-      "globalTags": "Global Tags"
+      "globalTags": "Global Tags",
+      "usage": "Used by {count} account(s)",
+      "batchOperations": "Batch operations on {count} account(s)",
+      "addFailed": "Add failed"
     },
     "teamSettings": {
       "title": "Team Settings",
@@ -1206,74 +1391,7 @@
       "error": "Error",
       "getLink": "Get link"
     },
-    "updatePlan": {
-      "title": "Update Plan",
-      "currentPlan": "Current plan",
-      "quotaUsage": "Quota usage",
-      "currentPlanTag": "Current plan tag",
-      "selectedTag": "Selected tag",
-      "selectPlan": "Select plan",
-      "currentlyInUse": "Currently in use",
-      "paymentPeriod": "Payment period",
-      "monthly": "Monthly",
-      "yearly": "Yearly",
-      "previewBilling": "Preview billing",
-      "billingPreview": "Billing preview",
-      "immediateDue": "Immediate due",
-      "pricePerSeat": "Price per seat",
-      "seatCount": "Seat count",
-      "amountPerInterval": "Amount per interval",
-      "perYear": "Per year",
-      "perMonth": "Per month",
-      "billingStart": "Billing start",
-      "billingEnd": "Billing end",
-      "loopMode": "Loop mode",
-      "loopModeDesc": "Loop mode desc",
-      "success": "Success",
-      "failed": "Failed",
-      "total": "Total",
-      "consecutiveFailures": "Consecutive failures",
-      "subscriptionManagement": "Subscription management",
-      "manageSubscriptionStatus": "Manage subscription status",
-      "cancelSubscription": "Cancel subscription",
-      "resumeSubscription": "Resume subscription",
-      "cancel": "Cancel",
-      "stopLoop": "Stop loop",
-      "startLoopReplacement": "Start loop replacement",
-      "confirmChange": "Confirm change",
-      "seamless": {
-        "title": "Seamless Switch",
-        "pathFound": "Windsurf installation path found",
-        "selectPathTitle": "Select Windsurf Installation Directory",
-        "pathSelected": "Windsurf path selected",
-        "invalidPath": "Selected directory is not a valid Windsurf installation directory",
-        "setPathFirst": "Please detect or set Windsurf path first",
-        "confirmEnable": "Enabling Seamless Switch will modify extension.js and restart Windsurf. Continue?",
-        "confirmDisable": "Disabling Seamless Switch will restore original files and restart Windsurf. Continue?",
-        "alreadyPatched": "Patch already applied",
-        "confirmEnableWeige": "Enabling Keep-Alive will modify Windsurf files and restart. Continue?",
-        "confirmDisableWeige": "Disabling Keep-Alive will restore files and restart. Continue?",
-        "path": "Windsurf Path",
-        "pathPlaceholder": "Enter or Auto-detect Path",
-        "autoDetect": "Auto Detect",
-        "browse": "Browse",
-        "pathDesc": "Manually enter or auto-detect Windsurf installation path",
-        "enable": "Enable Seamless Switch",
-        "patchStatus": "Patch Status",
-        "installed": "Installed",
-        "notInstalled": "Not Installed",
-        "recheck": "Recheck",
-        "featureDesc": "Feature Info",
-        "featureDesc1": "🚀 Seamless Switch: Switch Windsurf accounts without full logout",
-        "featureDesc2": "⚠️ Note: Toggling will restart Windsurf automatically",
-        "weige": "Windsurf Keep-Alive",
-        "enableWeige": "Enable Keep-Alive",
-        "weigeStatus": "Keep-Alive Status",
-        "weigeDesc": "Keep-Alive Info",
-        "weigeDesc1": "💊 Keep-Alive: Prevent AI from ending conversations prematurely",
-        "weigeDesc2": "⚠️ Note: Toggling requires Windsurf restart to take effect"
-      }
-    },
+
     "welcome": {
       "importantReminder": "Important Reminder",
       "completelyFree": "completely free",
@@ -1291,5 +1409,11 @@
   "validation": {
     "groupNameLength": "Group name length must be 1-20 characters",
     "nicknameLength": "Nickname length must be 1-20 characters"
-  }
+  },
+  "dashboard.filter.all": "All accounts",
+  "common.confirmChange": "Confirm change",
+  "dashboard.transfer.targetEmail": "Target Email",
+  "dashboard.transfer.emailPlaceholder": "Recipient Email",
+  "dashboard.transfer.emailCount": "Email Count",
+  "dashboard.transfer.confirmTransfer": "Confirm subscription transfer"
 }

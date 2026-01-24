@@ -62,7 +62,7 @@
                 <User v-if="account.plan_name?.toLowerCase() === 'free'" />
                 <Trophy v-else />
               </el-icon>
-              {{ account.plan_name }}
+              {{ getLocalizedPlanName(account.plan_name) }}
             </el-tag>
           </div>
           <div class="quota-header-right">
@@ -82,7 +82,10 @@
             :color="quotaColor"
             :show-text="false"
           />
-          <span class="quota-percentage">{{ quotaPercentage }}% {{ $t('dialog.accountCard.quotaPercentage') }}</span>
+          <span class="quota-percentage"
+            >{{ quotaPercentage }}%
+            {{ $t("dialog.accountCard.quotaPercentage") }}</span
+          >
         </div>
 
         <!-- 订阅到期时间（整合在配额区块内） -->
@@ -120,7 +123,11 @@
         >
           <el-tag size="small" class="info-tag group-tag">
             <el-icon><Folder /></el-icon>
-            <span>{{ account.group }}</span>
+            <span>{{
+              account.group === "默认分组"
+                ? $t("common.defaultGroup")
+                : account.group
+            }}</span>
           </el-tag>
         </el-tooltip>
 
@@ -606,6 +613,49 @@ const showUpdatePlanDialog = ref(false);
 const showTurnstileDialog = ref(false);
 const pendingTurnstileToken = ref("");
 const seatsResultData = ref<any>(null);
+
+// 获取本地化后的计划名称
+function getLocalizedPlanName(planName?: string): string {
+  if (!planName) return "";
+
+  // 规范化键名
+  const key = planName.toLowerCase().replace(/\s+/g, "");
+
+  // 映射表：处理后端可能返回的各种格式
+  const planMap: Record<string, string> = {
+    teams: "teams",
+    pro: "pro",
+    entsaas: "enterpriseSaaS",
+    enterprisesaas: "enterpriseSaaS",
+    hybrid: "hybrid",
+    entself: "enterpriseSelf",
+    enterpriseself: "enterpriseSelf",
+    enterpriseselfhosted: "enterpriseSelf",
+    waitpro: "waitPro",
+    waitlistpro: "waitPro",
+    teamsult: "teamsUltimate",
+    teamsultimate: "teamsUltimate",
+    proult: "proUltimate",
+    proultimate: "proUltimate",
+    trial: "trial",
+    entselfserve: "enterpriseSelfServe",
+    enterpriseselfserve: "enterpriseSelfServe",
+    entpooled: "enterprisePooled",
+    pooledsaas: "enterprisePooled",
+    free: "free",
+    starter: "starter",
+    enterprise: "enterprise",
+  };
+
+  const i18nKey = planMap[key] || key;
+
+  // 尝试翻译，如果找不到则返回原字符串
+  const translationKey = `dialog.plans.${i18nKey}`;
+  const translated = t(translationKey);
+
+  // t() 如果找不到键通常会返回键本身，我们需要检测这种情况
+  return translated !== translationKey ? translated : planName;
+}
 
 // 判断是否为付费计划（非 Free）
 const isPaidPlan = computed(() => {
@@ -1123,7 +1173,7 @@ async function handleBatchResetTeamCredits() {
     }
 
     if (otherMembers.length === 0) {
-      ElMessage.warning("没有可重置的团队成员");
+      ElMessage.warning(t("dialog.messages.noResetableMembers"));
       return;
     }
 

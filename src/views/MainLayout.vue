@@ -39,7 +39,7 @@
           >
             <div class="group-item-content">
               <span @click="filterByGroup(group)" class="group-name">{{
-                group
+                group === "默认分组" ? $t("common.defaultGroup") : group
               }}</span>
               <div class="group-actions" v-if="group !== '默认分组'">
                 <el-icon
@@ -893,7 +893,6 @@ import {
   Switch,
   SortUp,
   SortDown,
-  ArrowDown,
 } from "@element-plus/icons-vue";
 import { useAccountsStore, useSettingsStore, useUIStore } from "@/store";
 import { apiService, settingsApi, accountApi } from "@/api";
@@ -926,7 +925,7 @@ const currentLanguageFlag = computed(() => {
     fr: "🇫🇷",
     es: "🇪🇸",
   };
-  return map[settingsStore.settings.language] || "🇨🇳";
+  return map[settingsStore.settings.language || "zh"] || "🇨🇳";
 });
 
 function handleLanguageCommand(lang: string) {
@@ -1285,11 +1284,12 @@ async function refreshAccounts() {
 
       // 显示详细的刷新结果
       if (failedCount === 0) {
-        ElMessage.success({
-          message: `✅ 全部刷新完成！\n成功: ${successCount}/${totalCount}`,
-          duration: 3000,
-          showClose: true,
-        });
+        ElMessage.success(
+          t("dialog.messages.batchRefreshSuccess", {
+            success: successCount,
+            total: totalCount,
+          }),
+        );
       } else {
         const failedItems =
           result.results?.filter((r: any) => !r.success) || [];
@@ -1299,16 +1299,26 @@ async function refreshAccounts() {
             const account = accountsStore.accounts.find(
               (a) => a.id === item.id,
             );
-            return `  • ${account?.email || item.id}: ${item.error || "未知错误"}`;
+            return `  • ${account?.email || item.id}: ${item.error || t("dialog.messages.unknownError")}`;
           })
           .join("\n");
+
+        // 更多失败信息
         const moreFailures =
           failedItems.length > 3
-            ? `\n  ... 还有 ${failedItems.length - 3} 个失败`
+            ? t("dialog.messages.moreFailures", {
+                count: failedItems.length - 3,
+              })
             : "";
 
         ElMessage.warning({
-          message: `⚠️ 刷新完成（部分失败）\n成功: ${successCount}/${totalCount}\n失败: ${failedCount}/${totalCount}\n\n失败账号:\n${failedDetails}${moreFailures}`,
+          message: t("dialog.messages.batchRefreshPartial", {
+            success: successCount,
+            total: totalCount,
+            failed: failedCount,
+            details: failedDetails,
+            more: moreFailures,
+          }),
           duration: 5000,
           showClose: true,
           dangerouslyUseHTMLString: false,
@@ -1316,7 +1326,7 @@ async function refreshAccounts() {
       }
     } else {
       loading.close();
-      ElMessage.success("账号列表已刷新");
+      ElMessage.success(t("dialog.messages.listRefreshed"));
     }
   } catch (error) {
     loading.close();
@@ -1327,11 +1337,13 @@ async function refreshAccounts() {
 async function handleBatchDelete() {
   try {
     await ElMessageBox.confirm(
-      `确定要删除选中的 ${accountsStore.selectedAccounts.size} 个账号吗？`,
-      "批量删除确认",
+      t("dialog.batchDelete.confirmMessage", {
+        count: accountsStore.selectedAccounts.size,
+      }),
+      t("dialog.batchDelete.confirmTitle"),
       {
-        confirmButtonText: "删除",
-        cancelButtonText: "取消",
+        confirmButtonText: t("common.delete"),
+        cancelButtonText: t("common.cancel"),
         type: "warning",
       },
     );
@@ -1437,7 +1449,10 @@ async function handleBatchTransfer() {
 
   if (failedCount === 0) {
     ElMessage.success(
-      `批量转让完成！成功: ${successCount}/${selectedIds.length}`,
+      t("dialog.messages.batchTransferSuccess", {
+        success: successCount,
+        total: selectedIds.length,
+      }),
     );
   } else {
     const failedDetails = results
@@ -1512,7 +1527,7 @@ function toggleSelectAll() {
 function selectCurrentPageAccounts() {
   const pageAccounts = accountsStore.paginatedAccounts;
   if (pageAccounts.length === 0) {
-    ElMessage.info("当前页没有账号");
+    ElMessage.info(t("dialog.messages.noAccountsOnPage"));
     return;
   }
 
@@ -1532,7 +1547,11 @@ function selectCurrentPageAccounts() {
     pageAccounts.forEach((account) => {
       accountsStore.selectedAccounts.add(account.id);
     });
-    ElMessage.success(`已选择本页 ${pageAccounts.length} 个账号`);
+    ElMessage.success(
+      t("dashboard.actions.selectedPageAccounts", {
+        count: pageAccounts.length,
+      }),
+    );
   }
 }
 

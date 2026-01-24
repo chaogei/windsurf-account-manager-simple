@@ -179,7 +179,9 @@
               <el-option
                 v-for="group in settingsStore.groups"
                 :key="group"
-                :label="group"
+                :label="
+                  group === '默认分组' ? $t('common.defaultGroup') : group
+                "
                 :value="group"
               />
             </el-select>
@@ -273,6 +275,8 @@ import { Upload } from "@element-plus/icons-vue";
 import { useSettingsStore } from "@/store";
 import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
+
 const props = defineProps<{
   modelValue: boolean;
 }>();
@@ -295,7 +299,7 @@ const emit = defineEmits<{
 }>();
 
 const settingsStore = useSettingsStore();
-const { t } = useI18n();
+// const { t } = useI18n(); // t is not used in script currently
 
 const visible = computed({
   get: () => props.modelValue,

@@ -9,7 +9,7 @@
   >
     <div v-if="loading" class="loading-container">
       <el-icon class="is-loading" size="32"><Loading /></el-icon>
-      <p>{{$t("dialog.accountInfo.loading") }}</p>
+      <p>{{ $t("dialog.accountInfo.loading") }}</p>
     </div>
 
     <div v-else-if="accountInfo" class="dialog-content">
@@ -65,7 +65,10 @@
                 <div class="profile-info">
                   <div class="name-row">
                     <h3 class="user-name">
-                      {{ userDetails.user?.name || $t('dialog.accountInfo.unknownUser') }}
+                      {{
+                        userDetails.user?.name ||
+                        $t("dialog.accountInfo.unknownUser")
+                      }}
                     </h3>
                     <el-tag
                       size="small"
@@ -75,7 +78,9 @@
                     >
                       {{
                         userDetails.role?.role_name ||
-                        (userDetails.is_root_admin ? $t('dialog.accountInfo.rootAdmin') : $t('dialog.accountInfo.member'))
+                        (userDetails.is_root_admin
+                          ? $t("dialog.accountInfo.rootAdmin")
+                          : $t("dialog.accountInfo.member"))
                       }}
                     </el-tag>
                   </div>
@@ -229,7 +234,11 @@
                       </td>
                       <td class="value-cell">
                         {{ userDetails.user.referral_code }}
-                        <el-tooltip content="复制推荐链接">
+                        <el-tooltip
+                          :content="
+                            t('dialog.accountInfo.basicInfo.copyReferralLink')
+                          "
+                        >
                           <el-icon
                             class="copy-btn"
                             @click="
@@ -730,7 +739,7 @@
                               v-if="userDetails.plan?.browser_enabled" /><Close
                               v-else
                           /></el-icon>
-                          浏览器
+                          {{ t("dialog.accountInfo.plan.switches.browser") }}
                         </el-tag>
                         <el-tag
                           size="small"
@@ -747,7 +756,7 @@
                                 userDetails.plan?.can_share_conversations
                               " /><Close v-else
                           /></el-icon>
-                          分享对话
+                          {{ t("dialog.accountInfo.plan.switches.share") }}
                         </el-tag>
                         <el-tag
                           size="small"
@@ -764,7 +773,7 @@
                                 userDetails.plan?.can_buy_more_credits
                               " /><Close v-else
                           /></el-icon>
-                          购买积分
+                          {{ t("dialog.accountInfo.plan.switches.buyCredits") }}
                         </el-tag>
                         <el-tag
                           size="small"
@@ -781,7 +790,7 @@
                                 userDetails.plan?.can_customize_app_icon
                               " /><Close v-else
                           /></el-icon>
-                          自定义图标
+                          {{ t("dialog.accountInfo.plan.switches.customIcon") }}
                         </el-tag>
                       </div>
                     </div>
@@ -1612,7 +1621,9 @@
                     v-if="provider.displayName || provider.display_name"
                   >
                     <div class="info-cell full-width">
-                      <span class="label">显示名称</span>
+                      <span class="label">{{
+                        t("dialog.accountInfo.firebase.provider.displayName")
+                      }}</span>
                       <span class="value">{{
                         provider.displayName || provider.display_name
                       }}</span>
@@ -1626,7 +1637,9 @@
             <el-collapse class="raw-data-collapse">
               <el-collapse-item>
                 <template #title>
-                  <span class="collapse-title">查看Firebase原始数据</span>
+                  <span class="collapse-title">{{
+                    t("dialog.accountInfo.firebase.viewRawData")
+                  }}</span>
                   <el-icon class="collapse-arrow"><Right /></el-icon>
                 </template>
                 <pre class="raw-json">{{
@@ -1641,7 +1654,7 @@
 
     <div v-else-if="error" class="error-container">
       <el-alert
-        title="获取账号信息失败"
+        :title="t('dialog.accountInfo.fetchError')"
         :description="error"
         type="error"
         show-icon
@@ -1756,11 +1769,11 @@ async function loadAccountInfo() {
     if (result.success) {
       accountInfo.value = result;
     } else {
-      error.value = result.error || "获取失败";
+      error.value = result.error || t("common.fetchFailed");
     }
   } catch (err: any) {
     error.value = err.toString();
-    ElMessage.error(`获取账号信息失败: ${err}`);
+    ElMessage.error(`${t("dialog.accountInfo.fetchError")}: ${err}`);
   } finally {
     loading.value = false;
   }
@@ -1770,7 +1783,10 @@ async function loadAccountInfo() {
 async function loadUserDetails() {
   if (!uiStore.currentViewingAccountId) return;
 
-  console.log("开始获取用户详情, ID:", uiStore.currentViewingAccountId);
+  console.log(
+    "Starting to fetch user details, ID:",
+    uiStore.currentViewingAccountId,
+  );
 
   loadingUserDetails.value = true;
   userDetails.value = null;
@@ -1780,24 +1796,28 @@ async function loadUserDetails() {
     const result = await apiService.getCurrentUserParsed(
       uiStore.currentViewingAccountId,
     );
-    console.log("API返回结果:", result);
+    console.log("API Result:", result);
 
     if (result && result.success && result.data) {
       userDetails.value = result.data;
       parsedData.value = result.parsed_data;
-      console.log("用户详情已设置:", userDetails.value);
+      console.log("User details set:", userDetails.value);
     } else {
-      console.warn("API返回失败或没有数据:", result);
+      console.warn("API returned failed or no data:", result);
       // 显示错误信息
       if (result && result.error) {
-        ElMessage.warning(`获取用户详情失败: ${result.error}`);
+        ElMessage.warning(
+          t("dialog.accountInfo.fetchDetailsFailed", { error: result.error }),
+        );
       } else {
-        console.log("未获取到用户详情数据");
+        console.log("No user details data found");
       }
     }
   } catch (err: any) {
-    console.error("获取用户详情失败:", err);
-    ElMessage.error(`获取用户详情失败: ${err.message || err}`);
+    console.error("Failed to fetch user details:", err);
+    ElMessage.error(
+      t("dialog.accountInfo.fetchDetailsError", { error: err.message || err }),
+    );
   } finally {
     loadingUserDetails.value = false;
   }
@@ -1837,23 +1857,23 @@ function getExpireCountdown(timestamp: number | undefined | null): string {
   const diffDays = expireDate.diff(now, "day");
 
   if (diffDays < 0) {
-    return `已过期 ${Math.abs(diffDays)} 天`;
+    return t("account.quota.expiredInDays", { days: Math.abs(diffDays) });
   } else if (diffDays === 0) {
     const diffHours = expireDate.diff(now, "hour");
     if (diffHours <= 0) {
-      return "即将到期";
+      return t("account.quota.expiringSoon");
     }
-    return `剩余 ${diffHours} 小时`;
+    return t("account.quota.remainingHours", { hours: diffHours });
   } else if (diffDays <= 7) {
-    return `剩余 ${diffDays} 天`;
+    return t("account.quota.remainingDays", { days: diffDays });
   } else if (diffDays <= 30) {
-    return `剩余 ${diffDays} 天`;
+    return t("account.quota.remainingDays", { days: diffDays });
   } else {
     const diffMonths = expireDate.diff(now, "month");
     if (diffMonths >= 1) {
-      return `剩余 ${diffMonths} 个月`;
+      return t("account.quota.remainingMonths", { months: diffMonths });
     }
-    return `剩余 ${diffDays} 天`;
+    return t("account.quota.remainingDays", { days: diffDays });
   }
 }
 
@@ -1899,7 +1919,7 @@ function formatLargeNumber(num: number | undefined | null) {
 function formatStorageSize(bytes: number | undefined | null) {
   if (!bytes) return "0 GB";
   // 如果是很大的数（无限制），显示为"无限制"
-  if (bytes > 1000000000000) return "无限制";
+  if (bytes > 1000000000000) return t("common.unlimited");
   // 假设输入是KB，转换为GB
   const gb = bytes / 1024;
   return `${gb.toFixed(2)} GB`;
@@ -1978,21 +1998,21 @@ function formatProviderName(providerId: string | null | undefined) {
 // 复制推荐链接
 async function copyReferralLink(referralCode: string | undefined) {
   if (!referralCode) {
-    ElMessage.warning("推荐码不存在");
+    ElMessage.warning(t("common.referralCodeNotFound"));
     return;
   }
 
   const referralLink = `https://windsurf.com/refer?referral_code=${referralCode}`;
-  await copyText(referralLink, "推荐链接已复制到剪贴板");
+  await copyText(referralLink, t("common.copyReferralLinkSuccess"));
 }
 
 // 通用复制函数
 async function copyText(
   text: string | undefined,
-  message: string = "内容已复制",
+  message: string = t("common.copy_success"),
 ) {
   if (!text) {
-    ElMessage.warning("无可复制内容");
+    ElMessage.warning(t("common.noContentToCopy"));
     return;
   }
 

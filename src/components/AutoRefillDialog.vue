@@ -10,33 +10,51 @@
       <!-- 当前状态 -->
       <div class="status-section">
         <div class="status-header">
-          <span class="status-title">{{ $t('dialog.autoRefill.statusTitle') }}</span>
+          <span class="status-title">{{
+            $t("dialog.autoRefill.statusTitle")
+          }}</span>
           <el-button
             :type="settings.enabled ? 'danger' : 'success'"
             size="small"
             :loading="saving"
             @click="toggleEnabled"
           >
-            {{ settings.enabled ? $t('dialog.autoRefill.disableAutoRefill') : $t('dialog.autoRefill.enableAutoRefillBtn') }}
+            {{
+              settings.enabled
+                ? $t("dialog.autoRefill.disableAutoRefill")
+                : $t("dialog.autoRefill.enableAutoRefillBtn")
+            }}
           </el-button>
         </div>
         <div class="status-description" v-if="settings.enabled">
-          <span v-html="$t('dialog.autoRefill.statusDescriptionEnabled', { spent: settings.topUpSpent, budget: settings.monthlyTopUpAmount, amount: settings.topUpIncrement })"></span>
+          <span
+            v-html="
+              $t('dialog.autoRefill.statusDescriptionEnabled', {
+                spent: settings.topUpSpent,
+                budget: settings.monthlyTopUpAmount,
+                amount: settings.topUpIncrement,
+              })
+            "
+          ></span>
         </div>
         <div class="status-description" v-else>
-          {{ $t('dialog.autoRefill.statusDescriptionDisabled') }}
+          {{ $t("dialog.autoRefill.statusDescriptionDisabled") }}
         </div>
       </div>
 
       <!-- 设置表单 -->
       <div class="settings-section" v-if="settings.enabled">
         <el-divider />
-        
+
         <!-- 月度预算 -->
         <div class="setting-item">
           <div class="setting-label">
-            <span class="label-title">{{ $t('dialog.autoRefill.monthlyBudgetLimit') }}</span>
-            <span class="label-desc">{{ $t('dialog.autoRefill.monthlyBudgetDesc') }}</span>
+            <span class="label-title">{{
+              $t("dialog.autoRefill.monthlyBudgetLimit")
+            }}</span>
+            <span class="label-desc">{{
+              $t("dialog.autoRefill.monthlyBudgetDesc")
+            }}</span>
           </div>
           <div class="setting-options">
             <span class="currency">$</span>
@@ -50,7 +68,7 @@
               :min="40"
               :step="40"
               size="small"
-              style="width: 160px; margin-left: 8px;"
+              style="width: 160px; margin-left: 8px"
               @change="onCustomMonthlyChange"
             />
           </div>
@@ -59,8 +77,12 @@
         <!-- 充值增量 -->
         <div class="setting-item">
           <div class="setting-label">
-            <span class="label-title">{{ $t('dialog.autoRefill.singleRefillAmount') }}</span>
-            <span class="label-desc">{{ $t('dialog.autoRefill.singleRefillDesc') }}</span>
+            <span class="label-title">{{
+              $t("dialog.autoRefill.singleRefillAmount")
+            }}</span>
+            <span class="label-desc">{{
+              $t("dialog.autoRefill.singleRefillDesc")
+            }}</span>
           </div>
           <div class="setting-options">
             <span class="currency">$</span>
@@ -74,7 +96,7 @@
               :min="40"
               :step="40"
               size="small"
-              style="width: 160px; margin-left: 8px;"
+              style="width: 160px; margin-left: 8px"
               @change="onCustomIncrementChange"
             />
           </div>
@@ -83,7 +105,9 @@
         <!-- 使用情况 -->
         <el-divider />
         <div class="usage-section">
-          <div class="usage-title">{{ $t('dialog.autoRefill.monthlyUsage') }}</div>
+          <div class="usage-title">
+            {{ $t("dialog.autoRefill.monthlyUsage") }}
+          </div>
           <div class="usage-bar">
             <el-progress
               :percentage="usagePercentage"
@@ -93,150 +117,170 @@
             />
           </div>
           <div class="usage-text">
-            {{ $t('dialog.autoRefill.usageText', { used: settings.topUpSpent, total: settings.monthlyTopUpAmount }) }}
+            {{
+              $t("dialog.autoRefill.usageText", {
+                used: settings.topUpSpent,
+                total: settings.monthlyTopUpAmount,
+              })
+            }}
           </div>
         </div>
       </div>
     </div>
 
     <template #footer>
-      <el-button @click="dialogVisible = false">{{ $t('dialog.autoRefill.cancel') }}</el-button>
+      <el-button @click="dialogVisible = false">{{
+        $t("dialog.autoRefill.cancel")
+      }}</el-button>
       <el-button type="primary" :loading="saving" @click="saveSettings">
-        {{ $t('dialog.autoRefill.save') }}
+        {{ $t("dialog.autoRefill.save") }}
       </el-button>
     </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { invoke } from '@tauri-apps/api/core'
-import { ElMessage } from 'element-plus'
+import { ref, computed, watch } from "vue";
+import { invoke } from "@tauri-apps/api/core";
+import { ElMessage } from "element-plus";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 interface Props {
-  modelValue: boolean
-  accountId: string
+  modelValue: boolean;
+  accountId: string;
 }
 
-const props = defineProps<Props>()
-const emit = defineEmits(['update:modelValue'])
+const props = defineProps<Props>();
+const emit = defineEmits(["update:modelValue"]);
 
 const dialogVisible = computed({
   get: () => props.modelValue,
-  set: (val) => emit('update:modelValue', val)
-})
+  set: (val) => emit("update:modelValue", val),
+});
 
-const loading = ref(false)
-const saving = ref(false)
+const loading = ref(false);
+const saving = ref(false);
 
 const settings = ref({
   enabled: false,
   monthlyTopUpAmount: 120, // 单位：美元
-  topUpIncrement: 40,      // 单位：美元
-  topUpSpent: 0            // 单位：美元
-})
+  topUpIncrement: 40, // 单位：美元
+  topUpSpent: 0, // 单位：美元
+});
 
-const customMonthlyBudget = ref(120)
-const customIncrement = ref(40)
+const customMonthlyBudget = ref(120);
+const customIncrement = ref(40);
 
 const usagePercentage = computed(() => {
-  if (settings.value.monthlyTopUpAmount === 0) return 0
-  return Math.min(100, (settings.value.topUpSpent / settings.value.monthlyTopUpAmount) * 100)
-})
+  if (settings.value.monthlyTopUpAmount === 0) return 0;
+  return Math.min(
+    100,
+    (settings.value.topUpSpent / settings.value.monthlyTopUpAmount) * 100,
+  );
+});
 
 const usageColor = computed(() => {
-  if (usagePercentage.value > 80) return '#f56c6c'
-  if (usagePercentage.value > 50) return '#e6a23c'
-  return '#67c23a'
-})
+  if (usagePercentage.value > 80) return "#f56c6c";
+  if (usagePercentage.value > 50) return "#e6a23c";
+  return "#67c23a";
+});
 
 function onCustomMonthlyChange(val: number) {
   // 确保是 $40 的倍数
-  const rounded = Math.round(val / 40) * 40
-  customMonthlyBudget.value = rounded
-  settings.value.monthlyTopUpAmount = rounded
+  const rounded = Math.round(val / 40) * 40;
+  customMonthlyBudget.value = rounded;
+  settings.value.monthlyTopUpAmount = rounded;
 }
 
 function onCustomIncrementChange(val: number) {
   // 确保是 $40 的倍数
-  const rounded = Math.round(val / 40) * 40
-  customIncrement.value = rounded
-  settings.value.topUpIncrement = rounded
+  const rounded = Math.round(val / 40) * 40;
+  customIncrement.value = rounded;
+  settings.value.topUpIncrement = rounded;
 }
 
 async function loadSettings() {
-  if (!props.accountId) return
-  
-  loading.value = true
+  if (!props.accountId) return;
+
+  loading.value = true;
   try {
-    const result = await invoke<any>('get_credit_top_up_settings', {
-      id: props.accountId
-    })
-    
-    console.log('[AutoRefill] Settings loaded:', result)
-    
+    const result = await invoke<any>("get_credit_top_up_settings", {
+      id: props.accountId,
+    });
+
+    console.log("[AutoRefill] Settings loaded:", result);
+
     if (result.success) {
-      settings.value.enabled = result.top_up_enabled || false
-      settings.value.monthlyTopUpAmount = result.monthly_top_up_amount || 120
-      settings.value.topUpIncrement = result.top_up_increment || 40
-      settings.value.topUpSpent = result.top_up_spent || 0
-      customMonthlyBudget.value = settings.value.monthlyTopUpAmount
-      customIncrement.value = settings.value.topUpIncrement
+      settings.value.enabled = result.top_up_enabled || false;
+      settings.value.monthlyTopUpAmount = result.monthly_top_up_amount || 120;
+      settings.value.topUpIncrement = result.top_up_increment || 40;
+      settings.value.topUpSpent = result.top_up_spent || 0;
+      customMonthlyBudget.value = settings.value.monthlyTopUpAmount;
+      customIncrement.value = settings.value.topUpIncrement;
     }
   } catch (error: any) {
-    console.error('Failed to load settings:', error)
-    ElMessage.error($t('dialog.autoRefill.loadFailed') + ': ' + error.toString())
+    console.error("Failed to load settings:", error);
+    ElMessage.error(
+      t("dialog.autoRefill.loadFailed") + ": " + error.toString(),
+    );
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
 async function toggleEnabled() {
-  settings.value.enabled = !settings.value.enabled
+  settings.value.enabled = !settings.value.enabled;
   if (settings.value.enabled) {
     // 启用时使用默认值
     if (settings.value.monthlyTopUpAmount === 0) {
-      settings.value.monthlyTopUpAmount = 120
+      settings.value.monthlyTopUpAmount = 120;
     }
     if (settings.value.topUpIncrement === 0) {
-      settings.value.topUpIncrement = 40
+      settings.value.topUpIncrement = 40;
     }
   }
-  await saveSettings()
+  await saveSettings();
 }
 
 async function saveSettings() {
-  if (!props.accountId) return
-  
-  saving.value = true
+  if (!props.accountId) return;
+
+  saving.value = true;
   try {
-    const result = await invoke<any>('update_credit_top_up_settings', {
+    const result = await invoke<any>("update_credit_top_up_settings", {
       id: props.accountId,
       enabled: settings.value.enabled,
       monthlyTopUpAmount: settings.value.monthlyTopUpAmount,
-      topUpIncrement: settings.value.topUpIncrement
-    })
-    
-    console.log('[AutoRefill] Settings saved:', result)
-    
+      topUpIncrement: settings.value.topUpIncrement,
+    });
+
+    console.log("[AutoRefill] Settings saved:", result);
+
     if (result.success) {
-      ElMessage.success(result.message || $t('dialog.autoRefill.saveSuccess'))
+      ElMessage.success(result.message || t("dialog.autoRefill.saveSuccess"));
     } else {
-      ElMessage.error(result.error || $t('dialog.autoRefill.saveFailed'))
+      ElMessage.error(result.error || t("dialog.autoRefill.saveFailed"));
     }
   } catch (error: any) {
-    console.error('Failed to save settings:', error)
-    ElMessage.error($t('dialog.autoRefill.saveFailed') + ': ' + error.toString())
+    console.error("Failed to save settings:", error);
+    ElMessage.error(
+      t("dialog.autoRefill.saveFailed") + ": " + error.toString(),
+    );
   } finally {
-    saving.value = false
+    saving.value = false;
   }
 }
 
-watch(() => props.modelValue, (val) => {
-  if (val) {
-    loadSettings()
-  }
-})
+watch(
+  () => props.modelValue,
+  (val) => {
+    if (val) {
+      loadSettings();
+    }
+  },
+);
 </script>
 
 <style scoped>
