@@ -26,7 +26,8 @@ impl ProtobufParser {
     }
 
     /// 从Base64字符串解析
-    pub fn from_base64(base64_str: &str) -> Result<Value, String> {
+    #[allow(dead_code)]
+    pub fn from_base64(base64_str: &str) -> Result<Self, String> {
         // 处理可能的前缀
         let base64_data = if base64_str.starts_with("data:application/proto;base64,") {
             &base64_str[31..]
@@ -39,8 +40,7 @@ impl ProtobufParser {
             .map_err(|e| format!("Base64解码失败: {}", e))?;
 
         // 解析Protobuf
-        let mut parser = Self::new(decoded);
-        parser.parse_message()
+        Ok(Self::new(decoded))
     }
 
     /// 解析消息
@@ -661,6 +661,7 @@ pub fn parse_get_current_user_response(response_body: &[u8]) -> Result<Value, St
 }
 
 impl ProtobufParser {
+    #[allow(dead_code)]
     pub fn parse_update_seats_response(response_body: &[u8]) -> Result<Value, String> {
         // 检查是否是base64编码的响应
         let decoded_body = if response_body.starts_with(b"data:application/proto;base64,") {
@@ -752,6 +753,7 @@ impl ProtobufParser {
     /// - Field 3: next_action_client_secret (string)
     /// - Field 4: payment_failure_reason (string)
     /// - Field 5: requires_password_reset (bool)
+    #[allow(dead_code)]
     pub fn parse_update_plan_response(response_body: &[u8]) -> Result<Value, String> {
         // 检查是否是base64编码的响应
         let decoded_body = if response_body.starts_with(b"data:application/proto;base64,") {
@@ -860,6 +862,7 @@ impl ProtobufParser {
         Ok(result)
     }
     
+    #[allow(dead_code)]
     pub fn parse_get_team_billing_response(response_body: &[u8]) -> Result<Value, String> {
         // 检查是否是base64编码的响应
         let decoded_body = if response_body.starts_with(b"data:application/proto;base64,") {
@@ -1028,6 +1031,7 @@ impl ProtobufParser {
     ///   used_flow_credits=5, used_prompt_credits=6, used_flex_credits=7, 
     ///   available_prompt_credits=8, available_flow_credits=9, top_up_status=10 }
     /// - PlanInfo { teams_tier=1, plan_name=2, monthly_prompt_credits=12, monthly_flow_credits=13, ... }
+    #[allow(dead_code)]
     pub fn parse_get_plan_status_response(response_body: &[u8]) -> Result<Value, String> {
         let decoded_body = if response_body.starts_with(b"data:application/proto;base64,") {
             let base64_str = std::str::from_utf8(&response_body[30..])
@@ -1227,6 +1231,7 @@ impl ProtobufParser {
     }
     
     /// 解析GetUsers API响应
+    #[allow(dead_code)]
     pub fn parse_get_users_response(response_body: &[u8]) -> Result<Value, String> {
         let decoded_body = if response_body.starts_with(b"data:application/proto;base64,") {
             let base64_str = std::str::from_utf8(&response_body[30..])

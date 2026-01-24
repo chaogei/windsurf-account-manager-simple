@@ -26,6 +26,7 @@ pub struct CardGenerator;
 
 impl CardGenerator {
     /// 生成完整的虚拟卡信息（使用默认BIN）
+    #[allow(dead_code)]
     pub fn generate_card() -> VirtualCard {
         Self::generate_card_with_bin("626202")
     }
@@ -172,6 +173,7 @@ impl CardGenerator {
     }
 
     /// 使用Luhn算法生成有效的16位卡号（使用默认BIN）
+    #[allow(dead_code)]
     pub fn generate_card_number() -> String {
         Self::generate_card_number_with_bin("626202")
     }

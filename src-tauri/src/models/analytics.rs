@@ -134,6 +134,7 @@ pub struct ChatStatsByModel {
 
 /// 自定义查询数据源
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[allow(dead_code)]
 pub enum QueryDataSource {
     Unspecified = 0,
     UserData = 1,
@@ -276,6 +277,7 @@ pub struct AnalyticsSummary {
 
 impl AnalyticsData {
     /// 创建空的分析数据
+    #[allow(dead_code)]
     pub fn empty() -> Self {
         Self {
             daily_cascade_lines: Vec::new(),

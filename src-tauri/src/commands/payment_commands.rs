@@ -40,7 +40,7 @@ pub async fn open_payment_window(
     println!("[Incognito] 创建临时用户数据目录: {:?}", user_data_dir);
     
     // 创建新的webview窗口（Chrome风格的无痕模式）
-    let mut window_builder = WebviewWindowBuilder::new(
+    let window_builder = WebviewWindowBuilder::new(
         &app,
         window_label.clone(),
         WebviewUrl::External(url.parse().unwrap())
