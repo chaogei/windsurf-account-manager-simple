@@ -208,12 +208,14 @@ impl Default for AppConfig {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[allow(dead_code)]
 pub struct FirebaseAuthInfo {
     pub email: String,
     pub password: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[allow(dead_code)]
 pub struct TokenInfo {
     pub token: String,
     pub expires_at: DateTime<Utc>,

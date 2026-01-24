@@ -30,6 +30,7 @@ fn get_platform_subdir() -> &'static str {
 }
 
 /// 解压 zip 文件到指定目录
+#[allow(dead_code)]
 fn extract_zip(zip_path: &PathBuf, dest_dir: &PathBuf) -> Result<Vec<String>, String> {
     let file = File::open(zip_path)
         .map_err(|e| format!("打开 zip 文件失败: {}", e))?;
@@ -141,7 +142,6 @@ fn copy_dir_all(src: &PathBuf, dst: &PathBuf) -> Result<(), String> {
             // 在 Unix 系统上保留权限
             #[cfg(unix)]
             {
-                use std::os::unix::fs::PermissionsExt;
                 if let Ok(metadata) = fs::metadata(&src_path) {
                     fs::set_permissions(&dst_path, metadata.permissions()).ok();
                 }

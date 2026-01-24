@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="团队积分记录"
+    :title="$t('dialog.creditHistory.title')"
     width="80%"
     @close="handleClose"
     append-to-body
@@ -9,37 +9,37 @@
   >
     <div v-if="loading" class="loading-container">
       <el-icon class="is-loading" size="32"><Loading /></el-icon>
-      <p>正在获取积分记录...</p>
+      <p>{{ $t('dialog.creditHistory.loading') }}</p>
     </div>
 
     <div v-else-if="creditEntries">
       <!-- 统计信息 -->
       <el-row :gutter="20" style="margin-bottom: 20px;" v-if="creditEntries.success">
         <el-col :span="6">
-          <el-statistic title="总记录数" :value="creditEntries.total_entries || 0" />
+          <el-statistic :title="$t('dialog.creditHistory.totalRecords')" :value="creditEntries.total_entries || 0" />
         </el-col>
         <el-col :span="6">
           <el-statistic 
-            title="总积分数" 
+            :title="$t('dialog.creditHistory.totalCredits')" 
             :value="totalCredits" 
             :precision="2"
-            suffix="积分"
+            :suffix="$t('dialog.creditHistory.credits')"
           />
         </el-col>
         <el-col :span="6">
           <el-statistic 
-            title="推荐积分" 
+            :title="$t('dialog.creditHistory.referralCredits')" 
             :value="referralCredits" 
             :precision="2"
-            suffix="积分"
+            :suffix="$t('dialog.creditHistory.credits')"
           />
         </el-col>
         <el-col :span="6">
           <el-statistic 
-            title="购买积分" 
+            :title="$t('dialog.creditHistory.purchaseCredits')" 
             :value="purchaseCredits" 
             :precision="2"
-            suffix="积分"
+            :suffix="$t('dialog.creditHistory.credits')"
           />
         </el-col>
       </el-row>
@@ -54,7 +54,7 @@
         @sort-change="handleSortChange"
       >
         <el-table-column 
-          label="授予日期" 
+          :label="$t('dialog.creditHistory.grantDate')" 
           prop="grant_date"
           width="180"
           sortable="custom"
@@ -68,7 +68,7 @@
         </el-table-column>
 
         <el-table-column 
-          label="积分数量" 
+          :label="$t('dialog.creditHistory.creditAmount')" 
           prop="num_credits"
           width="120"
           align="right"
@@ -82,7 +82,7 @@
         </el-table-column>
 
         <el-table-column 
-          label="积分类型" 
+          :label="$t('dialog.creditHistory.creditType')" 
           prop="type"
           width="100"
         >
@@ -94,7 +94,7 @@
         </el-table-column>
 
         <el-table-column 
-          label="获取原因" 
+          :label="$t('dialog.creditHistory.reason')" 
           prop="reason"
           min-width="200"
         >
@@ -102,15 +102,15 @@
             <div v-if="row.reason">
               <el-tag v-if="row.reason.type === 'referrer'" type="success" size="small">
                 <el-icon><UserFilled /></el-icon>
-                推荐奖励
+                {{ $t('dialog.creditHistory.referralReward') }}
               </el-tag>
               <el-tag v-else-if="row.reason.type === 'purchase'" type="warning" size="small">
                 <el-icon><ShoppingCart /></el-icon>
-                购买积分
+                {{ $t('dialog.creditHistory.purchaseCreditsText') }}
               </el-tag>
               <el-tag v-else-if="row.reason.type === 'avery'" type="info" size="small">
                 <el-icon><Present /></el-icon>
-                系统赠送
+                {{ $t('dialog.creditHistory.systemGift') }}
               </el-tag>
               <el-tag v-else size="small">
                 {{ row.reason.type }}
@@ -119,33 +119,33 @@
               <!-- 推荐人详情 -->
               <div v-if="row.reason.referrer_email" style="margin-top: 5px;">
                 <el-text size="small" type="info">
-                  推荐人: {{ row.reason.referrer_email }}
+                  {{ $t('dialog.creditHistory.referrer') }} {{ row.reason.referrer_email }}
                 </el-text>
               </div>
               <div v-if="row.reason.referred_email" style="margin-top: 5px;">
                 <el-text size="small" type="info">
-                  被推荐人: {{ row.reason.referred_email }}
+                  {{ $t('dialog.creditHistory.referredUser') }} {{ row.reason.referred_email }}
                 </el-text>
               </div>
               
               <!-- Avery详情 -->
               <div v-if="row.reason.avery_email" style="margin-top: 5px;">
                 <el-text size="small" type="info">
-                  来源: {{ row.reason.avery_email }}
+                  {{ $t('dialog.creditHistory.source') }} {{ row.reason.avery_email }}
                 </el-text>
               </div>
               <div v-if="row.reason.target_email" style="margin-top: 5px;">
                 <el-text size="small" type="info">
-                  目标用户: {{ row.reason.target_email }}
+                  {{ $t('dialog.creditHistory.targetUser') }} {{ row.reason.target_email }}
                 </el-text>
               </div>
             </div>
-            <el-text v-else type="info">未知</el-text>
+            <el-text v-else type="info">{{ $t('dialog.creditHistory.unknown') }}</el-text>
           </template>
         </el-table-column>
 
         <el-table-column 
-          label="推荐ID" 
+          :label="$t('dialog.creditHistory.referralId')" 
           prop="referral_id"
           width="100"
         >
@@ -158,7 +158,7 @@
         </el-table-column>
 
         <el-table-column 
-          label="团队ID" 
+          :label="$t('dialog.creditHistory.teamId')" 
           prop="team_id"
           width="280"
           :show-overflow-tooltip="true"
@@ -176,7 +176,7 @@
       <!-- 错误信息 -->
       <el-alert
         v-if="!creditEntries.success"
-        :title="creditEntries.error || '获取积分记录失败'"
+        :title="creditEntries.error || $t('dialog.creditHistory.loadFailed')"
         type="error"
         :closable="false"
         show-icon
@@ -184,10 +184,10 @@
 
       <!-- 原始响应（用于调试） -->
       <el-collapse v-if="creditEntries?.raw_response" style="margin-top: 20px;">
-        <el-collapse-item title="查看原始响应">
+        <el-collapse-item :title="$t('dialog.creditHistory.viewRawResponse')">
           <div v-if="creditEntries.raw_response.startsWith('data:application/proto;base64,')">
             <el-button @click="decodeAndShowResponse" type="primary" size="small" style="margin-bottom: 10px;">
-              解码Base64响应
+              {{ $t('dialog.creditHistory.decodeBase64Response') }}
             </el-button>
             <pre class="raw-data" style="max-height: 200px; overflow-y: auto;">{{ creditEntries.raw_response }}</pre>
           </div>
@@ -197,26 +197,26 @@
 
       <!-- 原始数据（调试模式） -->
       <el-collapse v-if="creditEntries?.raw_data" style="margin-top: 20px;">
-        <el-collapse-item title="查看解析数据">
+        <el-collapse-item :title="$t('dialog.creditHistory.viewParsedData')">
           <pre class="raw-data">{{ JSON.stringify(creditEntries.raw_data, null, 2) }}</pre>
         </el-collapse-item>
       </el-collapse>
     </div>
 
     <div v-else>
-      <el-empty description="暂无积分记录" />
+      <el-empty :description="$t('dialog.creditHistory.noRecords')" />
     </div>
 
     <template #footer>
-      <el-button @click="handleRefresh" :icon="Refresh">刷新</el-button>
-      <el-button @click="handleClose">关闭</el-button>
+      <el-button @click="handleRefresh" :icon="Refresh">{{ $t('dialog.creditHistory.refresh') }}</el-button>
+      <el-button @click="handleClose">{{ $t('dialog.creditHistory.close') }}</el-button>
       <el-button 
         type="primary" 
         @click="handleExport" 
         :icon="Download"
         v-if="creditEntries?.entries?.length > 0"
       >
-        导出记录
+        {{ $t('dialog.creditHistory.exportRecords') }}
       </el-button>
     </template>
   </el-dialog>

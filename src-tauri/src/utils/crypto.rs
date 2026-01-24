@@ -7,14 +7,19 @@ use base64::{engine::general_purpose::STANDARD, Engine};
 use keyring::Entry;
 use rand::{RngCore, thread_rng};
 
+#[allow(dead_code)]
 const APP_NAME: &str = "WindsurfAccountManager";
+#[allow(dead_code)]
 const KEY_NAME: &str = "MasterKey";
 
+#[allow(dead_code)]
 pub struct CryptoService {
     cipher: Aes256Gcm,
 }
 
+#[allow(dead_code)]
 impl CryptoService {
+    #[allow(dead_code)]
     pub fn new() -> Result<Self> {
         let key = Self::get_or_create_key()?;
         let key_bytes = STANDARD.decode(&key)?;

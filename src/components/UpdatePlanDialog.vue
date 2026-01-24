@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="visible"
-    title="更换订阅计划"
+    :title="$t('dialog.updatePlan.title')"
     width="1100px"
     class="plan-dialog"
     :close-on-click-modal="false"
@@ -11,7 +11,7 @@
       <!-- 当前套餐信息 -->
       <div v-if="account?.plan_name" class="current-plan-info">
         <div class="info-left">
-          <div class="info-label">当前订阅套餐</div>
+          <div class="info-label">{{ $t('dialog.updatePlan.currentPlan') }}</div>
           <div class="info-value">
             <el-tag :class="['plan-tag', `plan-${account.plan_name?.toLowerCase()}`]" effect="dark">
               <el-icon><Trophy /></el-icon>
@@ -20,7 +20,7 @@
           </div>
         </div>
         <div class="info-right" v-if="account.total_quota">
-          <div class="quota-label">配额使用情况</div>
+          <div class="quota-label">{{ $t('dialog.updatePlan.quotaUsage') }}</div>
           <div class="quota-value">
             <span class="used">{{ formatQuota(account.used_quota) }}</span>
             <span class="separator">/</span>
@@ -77,11 +77,11 @@
               round
               size="small"
             >
-              {{ isCurrentPlan(plan.key) ? '当前套餐' : (selectedPlan === plan.key ? '已选择' : '选择') }}
+              {{ isCurrentPlan(plan.key) ? $t('dialog.updatePlan.currentPlanTag') : (selectedPlan === plan.key ? $t('dialog.updatePlan.selectedTag') : $t('dialog.updatePlan.selectPlan')) }}
             </el-button>
           </div>
           
-          <div v-if="isCurrentPlan(plan.key)" class="current-badge">当前使用</div>
+          <div v-if="isCurrentPlan(plan.key)" class="current-badge">{{ $t('dialog.updatePlan.currentlyInUse') }}</div>
         </div>
       </div>
       
@@ -89,16 +89,16 @@
       <div class="payment-period-section">
         <div class="section-title">
           <el-icon><Calendar /></el-icon>
-          <span>付款周期</span>
+          <span>{{ $t('dialog.updatePlan.paymentPeriod') }}</span>
         </div>
         <el-radio-group v-model="paymentPeriod" :disabled="isLooping">
           <el-radio-button :value="1">
             <el-icon><Clock /></el-icon>
-            月付
+            {{ $t('dialog.updatePlan.monthly') }}
           </el-radio-button>
           <el-radio-button :value="2">
             <el-icon><Calendar /></el-icon>
-            年付
+            {{ $t('dialog.updatePlan.yearly') }}
           </el-radio-button>
         </el-radio-group>
         <el-button
@@ -111,7 +111,7 @@
           style="margin-left: 16px;"
         >
           <el-icon><View /></el-icon>
-          预览计费
+          {{ $t('dialog.updatePlan.previewBilling') }}
         </el-button>
       </div>
 
@@ -119,31 +119,31 @@
       <div v-if="billingPreview" class="billing-preview">
         <div class="preview-header">
           <el-icon><Ticket /></el-icon>
-          <span>计费预览</span>
+          <span>{{ $t('dialog.updatePlan.billingPreview') }}</span>
         </div>
         <div class="preview-content">
           <div class="preview-item" v-if="billingPreview.amount_due_immediately !== undefined">
-            <span class="label">立即应付</span>
+            <span class="label">{{ $t('dialog.updatePlan.immediateDue') }}</span>
             <span class="value">${{ billingPreview.amount_due_immediately?.toFixed(2) }}</span>
           </div>
           <div class="preview-item" v-if="billingPreview.price_per_seat !== undefined">
-            <span class="label">每席位价格</span>
+            <span class="label">{{ $t('dialog.updatePlan.pricePerSeat') }}</span>
             <span class="value">${{ billingPreview.price_per_seat?.toFixed(2) }}</span>
           </div>
           <div class="preview-item" v-if="billingPreview.num_seats !== undefined">
-            <span class="label">席位数</span>
+            <span class="label">{{ $t('dialog.updatePlan.seatCount') }}</span>
             <span class="value">{{ billingPreview.num_seats }}</span>
           </div>
           <div class="preview-item" v-if="billingPreview.amount_per_interval !== undefined">
-            <span class="label">每周期费用</span>
-            <span class="value">${{ billingPreview.amount_per_interval?.toFixed(2) }}/{{ billingPreview.sub_interval_name === 'yearly' ? '年' : '月' }}</span>
+            <span class="label">{{ $t('dialog.updatePlan.amountPerInterval') }}</span>
+            <span class="value">${{ billingPreview.amount_per_interval?.toFixed(2) }}{{ billingPreview.sub_interval_name === 'yearly' ? $t('dialog.updatePlan.perYear') : $t('dialog.updatePlan.perMonth') }}</span>
           </div>
           <div class="preview-item" v-if="billingPreview.billing_start">
-            <span class="label">计费开始</span>
+            <span class="label">{{ $t('dialog.updatePlan.billingStart') }}</span>
             <span class="value">{{ billingPreview.billing_start }}</span>
           </div>
           <div class="preview-item" v-if="billingPreview.billing_end">
-            <span class="label">计费结束</span>
+            <span class="label">{{ $t('dialog.updatePlan.billingEnd') }}</span>
             <span class="value">{{ billingPreview.billing_end }}</span>
           </div>
         </div>
@@ -163,31 +163,31 @@
         <div class="loop-header">
           <div class="loop-title">
             <el-icon><Refresh /></el-icon>
-            <span>循环更换模式</span>
+            <span>{{ $t('dialog.updatePlan.loopMode') }}</span>
           </div>
           <el-switch v-model="loopMode" :disabled="isLooping" />
         </div>
-        <p class="loop-desc">开启后将持续执行订阅更换，直到连续3次失败或手动停止</p>
+        <p class="loop-desc">{{ $t('dialog.updatePlan.loopModeDesc') }}</p>
         
         <!-- 循环执行状态 -->
         <div v-if="isLooping || loopStats.totalAttempts > 0" class="loop-status">
           <div class="status-row">
             <div class="stat-item success">
               <el-icon><SuccessFilled /></el-icon>
-              <span>成功: {{ loopStats.successCount }}</span>
+              <span>{{ $t('dialog.updatePlan.success') }}: {{ loopStats.successCount }}</span>
             </div>
             <div class="stat-item failed">
               <el-icon><CircleCloseFilled /></el-icon>
-              <span>失败: {{ loopStats.failedCount }}</span>
+              <span>{{ $t('dialog.updatePlan.failed') }}: {{ loopStats.failedCount }}</span>
             </div>
             <div class="stat-item total">
               <el-icon><DataLine /></el-icon>
-              <span>总计: {{ loopStats.totalAttempts }}</span>
+              <span>{{ $t('dialog.updatePlan.total') }}: {{ loopStats.totalAttempts }}</span>
             </div>
           </div>
           <div v-if="loopStats.consecutiveFailures > 0" class="consecutive-warn">
             <el-icon><Warning /></el-icon>
-            连续失败: {{ loopStats.consecutiveFailures }} / 3
+            {{ $t('dialog.updatePlan.consecutiveFailures') }}
           </div>
           <div v-if="loopStats.lastError" class="last-error">
             <el-icon><InfoFilled /></el-icon>
@@ -199,8 +199,8 @@
       <!-- 订阅管理区域 -->
       <div class="subscription-management">
         <div class="management-header">
-          <span class="title">订阅管理</span>
-          <span class="subtitle">管理您的订阅状态</span>
+          <span class="title">{{ $t('dialog.updatePlan.subscriptionManagement') }}</span>
+          <span class="subtitle">{{ $t('dialog.updatePlan.manageSubscriptionStatus') }}</span>
         </div>
 
         <div class="subscription-actions">
@@ -212,7 +212,7 @@
             class="action-btn"
           >
             <el-icon><CircleClose /></el-icon>
-            取消订阅
+            {{ $t('dialog.updatePlan.cancelSubscription') }}
           </el-button>
 
           <el-button
@@ -223,7 +223,7 @@
             class="action-btn"
           >
             <el-icon><CircleCheck /></el-icon>
-            恢复订阅
+            {{ $t('dialog.updatePlan.resumeSubscription') }}
           </el-button>
         </div>
       </div>
@@ -231,14 +231,14 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleClose" :disabled="isLooping">取消</el-button>
+        <el-button @click="handleClose" :disabled="isLooping">{{ $t('dialog.updatePlan.cancel') }}</el-button>
         <el-button
           v-if="isLooping"
           type="danger"
           @click="stopLoop"
         >
           <el-icon><VideoPause /></el-icon>
-          停止循环
+          {{ $t('dialog.updatePlan.stopLoop') }}
         </el-button>
         <el-button
           v-else
@@ -247,7 +247,7 @@
           :loading="loading"
           :disabled="!selectedPlan"
         >
-          {{ loopMode ? '开始循环更换' : '确认更换' }}
+          {{ loopMode ? $t('dialog.updatePlan.startLoopReplacement') : $t('dialog.updatePlan.confirmChange') }}
         </el-button>
       </div>
     </template>
@@ -255,8 +255,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue';
+import { ref, reactive, watch, computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { useI18n } from 'vue-i18n';
 import { 
   UserFilled, OfficeBuilding, Check, Star, Trophy, CircleClose, CircleCheck, 
   Refresh, SuccessFilled, CircleCloseFilled, DataLine, Warning, InfoFilled, 
@@ -278,6 +279,8 @@ const emit = defineEmits<{
   'success': [];
 }>();
 
+const { t } = useI18n();
+
 const visible = ref(props.modelValue);
 // 所有可用的订阅计划类型
 type PlanType = 'teams' | 'pro' | 'enterprise_saas' | 'hybrid' | 'enterprise_self_hosted' | 'waitlist_pro' | 'teams_ultimate' | 'pro_ultimate' | 'trial' | 'enterprise_self_serve' | 'enterprise_saas_pooled' | '';
@@ -285,20 +288,20 @@ const selectedPlan = ref<PlanType>('');
 // 付款周期: 1=月付, 2=年付
 const paymentPeriod = ref<number>(1);
 
-// 订阅计划配置
-const planConfigs = [
-  { key: 'teams', name: 'Teams', tier: 1, icon: 'UserFilled', color: '#10b981', desc: '团队版', features: ['团队协作', '多用户管理', '集中计费'] },
-  { key: 'pro', name: 'Pro', tier: 2, icon: 'Star', color: '#3b82f6', desc: '专业版', features: ['个人专业版', '高级功能', '优先支持'] },
-  { key: 'enterprise_saas', name: 'Enterprise SaaS', tier: 3, icon: 'OfficeBuilding', color: '#8b5cf6', desc: '企业SaaS版', features: ['企业级安全', 'SaaS部署', 'API访问'] },
-  { key: 'hybrid', name: 'Hybrid', tier: 4, icon: 'Connection', color: '#f59e0b', desc: '混合部署版', features: ['混合云部署', '灵活配置', '数据隔离'] },
-  { key: 'enterprise_self_hosted', name: 'Enterprise Self-Hosted', tier: 5, icon: 'Monitor', color: '#ec4899', desc: '企业自托管版', features: ['本地部署', '完全控制', '数据自主'] },
-  { key: 'waitlist_pro', name: 'Waitlist Pro', tier: 6, icon: 'Clock', color: '#6366f1', desc: '等待列表Pro', features: ['预约访问', '优先体验', '特别优惠'] },
-  { key: 'teams_ultimate', name: 'Teams Ultimate', tier: 7, icon: 'Trophy', color: '#14b8a6', desc: '团队旗舰版', features: ['全部团队功能', '无限额度', 'VIP支持'] },
-  { key: 'pro_ultimate', name: 'Pro Ultimate', tier: 8, icon: 'Medal', color: '#f97316', desc: 'Pro旗舰版', features: ['全部Pro功能', '无限额度', 'VIP支持'] },
-  { key: 'trial', name: 'Trial', tier: 9, icon: 'Promotion', color: '#84cc16', desc: '试用版', features: ['限时体验', '全部功能', '无需付费'] },
-  { key: 'enterprise_self_serve', name: 'Enterprise Self-Serve', tier: 10, icon: 'Briefcase', color: '#a855f7', desc: '企业自助版', features: ['企业级功能', '自助管理', 'SLA保障'] },
-  { key: 'enterprise_saas_pooled', name: 'Enterprise SaaS Pooled', tier: 11, icon: 'Grid', color: '#0891b2', desc: '企业SaaS池化版', features: ['共享资源池', '弹性扩展', '成本优化'] },
-];
+// 订阅计划配置 - 使用 traductions dynamiques
+const planConfigs = computed(() => [
+  { key: 'teams', name: 'Teams', tier: 1, icon: 'UserFilled', color: '#10b981', desc: t('dialog.updatePlan.planFeatures.teams.name'), features: t('dialog.updatePlan.planFeatures.teams.features') },
+  { key: 'pro', name: 'Pro', tier: 2, icon: 'Star', color: '#3b82f6', desc: t('dialog.updatePlan.planFeatures.pro.name'), features: t('dialog.updatePlan.planFeatures.pro.features') },
+  { key: 'enterprise_saas', name: 'Enterprise SaaS', tier: 3, icon: 'OfficeBuilding', color: '#8b5cf6', desc: t('dialog.updatePlan.planFeatures.enterprise_saas.name'), features: t('dialog.updatePlan.planFeatures.enterprise_saas.features') },
+  { key: 'hybrid', name: 'Hybrid', tier: 4, icon: 'Connection', color: '#f59e0b', desc: t('dialog.updatePlan.planFeatures.hybrid.name'), features: t('dialog.updatePlan.planFeatures.hybrid.features') },
+  { key: 'enterprise_self_hosted', name: 'Enterprise Self-Hosted', tier: 5, icon: 'Monitor', color: '#ec4899', desc: t('dialog.updatePlan.planFeatures.enterprise_self_hosted.name'), features: t('dialog.updatePlan.planFeatures.enterprise_self_hosted.features') },
+  { key: 'waitlist_pro', name: 'Waitlist Pro', tier: 6, icon: 'Clock', color: '#6366f1', desc: t('dialog.updatePlan.planFeatures.waitlist_pro.name'), features: t('dialog.updatePlan.planFeatures.waitlist_pro.features') },
+  { key: 'teams_ultimate', name: 'Teams Ultimate', tier: 7, icon: 'Trophy', color: '#14b8a6', desc: t('dialog.updatePlan.planFeatures.teams_ultimate.name'), features: t('dialog.updatePlan.planFeatures.teams_ultimate.features') },
+  { key: 'pro_ultimate', name: 'Pro Ultimate', tier: 8, icon: 'Medal', color: '#f97316', desc: t('dialog.updatePlan.planFeatures.pro_ultimate.name'), features: t('dialog.updatePlan.planFeatures.pro_ultimate.features') },
+  { key: 'trial', name: 'Trial', tier: 9, icon: 'Promotion', color: '#84cc16', desc: t('dialog.updatePlan.planFeatures.trial.name'), features: t('dialog.updatePlan.planFeatures.trial.features') },
+  { key: 'enterprise_self_serve', name: 'Enterprise Self-Serve', tier: 10, icon: 'Briefcase', color: '#a855f7', desc: t('dialog.updatePlan.planFeatures.enterprise_self_serve.name'), features: t('dialog.updatePlan.planFeatures.enterprise_self_serve.features') },
+  { key: 'enterprise_saas_pooled', name: 'Enterprise SaaS Pooled', tier: 11, icon: 'Grid', color: '#0891b2', desc: t('dialog.updatePlan.planFeatures.enterprise_saas_pooled.name'), features: t('dialog.updatePlan.planFeatures.enterprise_saas_pooled.features') },
+]);
 const loading = ref(false);
 const cancelLoading = ref(false);
 const resumeLoading = ref(false);
@@ -349,11 +352,11 @@ const billingPreview = ref<{
 
 // 取消原因选项
 const cancelReasons = [
-  { value: 'too_expensive', label: '价格太贵' },
-  { value: 'not_using', label: '不再使用' },
-  { value: 'missing_features', label: '缺少功能' },
-  { value: 'switching_service', label: '切换到其他服务' },
-  { value: 'other', label: '其他原因' }
+  { value: 'too_expensive', label: t('dialog.updatePlan.cancelReasons.too_expensive') },
+  { value: 'not_using', label: t('dialog.updatePlan.cancelReasons.not_using') },
+  { value: 'missing_features', label: t('dialog.updatePlan.cancelReasons.missing_features') },
+  { value: 'switching_service', label: t('dialog.updatePlan.cancelReasons.switching_service') },
+  { value: 'other', label: t('dialog.updatePlan.cancelReasons.other') }
 ];
 
 watch(() => props.modelValue, (val) => {

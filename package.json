@@ -1,7 +1,7 @@
 {
   "name": "windsurf-account-manager",
   "private": true,
-  "version": "1.6.7",
+  "version": "1.6.8",
   "type": "module",
   "license": "AGPL-3.0",
   "scripts": {
@@ -25,6 +25,7 @@
     "pinia": "^3.0.4",
     "uuid": "^13.0.0",
     "vue": "^3.5.13",
+    "vue-i18n": "^9.14.5",
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {

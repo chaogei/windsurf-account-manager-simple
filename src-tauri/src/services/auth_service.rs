@@ -31,6 +31,7 @@ pub struct SignInResponse {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[allow(dead_code)]
 pub struct RefreshTokenRequest {
     grant_type: String,
     refresh_token: String,
@@ -103,8 +104,10 @@ impl AuthService {
     }
     
     /// 重新获取客户端（用于代理配置更新后）
-    pub fn refresh_client(&mut self) {
+    #[allow(dead_code)]
+    pub fn refresh_client(&mut self) -> Result<(), String> {
         self.client = super::get_google_api_client();
+        Ok(())
     }
 
     pub async fn sign_in(&self, email: &str, password: &str) -> AppResult<(String, String, DateTime<Utc>)> {
@@ -292,9 +295,10 @@ impl AuthService {
         Utc::now() >= *expires_at
     }
 
-    pub fn should_refresh_token(expires_at: &DateTime<Utc>) -> bool {
+    #[allow(dead_code)]
+    pub fn should_refresh_token(expires_at: Option<DateTime<Utc>>) -> bool {
         // 如果Token在5分钟内过期，则刷新
         let buffer = Duration::minutes(5);
-        Utc::now() + buffer >= *expires_at
+        expires_at.map_or(false, |dt| Utc::now() + buffer >= dt)
     }
 }

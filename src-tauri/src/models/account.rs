@@ -87,6 +87,7 @@ impl Account {
         }
     }
 
+    #[allow(dead_code)]
     pub fn is_token_valid(&self) -> bool {
         if let Some(expires_at) = self.token_expires_at {
             expires_at > Utc::now()

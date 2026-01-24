@@ -1,6 +1,6 @@
 [package]
 name = "windsurf-account-manager"
-version = "1.6.7"
+version = "1.6.8"
 description = "Windsurf Account Manager - Simple"
 authors = ["chaogei666"]
 license = "AGPL-3.0"

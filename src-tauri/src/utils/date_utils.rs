@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use chrono::{DateTime, Utc, Duration};
 
 /// 格式化日期时间为用户友好的字符串

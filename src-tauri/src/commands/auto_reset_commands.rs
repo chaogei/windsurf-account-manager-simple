@@ -182,8 +182,9 @@ impl ResetRecordStore {
         Ok(record)
     }
     
-    pub async fn get_all(&self) -> Vec<ResetRecord> {
-        self.records.read().await.clone()
+    #[allow(dead_code)]
+    pub async fn get_all(&self) -> Result<Vec<ResetRecord>, String> {
+        Ok(self.records.read().await.clone())
     }
     
     pub async fn get_paginated(&self, page: usize, page_size: usize) -> (Vec<ResetRecord>, usize) {

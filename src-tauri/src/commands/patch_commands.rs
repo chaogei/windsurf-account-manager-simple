@@ -150,6 +150,7 @@ fn resolve_shortcut(lnk_path: &Path) -> Result<PathBuf, String> {
 }
 
 #[cfg(not(target_os = "windows"))]
+#[allow(dead_code)]
 fn resolve_shortcut(_lnk_path: &Path) -> Result<PathBuf, String> {
     Err("不支持的操作系统".to_string())
 }

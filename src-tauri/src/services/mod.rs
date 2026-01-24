@@ -8,7 +8,7 @@ pub use windsurf_service::*;
 // pub use proto_parser::*;
 pub use analytics_service::*;  // Not used directly yet, commented to avoid warnings
 
-use std::sync::atomic::{AtomicU32, AtomicBool, Ordering};
+use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::{OnceLock, RwLock, Mutex};
 use std::sync::Arc;
 
