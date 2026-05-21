@@ -50,17 +50,62 @@
             <el-button size="small" @click="resetFields">重置</el-button>
           </div>
         </div>
-        <el-checkbox-group v-model="selectedFields" class="field-grid" @change="activePreset = 'custom'">
-          <el-checkbox
+        <div class="field-grid">
+          <label
             v-for="field in exportFields"
             :key="field.key"
-            :label="field.key"
             class="field-card"
+            :class="{ checked: selectedFields.includes(field.key) }"
           >
-            <span class="field-label">{{ field.label }}</span>
-            <span class="field-desc">{{ field.description }}</span>
-          </el-checkbox>
-        </el-checkbox-group>
+            <el-checkbox
+              :model-value="selectedFields.includes(field.key)"
+              @change="toggleField(field.key, $event as boolean)"
+            >
+              <span class="field-label">{{ field.label }}</span>
+              <span class="field-desc">{{ field.description }}</span>
+            </el-checkbox>
+          </label>
+        </div>
+      </div>
+
+      <div class="export-section" v-if="selectedFields.length > 0">
+        <div class="section-header">
+          <div>
+            <div class="section-title">字段顺序</div>
+            <div class="section-desc">拖拽或使用按钮调整字段在导出结果中的先后顺序。</div>
+          </div>
+          <el-tag type="info" effect="plain">{{ selectedFields.length }} 个字段</el-tag>
+        </div>
+        <draggable
+          v-model="selectedFields"
+          item-key="item"
+          tag="div"
+          class="order-grid"
+          handle=".order-drag"
+          :animation="180"
+          @change="activePreset = 'custom'"
+        >
+          <template #item="{ element, index }">
+            <div class="order-item">
+              <span class="order-drag" title="拖拽排序">
+                <el-icon><Rank /></el-icon>
+              </span>
+              <span class="order-index">{{ index + 1 }}</span>
+              <span class="order-label">{{ getFieldLabel(element) }}</span>
+              <div class="order-actions">
+                <el-button text size="small" :disabled="index === 0" @click="moveField(index, -1)">
+                  <el-icon><ArrowUp /></el-icon>
+                </el-button>
+                <el-button text size="small" :disabled="index === selectedFields.length - 1" @click="moveField(index, 1)">
+                  <el-icon><ArrowDown /></el-icon>
+                </el-button>
+                <el-button text size="small" @click="toggleField(element, false)">
+                  <el-icon><Close /></el-icon>
+                </el-button>
+              </div>
+            </div>
+          </template>
+        </draggable>
       </div>
 
       <div class="export-options-grid">
@@ -133,6 +178,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { ElMessage } from 'element-plus';
+import { Rank, ArrowUp, ArrowDown, Close } from '@element-plus/icons-vue';
+import draggable from 'vuedraggable';
 import type { Account } from '@/types';
 
 type ExportFormat = 'txt' | 'csv' | 'json';
@@ -224,7 +271,37 @@ const exportPresets: ExportPreset[] = [
   { key: 'custom', label: '自定义组合', description: '手动选择字段', fields: ['email', 'password'] }
 ];
 
-const selectedFieldDefs = computed(() => exportFields.filter(field => selectedFields.value.includes(field.key)));
+const fieldMap = computed(() => {
+  const map = new Map<ExportFieldKey, ExportField>();
+  exportFields.forEach(field => map.set(field.key, field));
+  return map;
+});
+const selectedFieldDefs = computed(() =>
+  selectedFields.value
+    .map(key => fieldMap.value.get(key))
+    .filter((field): field is ExportField => !!field)
+);
+function getFieldLabel(key: ExportFieldKey) {
+  return fieldMap.value.get(key)?.label || key;
+}
+function toggleField(key: ExportFieldKey, checked: boolean) {
+  activePreset.value = 'custom';
+  if (checked) {
+    if (!selectedFields.value.includes(key)) {
+      selectedFields.value = [...selectedFields.value, key];
+    }
+  } else {
+    selectedFields.value = selectedFields.value.filter(item => item !== key);
+  }
+}
+function moveField(index: number, direction: -1 | 1) {
+  const target = index + direction;
+  if (target < 0 || target >= selectedFields.value.length) return;
+  const next = [...selectedFields.value];
+  [next[index], next[target]] = [next[target], next[index]];
+  selectedFields.value = next;
+  activePreset.value = 'custom';
+}
 const canExport = computed(() => props.accounts.length > 0 && selectedFieldDefs.value.length > 0);
 const delimiter = computed(() => {
   const delimiters: Record<DelimiterType, string> = {
@@ -438,11 +515,84 @@ async function handleExport() {
   background: color-mix(in srgb, var(--theme-surface-strong, #ffffff) 86%, transparent);
 }
 
+.field-card :deep(.el-checkbox) {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  align-items: flex-start;
+}
+
 .field-card :deep(.el-checkbox__label) {
   display: flex;
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+  white-space: normal;
+}
+
+.field-card.checked {
+  border-color: var(--theme-primary, #409eff);
+  background: color-mix(in srgb, var(--theme-primary, #409eff) 10%, var(--theme-surface, #ffffff));
+}
+
+.order-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--theme-border, #e4e7ed);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--theme-surface-strong, #ffffff) 90%, transparent);
+  transition: box-shadow 0.2s ease;
+}
+
+.order-item:hover {
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+
+.order-drag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--theme-text-muted, #909399);
+  cursor: grab;
+}
+
+.order-drag:active {
+  cursor: grabbing;
+}
+
+.order-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--theme-primary, #409eff);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.order-label {
+  flex: 1;
+  color: var(--theme-text, #303133);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.order-actions {
+  display: flex;
+  gap: 2px;
 }
 
 .field-label {
