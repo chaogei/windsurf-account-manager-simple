@@ -52,6 +52,7 @@ foreach ($path in $mtPaths) {
 if (-not $mt) {
     Write-Host "Error: mt.exe not found. Please install Windows SDK or Visual Studio."
     Write-Host "Alternatively, you can use a third-party tool like Resource Hacker."
+    # Alternative: Resource Cracker https://www.pelock.com/products/resource-cracker
     exit 1
 }
 
